@@ -3,107 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact | DJELTI ILYES</title>
+    <title data-translate="contact_title">Contact | DJELTI ILYES</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        .contact-container {
-            max-width: 800px;
-            margin: 2rem auto;
-        }
-        
-        .contact-card {
-            background: white;
-            border-radius: 10px;
-            padding: 2rem;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-        
-        .contact-methods {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin: 2rem 0;
-        }
-        
-        .contact-method {
-            text-align: center;
-            padding: 1.5rem;
-            border: 2px solid var(--light);
-            border-radius: 8px;
-            transition: all 0.3s ease;
-        }
-        
-        .contact-method:hover {
-            border-color: var(--secondary);
-            transform: translateY(-5px);
-        }
-        
-        .contact-icon {
-            font-size: 2.5rem;
-            color: var(--secondary);
-            margin-bottom: 1rem;
-        }
-        
-        .contact-form {
-            margin-top: 2rem;
-        }
-        
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-        
-        .form-label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-        }
-        
-        .form-input, .form-textarea {
-            width: 100%;
-            padding: 0.8rem;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-family: inherit;
-        }
-        
-        .form-textarea {
-            min-height: 150px;
-            resize: vertical;
-        }
-        
-        .submit-btn {
-            background: var(--secondary);
-            color: white;
-            border: none;
-            padding: 1rem 2rem;
-            border-radius: 5px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .submit-btn:hover {
-            background: var(--primary);
-        }
-        
-        .academic-info {
-            background: var(--light);
-            padding: 1.5rem;
-            border-radius: 8px;
-            margin-top: 2rem;
-        }
-    </style>
 </head>
 <body>
+    <!-- Language Selector -->
+    <div class="language-selector">
+        <select id="languageSelect">
+            <option value="en">🇬🇧 English</option>
+            <option value="ar">🇸🇦 العربية</option>
+            <option value="ru">🇷🇺 Русский</option>
+            <option value="fr">🇫🇷 Français</option>
+        </select>
+    </div>
+
+    <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
-            <a href="index.html" class="logo">DJELTI ILYES</a>
+            <a href="index.html" class="logo" data-translate="name">DJELTI ILYES</a>
             <ul class="nav-menu">
-                <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
-                <li><a href="projects.html"><i class="fas fa-project-diagram"></i> Projects</a></li>
-                <li><a href="research.html"><i class="fas fa-flask"></i> Research</a></li>
-                <li><a href="contact.html" class="active"><i class="fas fa-envelope"></i> Contact</a></li>
+                <li><a href="index.html" data-translate="nav_home">Home</a></li>
+                <li><a href="projects.html" data-translate="nav_projects">Projects</a></li>
+                <li><a href="research.html" data-translate="nav_research">Research</a></li>
+                <li><a href="contact.html" class="active" data-translate="nav_contact">Contact</a></li>
             </ul>
             <button class="menu-toggle">
                 <i class="fas fa-bars"></i>
@@ -111,121 +34,93 @@
         </div>
     </nav>
 
+    <!-- Main Content -->
     <main class="container">
         <div class="page-header">
-            <h1><i class="fas fa-envelope"></i> Contact Information</h1>
-            <p>For academic collaborations, research discussions, or professional inquiries</p>
+            <h1 data-translate="contact_header">Contact Information</h1>
+            <p data-translate="contact_description">For academic collaborations, research discussions, or professional inquiries</p>
         </div>
 
         <div class="contact-container">
-            <div class="contact-card">
-                <h2>Academic & Professional Contact</h2>
-                <p>I am currently seeking doctoral research opportunities in Artificial Intelligence and Machine Learning. I am particularly interested in positions that allow me to work on cutting-edge research with practical applications.</p>
+            <div class="contact-methods">
+                <div class="contact-card">
+                    <div class="contact-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h3 data-translate="contact_academic">Academic Inquiries</h3>
+                    <p data-translate="contact_academic_text">For research collaborations, doctoral program information, or academic discussions</p>
+                </div>
                 
-                <div class="contact-methods">
-                    <div class="contact-method">
-                        <div class="contact-icon">
-                            <i class="fas fa-graduation-cap"></i>
-                        </div>
-                        <h3>Academic Inquiries</h3>
-                        <p>For research collaborations, doctoral program information, or academic discussions</p>
-                        <p><strong>Preferred Topics:</strong> AI, ML, IoT, Assistive Technologies, Sustainable Computing</p>
+                <div class="contact-card">
+                    <div class="contact-icon">
+                        <i class="fas fa-briefcase"></i>
+                    </div>
+                    <h3 data-translate="contact_professional">Professional Opportunities</h3>
+                    <p data-translate="contact_professional_text">Research positions, internships, or collaborative projects in AI/ML fields</p>
+                </div>
+            </div>
+
+            <!-- Contact Form -->
+            <div class="contact-form-container">
+                <h2><i class="fas fa-paper-plane"></i> Send a Message</h2>
+                <p>Please use this form for academic or professional inquiries.</p>
+                
+                <form id="contactForm">
+                    <div class="form-group">
+                        <label class="form-label" data-translate="contact_form_name">Your Name *</label>
+                        <input type="text" name="name" class="form-input" required>
                     </div>
                     
-                    <div class="contact-method">
-                        <div class="contact-icon">
-                            <i class="fas fa-briefcase"></i>
-                        </div>
-                        <h3>Professional Opportunities</h3>
-                        <p>Research positions, internships, or collaborative projects in AI/ML fields</p>
-                        <p><strong>Availability:</strong> Open to research opportunities worldwide</p>
+                    <div class="form-group">
+                        <label class="form-label" data-translate="contact_form_email">Your Email *</label>
+                        <input type="email" name="email" class="form-input" required>
                     </div>
-                </div>
-
-                <div class="academic-info">
-                    <h3><i class="fas fa-info-circle"></i> Academic Background</h3>
-                    <ul>
-                        <li><strong>Latest Degree:</strong> Master's in Computer Science (AI for IoT)</li>
-                        <li><strong>Thesis Score:</strong> 19.5/20 (Highest distinction)</li>
-                        <li><strong>Research Focus:</strong> AI-powered assistive technologies</li>
-                        <li><strong>Languages:</strong> Arabic (Native), English (Fluent), French (Fluent)</li>
-                        <li><strong>Age:</strong> 24 years</li>
-                    </ul>
-                </div>
-
-                <!-- Secure Contact Form (using Formspree) -->
-                <div class="contact-form">
-                    <h3><i class="fas fa-paper-plane"></i> Send a Message</h3>
-                    <p>Please use this form for academic or professional inquiries. I typically respond within 2-3 business days.</p>
                     
-                    <form action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
-                        <div class="form-group">
-                            <label class="form-label">Your Name *</label>
-                            <input type="text" name="name" class="form-input" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label class="form-label">Your Email *</label>
-                            <input type="email" name="email" class="form-input" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label class="form-label">Inquiry Type *</label>
-                            <select name="inquiry-type" class="form-input" required>
-                                <option value="">Select a category</option>
-                                <option value="doctoral">Doctoral Program Inquiry</option>
-                                <option value="research">Research Collaboration</option>
-                                <option value="academic">Academic Discussion</option>
-                                <option value="professional">Professional Opportunity</option>
-                                <option value="other">Other</option>
-                            </select>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label class="form-label">Message *</label>
-                            <textarea name="message" class="form-textarea" required></textarea>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label>
-                                <input type="checkbox" name="academic" required>
-                                I confirm this is an academic or professional inquiry
-                            </label>
-                        </div>
-                        
-                        <button type="submit" class="submit-btn">
-                            <i class="fas fa-paper-plane"></i> Send Message
-                        </button>
-                    </form>
+                    <div class="form-group">
+                        <label class="form-label" data-translate="contact_form_type">Inquiry Type *</label>
+                        <select name="inquiry-type" class="form-input" required>
+                            <option value="">Select a category</option>
+                            <option value="doctoral">Doctoral Program Inquiry</option>
+                            <option value="research">Research Collaboration</option>
+                            <option value="academic">Academic Discussion</option>
+                            <option value="professional">Professional Opportunity</option>
+                        </select>
+                    </div>
                     
-                    <p class="form-note">
-                        <small><i class="fas fa-shield-alt"></i> This form uses secure submission. Your information will only be used for professional communication.</small>
-                    </p>
-                </div>
-
-                <div style="margin-top: 2rem; padding: 1rem; background: #f8f9fa; border-radius: 5px;">
-                    <h4><i class="fas fa-clock"></i> Response Time</h4>
-                    <p>I check messages regularly and aim to respond to all academic inquiries within 48-72 hours. For urgent matters related to doctoral applications, please mention "URGENT: Doctoral Application" in your message subject.</p>
-                </div>
+                    <div class="form-group">
+                        <label class="form-label" data-translate="contact_form_message">Message *</label>
+                        <textarea name="message" class="form-textarea" rows="6" required></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-paper-plane"></i> <span data-translate="contact_form_send">Send Message</span>
+                    </button>
+                </form>
             </div>
         </div>
     </main>
 
+    <!-- Footer -->
     <footer class="footer">
         <div class="footer-content">
-            <p>&copy; 2026 DJELTI ILYES. All rights reserved.</p>
+            <p data-translate="footer_copyright">© 2026 DJELTI ILYES. All rights reserved.</p>
+            <p data-translate="footer_tagline">AI Researcher | Doctoral Candidate in AI & Machine Learning</p>
             <div class="footer-links">
-                <a href="index.html">Home</a> |
-                <a href="projects.html">Projects</a> |
-                <a href="research.html">Research</a> |
-                <a href="contact.html">Contact</a>
+                <a href="index.html" data-translate="nav_home">Home</a> |
+                <a href="projects.html" data-translate="nav_projects">Projects</a> |
+                <a href="research.html" data-translate="nav_research">Research</a> |
+                <a href="contact.html" data-translate="nav_contact">Contact</a>
             </div>
-            <p style="margin-top: 1rem; font-size: 0.9rem;">
-                <i class="fas fa-lock"></i> Secure contact form | Academic inquiries only
-            </p>
         </div>
     </footer>
 
     <script src="script.js"></script>
+    <script>
+        // Simple form handler
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Thank you for your message! In a real implementation, this would connect to a backend service.');
+        });
+    </script>
 </body>
 </html>
