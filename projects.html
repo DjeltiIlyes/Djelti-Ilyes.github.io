@@ -3,19 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Projects | DJELTI ILYES</title>
+    <title data-translate="projects_title">Projects | DJELTI ILYES</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
+    <!-- Language Selector -->
+    <div class="language-selector">
+        <select id="languageSelect">
+            <option value="en">🇬🇧 English</option>
+            <option value="ar">🇸🇦 العربية</option>
+            <option value="ru">🇷🇺 Русский</option>
+            <option value="fr">🇫🇷 Français</option>
+        </select>
+    </div>
+
+    <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
-            <a href="index.html" class="logo">DJELTI ILYES</a>
+            <a href="index.html" class="logo" data-translate="name">DJELTI ILYES</a>
             <ul class="nav-menu">
-                <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
-                <li><a href="projects.html" class="active"><i class="fas fa-project-diagram"></i> Projects</a></li>
-                <li><a href="research.html"><i class="fas fa-flask"></i> Research</a></li>
-                <li><a href="contact.html"><i class="fas fa-envelope"></i> Contact</a></li>
+                <li><a href="index.html" data-translate="nav_home">Home</a></li>
+                <li><a href="projects.html" class="active" data-translate="nav_projects">Projects</a></li>
+                <li><a href="research.html" data-translate="nav_research">Research</a></li>
+                <li><a href="contact.html" data-translate="nav_contact">Contact</a></li>
             </ul>
             <button class="menu-toggle">
                 <i class="fas fa-bars"></i>
@@ -23,21 +34,22 @@
         </div>
     </nav>
 
+    <!-- Main Content -->
     <main class="container">
         <div class="page-header">
-            <h1><i class="fas fa-project-diagram"></i> My Projects</h1>
-            <p>Innovative solutions combining AI, IoT, and practical engineering</p>
+            <h1 data-translate="projects_header">My Projects</h1>
+            <p data-translate="projects_description">Innovative solutions combining AI, IoT, and practical engineering</p>
         </div>
 
-        <div class="projects-grid">
+        <div class="projects-container">
             <!-- Project 1: LUNAV -->
             <div class="project-card featured">
                 <div class="project-header">
                     <span class="project-badge">Master's Thesis</span>
                     <span class="project-score">19.5/20</span>
                 </div>
-                <h2>LUNAV</h2>
-                <h3>Intelligent Navigation System for the Blind and Visually Impaired</h3>
+                <h2 data-translate="project1_title">LUNAV - Intelligent Navigation System</h2>
+                <h3 data-translate="project1_subtitle">AI-Powered Navigation for the Visually Impaired</h3>
                 
                 <div class="project-tech">
                     <span class="tech-tag">AI</span>
@@ -48,34 +60,21 @@
                 </div>
                 
                 <div class="project-description">
-                    <h4><i class="fas fa-bullseye"></i> Problem Statement</h4>
-                    <p>Over 285 million people worldwide are visually impaired, facing daily challenges with independent navigation and obstacle avoidance.</p>
+                    <h4><i class="fas fa-bullseye"></i> <span data-translate="project1_problem">Problem Statement</span></h4>
+                    <p data-translate="project1_problem_text">Over 285 million people worldwide are visually impaired, facing daily challenges with independent navigation.</p>
                     
-                    <h4><i class="fas fa-lightbulb"></i> Solution</h4>
-                    <p>Developed a wearable AI-powered device that combines real-time computer vision, spatial audio feedback, and haptic vibrations to create a comprehensive navigation aid.</p>
+                    <h4><i class="fas fa-lightbulb"></i> <span data-translate="project1_solution">Solution</span></h4>
+                    <p data-translate="project1_solution_text">Developed a wearable AI-powered device combining real-time computer vision, spatial audio feedback, and haptic vibrations.</p>
                     
-                    <h4><i class="fas fa-cogs"></i> Technical Implementation</h4>
+                    <h4><i class="fas fa-cogs"></i> <span data-translate="project1_tech">Technical Implementation</span></h4>
                     <ul>
-                        <li><strong>Computer Vision:</strong> YOLO object detection with custom-trained model on obstacle dataset</li>
-                        <li><strong>Audio Navigation:</strong> 3D spatial audio system for directional guidance</li>
-                        <li><strong>Hardware:</strong> Raspberry Pi 4, Ultrasonic sensors, Bone conduction headphones</li>
-                        <li><strong>Software Stack:</strong> Python, OpenCV, TensorFlow, Unity for AR visualization</li>
+                        <li data-translate="project1_tech_list">Computer Vision (YOLO), 3D Spatial Audio, Raspberry Pi 4, Ultrasonic sensors</li>
                     </ul>
                     
-                    <h4><i class="fas fa-chart-line"></i> Results</h4>
+                    <h4><i class="fas fa-chart-line"></i> <span data-translate="project1_results">Results</span></h4>
                     <ul>
-                        <li>95% accuracy in obstacle detection within 5 meters</li>
-                        <li>Real-time processing at 30 FPS</li>
-                        <li>Battery life: 8+ hours of continuous use</li>
-                        <li>Received highest academic score: 19.5/20</li>
+                        <li data-translate="project1_results_list">95% obstacle detection accuracy, Real-time 30 FPS processing, 8+ hour battery life</li>
                     </ul>
-                </div>
-                
-                <div class="project-gallery">
-                    <div class="gallery-placeholder">
-                        <i class="fas fa-images"></i>
-                        <p>System Architecture & Demo</p>
-                    </div>
                 </div>
             </div>
 
@@ -85,8 +84,8 @@
                     <span class="project-badge">Competition Winner</span>
                     <span class="project-award">2nd Place</span>
                 </div>
-                <h2>DesertCool</h2>
-                <h3>Sustainable Cooling Solution for Arid Regions</h3>
+                <h2 data-translate="project2_title">DesertCool</h2>
+                <h3 data-translate="project2_subtitle">Sustainable Cooling Solution for Arid Regions</h3>
                 
                 <div class="project-tech">
                     <span class="tech-tag">IoT</span>
@@ -96,71 +95,46 @@
                 </div>
                 
                 <div class="project-description">
-                    <h4><i class="fas fa-bullseye"></i> Challenge</h4>
-                    <p>Temperatures in the Algerian Sahara can reach 50°C+, creating extreme living conditions and high energy consumption for cooling.</p>
+                    <p data-translate="project2_description">IoT-based passive cooling system using evaporative techniques with smart monitoring.</p>
                     
-                    <h4><i class="fas fa-lightbulb"></i> Innovation</h4>
-                    <p>Designed a passive cooling system using evaporative techniques enhanced with IoT monitoring and smart control.</p>
-                    
-                    <h4><i class="fas fa-cogs"></i> System Design</h4>
+                    <h4><i class="fas fa-trophy"></i> <span data-translate="achievement_2">Achievements</span></h4>
                     <ul>
-                        <li><strong>Core Technology:</strong> Two-stage evaporative cooling with ceramic cooling pads</li>
-                        <li><strong>IoT Monitoring:</strong> Temperature, humidity, and air quality sensors</li>
-                        <li><strong>Smart Control:</strong> Automated fan speed and water flow adjustment</li>
-                        <li><strong>Energy Source:</strong> Solar-powered with battery backup</li>
-                    </ul>
-                    
-                    <h4><i class="fas fa-trophy"></i> Achievements</h4>
-                    <ul>
-                        <li>2nd Place in "The Call of Tech" National Competition 2023</li>
+                        <li data-translate="achievement_2">2nd Place, "The Call of Tech" National Competition (2023)</li>
                         <li>Temperature reduction: 10-15°C in test environments</li>
                         <li>Energy savings: 80% compared to conventional AC</li>
-                        <li>Water efficiency: 40% less than traditional evaporative coolers</li>
                     </ul>
-                </div>
-                
-                <div class="project-links">
-                    <a href="#" class="project-link">
-                        <i class="fas fa-file-pdf"></i> Competition Paper
-                    </a>
-                    <a href="#" class="project-link">
-                        <i class="fas fa-video"></i> Presentation Video
-                    </a>
                 </div>
             </div>
 
-            <!-- Project 3: Other Projects -->
+            <!-- Other Projects -->
             <div class="project-card">
-                <h2>Other Projects & Contributions</h2>
+                <h2>Other Projects & Workshops</h2>
                 
                 <div class="mini-projects">
                     <div class="mini-project">
                         <h4><i class="fas fa-robot"></i> Educational Robotics Workshop</h4>
-                        <p>Designed and taught Arduino robotics workshops for university students, focusing on IoT applications.</p>
+                        <p>Designed and taught Arduino robotics workshops for university students.</p>
                     </div>
                     
                     <div class="mini-project">
                         <h4><i class="fas fa-network-wired"></i> Network Optimization Tool</h4>
-                        <p>Developed Python tool for analyzing and optimizing local network performance during Algeria Telecom internship.</p>
-                    </div>
-                    
-                    <div class="mini-project">
-                        <h4><i class="fas fa-vr-cardboard"></i> VR Learning Environment</h4>
-                        <p>Created immersive VR experience for teaching computer science concepts using Unity and Meta Quest.</p>
+                        <p>Python tool for analyzing and optimizing local network performance.</p>
                     </div>
                 </div>
             </div>
         </div>
     </main>
 
+    <!-- Footer -->
     <footer class="footer">
         <div class="footer-content">
-            <p>&copy; 2026 DJELTI ILYES. All rights reserved.</p>
+            <p data-translate="footer_copyright">© 2026 DJELTI ILYES. All rights reserved.</p>
+            <p data-translate="footer_tagline">AI Researcher | Doctoral Candidate in AI & Machine Learning</p>
             <div class="footer-links">
-                <a href="index.html">Home</a> |
-                <a href="projects.html">Projects</a> |
-                <a href="research.html">Research</a> |
-                <a href="contact.html">Contact</a>
+                <a href="index.html" data-translate="nav_home">Home</a> |
+                <a href="projects.html" data-translate="nav_projects">Projects</a> |
+                <a href="research.html" data-translate="nav_research">Research</a> |
+                <a href="contact.html" data-translate="nav_contact">Contact</a>
             </div>
         </div>
     </footer>
