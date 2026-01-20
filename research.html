@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research | DJELTI ILYES</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .research-section {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        
+        .research-timeline {
+            border-left: 3px solid var(--secondary);
+            padding-left: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+        
+        .timeline-item:before {
+            content: '';
+            position: absolute;
+            left: -2.5rem;
+            top: 0;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background: var(--secondary);
+        }
+        
+        .publication-list {
+            list-style: none;
+        }
+        
+        .publication-item {
+            padding: 1rem;
+            border-left: 4px solid var(--primary);
+            margin-bottom: 1rem;
+            background: var(--light);
+        }
+        
+        .research-interests {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .interest-card {
+            padding: 1.5rem;
+            background: white;
+            border-radius: 8px;
+            border: 2px solid var(--light);
+            transition: all 0.3s ease;
+        }
+        
+        .interest-card:hover {
+            border-color: var(--secondary);
+            transform: translateY(-5px);
+        }
+        
+        .interest-card h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">DJELTI ILYES</a>
+            <ul class="nav-menu">
+                <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+                <li><a href="projects.html"><i class="fas fa-project-diagram"></i> Projects</a></li>
+                <li><a href="research.html" class="active"><i class="fas fa-flask"></i> Research</a></li>
+                <li><a href="contact.html"><i class="fas fa-envelope"></i> Contact</a></li>
+            </ul>
+            <button class="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <main class="container">
+        <div class="page-header">
+            <h1><i class="fas fa-flask"></i> Research Profile</h1>
+            <p>Doctoral Research Interests and Academic Contributions</p>
+        </div>
+
+        <div class="research-section">
+            <h2>Research Focus</h2>
+            <p>My research lies at the intersection of <strong>Artificial Intelligence</strong>, <strong>Internet of Things</strong>, and <strong>Human-Centered Computing</strong>. I am particularly interested in developing intelligent systems that address real-world challenges in accessibility, sustainability, and healthcare.</p>
+        </div>
+
+        <div class="research-section">
+            <h2>Research Timeline</h2>
+            <div class="research-timeline">
+                <div class="timeline-item">
+                    <h3>2024 - Present: Doctoral Research</h3>
+                    <p><strong>Focus:</strong> Advancing Edge AI for IoT applications in resource-constrained environments</p>
+                    <p><strong>Proposed Topics:</strong> Federated learning for distributed IoT, Lightweight neural networks, AI-driven energy optimization</p>
+                </div>
+                
+                <div class="timeline-item">
+                    <h3>2023-2024: Master's Research</h3>
+                    <p><strong>Thesis:</strong> "LUNAV: Intelligent Navigation System for the Blind and Visually Impaired"</p>
+                    <p><strong>Contributions:</strong> Novel integration of computer vision, spatial audio, and haptic feedback for accessible navigation</p>
+                    <p><strong>Grade:</strong> 19.5/20 (Highest distinction)</p>
+                </div>
+                
+                <div class="timeline-item">
+                    <h3>2022-2023: Undergraduate Research</h3>
+                    <p><strong>Projects:</strong> DesertCool (Sustainable cooling), Network optimization tools, Educational robotics</p>
+                    <p><strong>Achievements:</strong> 2nd place in national competition, Active member of COD'IN research club</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="research-section">
+            <h2>Research Interests for Doctoral Studies</h2>
+            <div class="research-interests">
+                <div class="interest-card">
+                    <h3><i class="fas fa-brain"></i> Edge AI & TinyML</h3>
+                    <p>Developing lightweight machine learning models that can run on resource-constrained IoT devices without cloud dependency. Exploring federated learning for distributed intelligence.</p>
+                    <ul>
+                        <li>Model compression techniques</li>
+                        <li>Federated learning protocols</li>
+                        <li>Hardware-aware neural architecture search</li>
+                    </ul>
+                </div>
+                
+                <div class="interest-card">
+                    <h3><i class="fas fa-eye"></i> Computer Vision for Accessibility</h3>
+                    <p>Creating vision-based assistive technologies for people with disabilities. Focus on real-time processing, low-power implementations, and multimodal interaction.</p>
+                    <ul>
+                        <li>Real-time object detection for navigation</li>
+                        <li>Scene understanding for accessibility</li>
+                        <li>Multimodal sensor fusion</li>
+                    </ul>
+                </div>
+                
+                <div class="interest-card">
+                    <h3><i class="fas fa-leaf"></i> Sustainable AI & IoT</h3>
+                    <p>Designing energy-efficient AI systems and IoT networks that minimize environmental impact while maximizing performance.</p>
+                    <ul>
+                        <li>AI-driven energy optimization</li>
+                        <li>Green computing for IoT</li>
+                        <li>Sustainable smart cities</li>
+                    </ul>
+                </div>
+                
+                <div class="interest-card">
+                    <h3><i class="fas fa-heartbeat"></i> Healthcare AI</h3>
+                    <p>Applying AI and IoT to healthcare challenges, particularly in remote monitoring, early diagnosis, and assistive technologies.</p>
+                    <ul>
+                        <li>Wearable health monitoring</li>
+                        <li>AI for early disease detection</li>
+                        <li>Telemedicine platforms</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="research-section">
+            <h2>Publications & Presentations</h2>
+            <ul class="publication-list">
+                <li class="publication-item">
+                    <h4>LUNAV: An AI-Powered Navigation System for Visually Impaired Individuals</h4>
+                    <p><strong>Type:</strong> Master's Thesis | <strong>Date:</strong> June 2024</p>
+                    <p><strong>Status:</strong> Completed with distinction (19.5/20)</p>
+                </li>
+                
+                <li class="publication-item">
+                    <h4>DesertCool: IoT-Based Sustainable Cooling for Arid Regions</h4>
+                    <p><strong>Type:</strong> Competition Paper | <strong>Date:</strong> November 2023</p>
+                    <p><strong>Award:</strong> 2nd Place, The Call of Tech National Competition</p>
+                </li>
+                
+                <li class="publication-item">
+                    <h4>AI in Assistive Technologies: Opportunities and Challenges</h4>
+                    <p><strong>Type:</strong> Conference Presentation | <strong>Date:</strong> April 2024</p>
+                    <p><strong>Event:</strong> University Tech Symposium, Université de Mostaganem</p>
+                </li>
+            </ul>
+        </div>
+
+        <div class="research-section">
+            <h2>Research Methodology</h2>
+            <div class="methodology">
+                <div class="method-item">
+                    <h3><i class="fas fa-code"></i> Technical Implementation</h3>
+                    <p>Strong background in Python, TensorFlow, embedded systems, and IoT protocols. Experience with full-stack development from concept to deployment.</p>
+                </div>
+                
+                <div class="method-item">
+                    <h3><i class="fas fa-chart-line"></i> Experimental Design</h3>
+                    <p>Experience designing controlled experiments, collecting and analyzing sensor data, and validating results through statistical methods.</p>
+                </div>
+                
+                <div class="method-item">
+                    <h3><i class="fas fa-users"></i> Interdisciplinary Collaboration</h3>
+                    <p>Proven ability to work across disciplines, combining insights from computer science, electrical engineering, and human-computer interaction.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; 2024 DJELTI ILYES. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="index.html">Home</a> |
+                <a href="projects.html">Projects</a> |
+                <a href="research.html">Research</a> |
+                <a href="contact.html">Contact</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
