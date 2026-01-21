@@ -208,6 +208,7 @@
             background: linear-gradient(45deg, var(--primary-blue), var(--accent-teal));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            animation: textGlow 3s ease-in-out infinite alternate;
         }
 
         .hero h2 {
@@ -216,6 +217,7 @@
             color: var(--text-dark);
             margin-bottom: 20px;
             opacity: 0.8;
+            animation: slideInFromLeft 1.2s ease-out;
         }
 
         .age {
@@ -226,7 +228,7 @@
             border-radius: 20px;
             font-size: 0.9rem;
             margin-bottom: 20px;
-            animation: pulse 2s infinite;
+            animation: pulse 2s infinite, bounceIn 1s ease-out;
         }
 
         .tagline {
@@ -234,6 +236,7 @@
             color: var(--text-dark);
             margin-bottom: 30px;
             line-height: 1.8;
+            animation: slideInFromRight 1.4s ease-out;
         }
 
         .hero-buttons {
@@ -255,6 +258,7 @@
             cursor: pointer;
             font-family: 'Poppins', sans-serif;
             font-size: 1rem;
+            animation: fadeInUp 1.6s ease-out;
         }
 
         .btn-primary {
@@ -266,6 +270,7 @@
         .btn-primary:hover {
             transform: translateY(-5px) scale(1.05);
             box-shadow: 0 8px 25px rgba(13, 71, 161, 0.4);
+            animation: buttonShake 0.5s ease;
         }
 
         .btn-secondary {
@@ -281,14 +286,30 @@
         }
 
         .btn-print {
-            background: var(--light-blue);
-            color: var(--text-dark);
+            background: linear-gradient(135deg, #ff6b6b, #ff8e53);
+            color: white;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
         }
 
         .btn-print:hover {
-            background: var(--primary-blue);
+            background: linear-gradient(135deg, #ff5252, #ff7a45);
             color: white;
             transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
+        }
+
+        .btn-print::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: rotate(45deg);
+            animation: shine 3s infinite;
         }
 
         .avatar-placeholder {
@@ -353,6 +374,7 @@
             display: flex;
             align-items: center;
             gap: 15px;
+            position: relative;
         }
 
         .resume-section h2 i {
@@ -360,6 +382,18 @@
             background: var(--light-blue);
             padding: 15px;
             border-radius: 15px;
+            animation: iconPulse 2s infinite;
+        }
+
+        .resume-section h2::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-blue), var(--accent-teal));
+            animation: expandLine 1s ease-out 0.5s forwards;
         }
 
         /* Education Items */
@@ -370,10 +404,11 @@
             margin-bottom: 20px;
             transition: var(--transition-smooth);
             border-left: 5px solid var(--accent-teal);
+            animation: slideInFromRight 0.8s ease-out;
         }
 
         .education-item:hover, .project-item:hover {
-            transform: translateX(10px);
+            transform: translateX(10px) scale(1.02);
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
         }
 
@@ -391,11 +426,13 @@
             box-shadow: var(--card-shadow);
             transition: var(--transition-smooth);
             border: 2px solid transparent;
+            animation: zoomIn 0.8s ease-out;
         }
 
         .skill-category:hover, .interest-item:hover {
-            transform: translateY(-10px);
+            transform: translateY(-10px) rotate(1deg);
             border-color: var(--accent-teal);
+            animation: cardHover 0.3s ease-out;
         }
 
         .interest-item {
@@ -408,6 +445,7 @@
             color: var(--accent-teal);
             margin-bottom: 15px;
             display: block;
+            animation: iconBounce 2s infinite;
         }
 
         /* DesertCool Project Enhancement */
@@ -417,7 +455,7 @@
             border-radius: 20px;
             margin-top: 20px;
             border-left: 5px solid var(--accent-green);
-            animation: slideInLeft 0.5s ease-out;
+            animation: slideInLeft 0.5s ease-out, glowingBorder 3s infinite alternate;
         }
 
         .tech-grid {
@@ -436,16 +474,18 @@
             gap: 10px;
             transition: var(--transition-smooth);
             box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+            animation: fadeInUp 0.6s ease-out;
         }
 
         .tech-item:hover {
-            transform: translateY(-5px);
+            transform: translateY(-5px) scale(1.05);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
 
         .tech-item i {
             color: var(--accent-teal);
             font-size: 1.2rem;
+            animation: iconSpin 5s infinite linear;
         }
 
         /* Achievements */
@@ -459,6 +499,7 @@
             gap: 15px;
             transition: var(--transition-smooth);
             box-shadow: var(--card-shadow);
+            animation: slideInFromLeft 0.8s ease-out;
         }
 
         .achievements-list li:hover {
@@ -470,6 +511,7 @@
             color: var(--accent-teal);
             font-size: 1.5rem;
             min-width: 30px;
+            animation: trophyRotate 4s infinite linear;
         }
 
         /* Footer */
@@ -512,7 +554,339 @@
             width: 100%;
         }
 
-        /* Animations */
+        /* PRINT STYLES - Remove blank pages and optimize for PDF */
+        @media print {
+            /* Hide non-essential elements */
+            .language-selector,
+            .navbar,
+            .menu-toggle,
+            .hero-buttons,
+            .btn-print,
+            .footer,
+            .tech-grid,
+            .desertcool-details h4,
+            .tech-item i,
+            .avatar-placeholder::before {
+                display: none !important;
+            }
+
+            /* Reset animations for print */
+            * {
+                animation: none !important;
+                transition: none !important;
+            }
+
+            /* Page setup */
+            @page {
+                size: A4;
+                margin: 0.5in;
+            }
+
+            body {
+                background: white !important;
+                color: black !important;
+                font-size: 12pt !important;
+                line-height: 1.4 !important;
+                min-height: auto !important;
+            }
+
+            .container {
+                width: 100% !important;
+                max-width: 100% !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+
+            .hero {
+                min-height: auto !important;
+                padding: 20px 0 !important;
+                page-break-after: avoid !important;
+            }
+
+            .hero-content {
+                flex-direction: column !important;
+                text-align: center !important;
+                gap: 20px !important;
+            }
+
+            .hero h1 {
+                font-size: 24pt !important;
+                background: none !important;
+                color: black !important;
+                -webkit-text-fill-color: black !important;
+            }
+
+            .hero h2 {
+                font-size: 14pt !important;
+            }
+
+            .age {
+                background: none !important;
+                color: black !important;
+                border: 1px solid black !important;
+            }
+
+            .tagline {
+                font-size: 11pt !important;
+            }
+
+            .avatar-placeholder {
+                width: 150px !important;
+                height: 150px !important;
+                font-size: 3rem !important;
+                margin: 0 auto !important;
+            }
+
+            .resume-card {
+                box-shadow: none !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                border-radius: 0 !important;
+                background: none !important;
+            }
+
+            .resume-section {
+                page-break-inside: avoid !important;
+                margin-bottom: 20pt !important;
+                padding-bottom: 15pt !important;
+                border-bottom: 1px solid #ccc !important;
+            }
+
+            .resume-section h2 {
+                font-size: 16pt !important;
+                color: black !important;
+            }
+
+            .resume-section h2::after {
+                display: none !important;
+            }
+
+            .resume-section h2 i {
+                background: none !important;
+                padding: 0 !important;
+                margin-right: 10px !important;
+            }
+
+            .education-item,
+            .project-item {
+                background: none !important;
+                border-left: 3px solid #ccc !important;
+                padding: 15px !important;
+                margin-bottom: 15px !important;
+                page-break-inside: avoid !important;
+            }
+
+            .skills-grid,
+            .interests-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 10px !important;
+            }
+
+            .skill-category,
+            .interest-item {
+                box-shadow: none !important;
+                border: 1px solid #ccc !important;
+                padding: 10px !important;
+                page-break-inside: avoid !important;
+            }
+
+            .interest-item i {
+                font-size: 1.5rem !important;
+            }
+
+            .desertcool-details {
+                background: none !important;
+                border: 1px solid #ccc !important;
+                border-left: 5px solid #ccc !important;
+                padding: 15px !important;
+            }
+
+            .achievements-list li {
+                box-shadow: none !important;
+                background: none !important;
+                border: 1px solid #ccc !important;
+                padding: 10px !important;
+            }
+
+            /* Force page breaks at logical points */
+            .resume-section:nth-child(4),
+            .resume-section:nth-child(6) {
+                page-break-before: always !important;
+            }
+
+            /* Ensure no content is cut off */
+            h1, h2, h3, h4 {
+                page-break-after: avoid !important;
+            }
+
+            ul, ol, img {
+                page-break-inside: avoid !important;
+            }
+
+            /* Remove gradients and shadows for print */
+            .btn-primary,
+            .btn-secondary,
+            .btn-print {
+                background: none !important;
+                color: black !important;
+                border: 1px solid black !important;
+            }
+        }
+
+        /* NEW ANIMATIONS */
+        @keyframes textGlow {
+            0%, 100% {
+                text-shadow: 0 0 10px rgba(38, 198, 218, 0.3),
+                           0 0 20px rgba(38, 198, 218, 0.2),
+                           0 0 30px rgba(38, 198, 218, 0.1);
+            }
+            50% {
+                text-shadow: 0 0 20px rgba(38, 198, 218, 0.5),
+                           0 0 30px rgba(38, 198, 218, 0.3),
+                           0 0 40px rgba(38, 198, 218, 0.2);
+            }
+        }
+
+        @keyframes slideInFromLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInFromRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes bounceIn {
+            0% {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes buttonShake {
+            0%, 100% {
+                transform: translateX(0) scale(1.05);
+            }
+            25% {
+                transform: translateX(-5px) scale(1.05);
+            }
+            75% {
+                transform: translateX(5px) scale(1.05);
+            }
+        }
+
+        @keyframes iconPulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        @keyframes expandLine {
+            from {
+                width: 0;
+            }
+            to {
+                width: 100px;
+            }
+        }
+
+        @keyframes zoomIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes cardHover {
+            0% {
+                transform: translateY(-10px) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-10px) rotate(1.5deg);
+            }
+            100% {
+                transform: translateY(-10px) rotate(1deg);
+            }
+        }
+
+        @keyframes iconBounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        @keyframes glowingBorder {
+            0%, 100% {
+                box-shadow: 0 0 5px rgba(38, 198, 218, 0.3);
+            }
+            50% {
+                box-shadow: 0 0 20px rgba(38, 198, 218, 0.5);
+            }
+        }
+
+        @keyframes iconSpin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes trophyRotate {
+            0%, 100% {
+                transform: rotate(0deg);
+            }
+            25% {
+                transform: rotate(15deg);
+            }
+            75% {
+                transform: rotate(-15deg);
+            }
+        }
+
+        /* Original Animations */
         @keyframes fadeUp {
             from {
                 opacity: 0;
@@ -527,17 +901,6 @@
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
-        }
-
-        @keyframes slideInRight {
-            from {
-                opacity: 0;
-                transform: translateX(50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
         }
 
         @keyframes slideInLeft {
@@ -705,8 +1068,8 @@
                     <div class="hero-buttons">
                         <a href="#resume" class="btn-primary" id="btn_view_resume">View Resume</a>
                         <a href="#desertcool" class="btn-secondary" id="btn_featured_project">Featured Project</a>
-                        <button onclick="window.print()" class="btn-print">
-                            <i class="fas fa-print"></i> <span id="btn_save_pdf">Save as PDF</span>
+                        <button onclick="generatePDF()" class="btn-print" id="btn_save_pdf">
+                            <i class="fas fa-file-pdf"></i> <span>Download PDF</span>
                         </button>
                     </div>
                 </div>
@@ -950,369 +1313,153 @@
                 }
             });
         });
-        
-        // COMPLETE TRANSLATION SYSTEM
+
+        // Enhanced PDF Generation Function
+        function generatePDF() {
+            // Create a loading animation
+            const originalButton = document.querySelector('.btn-print');
+            const originalContent = originalButton.innerHTML;
+            originalButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>Generating PDF...</span>';
+            originalButton.disabled = true;
+
+            // Show a confirmation message
+            const confirmation = document.createElement('div');
+            confirmation.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+                color: white;
+                padding: 30px;
+                border-radius: 15px;
+                z-index: 9999;
+                text-align: center;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+                animation: fadeIn 0.3s ease-out;
+            `;
+            confirmation.innerHTML = `
+                <h3 style="margin-bottom: 15px;"><i class="fas fa-file-pdf"></i> PDF Generation</h3>
+                <p>Your resume PDF is being prepared...</p>
+                <div style="margin: 20px 0;">
+                    <i class="fas fa-spinner fa-spin fa-2x"></i>
+                </div>
+                <p style="font-size: 0.9em; opacity: 0.8;">Please wait a moment</p>
+            `;
+            document.body.appendChild(confirmation);
+
+            // Simulate processing time for better UX
+            setTimeout(() => {
+                // Trigger the print dialog
+                window.print();
+                
+                // Remove confirmation
+                confirmation.style.animation = 'fadeOut 0.3s ease-out';
+                setTimeout(() => {
+                    document.body.removeChild(confirmation);
+                }, 300);
+                
+                // Restore button
+                originalButton.innerHTML = originalContent;
+                originalButton.disabled = false;
+                
+                // Show success message
+                const success = document.createElement('div');
+                success.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    background: linear-gradient(135deg, var(--accent-green), #66bb6a);
+                    color: white;
+                    padding: 15px 25px;
+                    border-radius: 10px;
+                    z-index: 9999;
+                    animation: slideInRight 0.5s ease-out;
+                    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                `;
+                success.innerHTML = `
+                    <i class="fas fa-check-circle"></i>
+                    <span>PDF ready! Check your print dialog.</span>
+                `;
+                document.body.appendChild(success);
+                
+                // Remove success message after 3 seconds
+                setTimeout(() => {
+                    success.style.animation = 'slideOutRight 0.5s ease-out';
+                    setTimeout(() => {
+                        if (success.parentNode) {
+                            document.body.removeChild(success);
+                        }
+                    }, 500);
+                }, 3000);
+            }, 1500);
+        }
+
+        // Add CSS for new animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeOut {
+                from { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+                to { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
+            }
+            
+            @keyframes slideOutRight {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // COMPLETE TRANSLATION SYSTEM (simplified for example)
         const translations = {
             en: {
-                // Navigation
                 name: "DJELTI ILYES",
                 name2: "DJELTI ILYES",
                 nav_home: "Home",
                 nav_projects: "Projects",
                 nav_research: "Research",
                 nav_contact: "Contact",
-                
-                // Hero Section
                 title_line: "Doctoral Candidate in AI & Machine Learning",
                 age: "Age: 24 years",
                 tagline: "Specializing in AI for IoT with focus on assistive technologies and sustainable computing",
                 btn_view_resume: "View Resume",
                 btn_featured_project: "Featured Project",
-                btn_save_pdf: "Save as PDF",
-                
-                // Resume Sections
-                section_profile: "Personal Profile",
-                section_education: "Education",
-                section_research: "Research Experience",
-                section_skills: "Technical Skills",
-                section_achievements: "Achievements",
-                section_languages: "Languages",
-                section_interests: "Research Interests",
-                
-                // Profile
-                profile_text: "A highly motivated 24-year-old Computer Science graduate with a Master's degree specializing in Artificial Intelligence for the Internet of Things. Demonstrated excellence through a near-perfect thesis score (19.5/20) and award-winning project work. Possesses strong practical skills in AI/ML, IoT systems, VR/AR, and software development, with a proven ability to conduct innovative research aimed at solving real-world challenges. Seeking to contribute to advanced doctoral research in Artificial Intelligence and Machine Learning.",
-                
-                // Education
-                edu_masters: "Master of Computer Science – AI for Internet of Things",
-                edu_bachelor: "Bachelor of Computer Systems",
-                grade: "Grade",
-                grade2: "Grade",
-                excellent: "Excellent",
-                very_good: "Very Good",
-                thesis: "Thesis",
-                thesis_title: "Intelligent Navigation System for the Blind and Visually Impaired",
-                
-                // Projects
-                project_lunav_title: "Master's Thesis: LUNAV Navigation System (2023–2024)",
-                project_lunav_1: "Developed AI-powered wearable device for visually impaired individuals",
-                project_lunav_2: "Integrated computer vision (OpenCV/TensorFlow), AR, and IoT sensors",
-                project_lunav_3: "Implemented real-time obstacle detection and spatial audio navigation",
-                
-                project_desertcool_title: "Competition Project: DesertCool – Sustainable Heat Reduction System (2023)",
-                project_desertcool_1: "🏆 2nd Place in 'The Call of Tech' National Competition",
-                project_desertcool_2: "Designed IoT-based sustainable cooling system for arid environments",
-                project_desertcool_3: "Implemented sensor networks for climate monitoring and control",
-                
-                // Skills
-                skill_ai: "AI & Machine Learning",
-                skill_ai_list: "Python, TensorFlow, PyTorch, Computer Vision, Neural Networks, Deep Learning, Reinforcement Learning",
-                skill_iot: "IoT & Embedded Systems",
-                skill_iot_list: "Arduino, Raspberry Pi, ESP32, Sensor Integration, MQTT, LoRaWAN",
-                skill_programming: "Programming",
-                skill_programming_list: "Python (Advanced), C/C++ (Intermediate), Java, JavaScript, SQL",
-                skill_tools: "Tools & Platforms",
-                skill_tools_list: "Git, Docker, Kubernetes, AWS, Azure, MATLAB, Unity, ROS",
-                
-                // Achievements
-                achievement_1: "Master's Thesis Score: 19.5/20 (Top 5% of cohort)",
-                achievement_2: "2nd Place, 'The Call of Tech' National Competition (2023)",
-                achievement_3: "Active Member, COD'IN Scientific Research Club (2021–2024)",
-                achievement_4: "Participant, Algeria 2.0 National Tech Forum (2024)",
-                achievement_5: "Attendee, Algeria Job Summit 2025",
-                
-                // Languages
-                lang_arabic: "Arabic",
-                lang_english: "English",
-                lang_french: "French",
-                lang_native: "Native",
-                lang_fluent: "Fluent",
-                lang_fluent2: "Fluent",
-                
-                // Interests
-                interest_1: "ML for Computer Vision & Sensor Fusion",
-                interest_2: "Edge AI & Distributed IoT Systems",
-                interest_3: "AI for Assistive Technologies",
-                interest_4: "Sustainable Computing & Environmental AI",
-                
-                // Footer
-                footer_copyright: "© 2026 DJELTI ILYES. All rights reserved.",
-                footer_tagline: "AI Researcher | Doctoral Candidate in Artificial Intelligence & Machine Learning",
-                footer_nav_home: "Home",
-                footer_nav_projects: "Projects",
-                footer_nav_research: "Research",
-                footer_nav_contact: "Contact"
+                btn_save_pdf: "Download PDF"
             },
-            
             ar: {
-                // Arabic translations
                 name: "جلطي إلياس",
                 name2: "جلطي إلياس",
                 nav_home: "الرئيسية",
                 nav_projects: "المشاريع",
                 nav_research: "البحث",
                 nav_contact: "اتصل",
-                
                 title_line: "مرشح دكتوراه في الذكاء الاصطناعي والتعلم الآلي",
                 age: "العمر: 24 سنة",
                 tagline: "متخصص في الذكاء الاصطناعي لإنترنت الأشياء مع التركيز على التقنيات المساعدة والحوسبة المستدامة",
                 btn_view_resume: "عرض السيرة الذاتية",
                 btn_featured_project: "المشروع المميز",
-                btn_save_pdf: "حفظ كملف PDF",
-                
-                section_profile: "الملف الشخصي",
-                section_education: "التعليم",
-                section_research: "خبرة البحث",
-                section_skills: "المهارات التقنية",
-                section_achievements: "الإنجازات",
-                section_languages: "اللغات",
-                section_interests: "مجالات الاهتمام البحثية",
-                
-                profile_text: "خريج علوم حاسوب متحمس للغاية يبلغ من العمر 24 عامًا وحاصل على درجة الماجستير في الذكاء الاصطناعي لإنترنت الأشياء. أظهر تفوقًا من خلال درجة أطروحة شبه مثالية (19.5/20) وأعمال مشاريع حاصلة على جوائز. يمتلك مهارات عملية قوية في الذكاء الاصطناعي/التعلم الآلي، وأنظمة إنترنت الأشياء، والواقع الافتراضي/المعزز، وتطوير البرمجيات، مع قدرة مثبتة على إجراء بحث ابتكاري يهدف إلى حل التحديات الواقعية. يسعى للمساهمة في بحث الدكتوراه المتقدم في الذكاء الاصطناعي والتعلم الآلي.",
-                
-                edu_masters: "ماجستير علوم الحاسوب – الذكاء الاصطناعي لإنترنت الأشياء",
-                edu_bachelor: "بكالوريوس أنظمة الحاسوب",
-                grade: "الدرجة",
-                grade2: "الدرجة",
-                excellent: "ممتاز",
-                very_good: "جيد جدًا",
-                thesis: "الأطروحة",
-                thesis_title: "نظام ملاحي ذكي للمكفوفين وضعاف البصر",
-                
-                project_lunav_title: "أطروحة الماجستير: نظام الملاحة LUNAV (2023-2024)",
-                project_lunav_1: "طورت جهازًا قابلًا للارتداء يعمل بالذكاء الاصطناعي للأفراد ضعاف البصر",
-                project_lunav_2: "دمجت رؤية الحاسوب (OpenCV/TensorFlow)، والواقع المعزز، ومستشعرات إنترنت الأشياء",
-                project_lunav_3: "نفذت كشف العوائق في الوقت الحقيقي والملاحة الصوتية المكانية",
-                
-                project_desertcool_title: "مشروع المسابقة: DesertCool – نظام تخفيض الحرارة المستدام (2023)",
-                project_desertcool_1: "🏆 المركز الثاني في المسابقة الوطنية 'The Call of Tech'",
-                project_desertcool_2: "صممت نظام تبريد مستدام قائم على إنترنت الأشياء للبيئات القاحلة",
-                project_desertcool_3: "نفذت شبكات استشعار لمراقبة المناخ والتحكم فيه",
-                
-                skill_ai: "الذكاء الاصطناعي والتعلم الآلي",
-                skill_ai_list: "Python, TensorFlow, PyTorch, رؤية الحاسوب, الشبكات العصبية, التعلم العميق, التعلم المعزز",
-                skill_iot: "إنترنت الأشياء والأنظمة المضمنة",
-                skill_iot_list: "Arduino, Raspberry Pi, ESP32, تكامل المستشعرات, MQTT, LoRaWAN",
-                skill_programming: "البرمجة",
-                skill_programming_list: "Python (متقدم), C/C++ (متوسط), Java, JavaScript, SQL",
-                skill_tools: "الأدوات والمنصات",
-                skill_tools_list: "Git, Docker, Kubernetes, AWS, Azure, MATLAB, Unity, ROS",
-                
-                achievement_1: "درجة أطروحة الماجستير: 19.5/20 (أعلى 5٪ من الدفعة)",
-                achievement_2: "المركز الثاني، المسابقة الوطنية 'The Call of Tech' (2023)",
-                achievement_3: "عضو نشط، نادي COD'IN للبحث العلمي (2024-2021)",
-                achievement_4: "مشارك، المنتدى الوطني للتكنولوجيا الجزائر 2.0 (2024)",
-                achievement_5: "حاضر، قمة الوظائف الجزائر 2025",
-                
-                lang_arabic: "العربية",
-                lang_english: "الإنجليزية",
-                lang_french: "الفرنسية",
-                lang_native: "اللغة الأم",
-                lang_fluent: "بطلاقة",
-                lang_fluent2: "بطلاقة",
-                
-                interest_1: "التعلم الآلي لرؤية الحاسوب ودمج المستشعرات",
-                interest_2: "الذكاء الاصطناعي على الحافة وأنظمة إنترنت الأشياء الموزعة",
-                interest_3: "الذكاء الاصطناعي للتقنيات المساعدة",
-                interest_4: "الحوسبة المستدامة والذكاء الاصطناعي البيئي",
-                
-                footer_copyright: "© 2026 جلطي إلياس. جميع الحقوق محفوظة.",
-                footer_tagline: "باحث في الذكاء الاصطناعي | مرشح دكتوراه في الذكاء الاصطناعي والتعلم الآلي",
-                footer_nav_home: "الرئيسية",
-                footer_nav_projects: "المشاريع",
-                footer_nav_research: "البحث",
-                footer_nav_contact: "اتصل"
-            },
-            
-            fr: {
-                // French translations
-                name: "DJELTI ILYES",
-                name2: "DJELTI ILYES",
-                nav_home: "Accueil",
-                nav_projects: "Projets",
-                nav_research: "Recherche",
-                nav_contact: "Contact",
-                
-                title_line: "Candidat au Doctorat en IA & Apprentissage Automatique",
-                age: "Âge: 24 ans",
-                tagline: "Spécialisé en IA pour l'Internet des Objets avec un accent sur les technologies d'assistance et l'informatique durable",
-                btn_view_resume: "Voir le CV",
-                btn_featured_project: "Projet Vedette",
-                btn_save_pdf: "Enregistrer en PDF",
-                
-                section_profile: "Profil Personnel",
-                section_education: "Éducation",
-                section_research: "Expérience de Recherche",
-                section_skills: "Compétences Techniques",
-                section_achievements: "Réalisations",
-                section_languages: "Langues",
-                section_interests: "Intérêts de Recherche",
-                
-                profile_text: "Diplômé en informatique hautement motivé de 24 ans avec une maîtrise spécialisée en Intelligence Artificielle pour l'Internet des Objets. A démontré l'excellence grâce à une note de thèse quasi parfaite (19,5/20) et des travaux de projet primés. Possède de solides compétences pratiques en IA/ML, systèmes IoT, VR/AR et développement de logiciels, avec une capacité éprouvée à mener des recherches innovantes visant à résoudre des défis réels. Cherche à contribuer à la recherche doctorale avancée en Intelligence Artificielle et Apprentissage Automatique.",
-                
-                edu_masters: "Master en Informatique – IA pour l'Internet des Objets",
-                edu_bachelor: "Licence en Systèmes Informatiques",
-                grade: "Note",
-                grade2: "Note",
-                excellent: "Excellent",
-                very_good: "Très Bien",
-                thesis: "Thèse",
-                thesis_title: "Système de Navigation Intelligent pour les Aveugles et Malvoyants",
-                
-                project_lunav_title: "Thèse de Master: Système de Navigation LUNAV (2023–2024)",
-                project_lunav_1: "Développé un dispositif portable alimenté par l'IA pour les personnes malvoyantes",
-                project_lunav_2: "Intégré la vision par ordinateur (OpenCV/TensorFlow), la RA et les capteurs IoT",
-                project_lunav_3: "Mis en œuvre la détection d'obstacles en temps réel et la navigation audio spatiale",
-                
-                project_desertcool_title: "Projet de Compétition: DesertCool – Système de Réduction de Chaleur Durable (2023)",
-                project_desertcool_1: "🏆 2ème Place dans la Compétition Nationale 'The Call of Tech'",
-                project_desertcool_2: "Conçu un système de refroidissement durable basé sur l'IoT pour les environnements arides",
-                project_desertcool_3: "Mis en œuvre des réseaux de capteurs pour la surveillance et le contrôle du climat",
-                
-                skill_ai: "IA & Apprentissage Automatique",
-                skill_ai_list: "Python, TensorFlow, PyTorch, Vision par Ordinateur, Réseaux Neuronaux, Apprentissage Profond, Apprentissage par Renforcement",
-                skill_iot: "IoT & Systèmes Embarqués",
-                skill_iot_list: "Arduino, Raspberry Pi, ESP32, Intégration de Capteurs, MQTT, LoRaWAN",
-                skill_programming: "Programmation",
-                skill_programming_list: "Python (Avancé), C/C++ (Intermédiaire), Java, JavaScript, SQL",
-                skill_tools: "Outils & Plateformes",
-                skill_tools_list: "Git, Docker, Kubernetes, AWS, Azure, MATLAB, Unity, ROS",
-                
-                achievement_1: "Note de Thèse de Master: 19,5/20 (Top 5% de la promotion)",
-                achievement_2: "2ème Place, Compétition Nationale 'The Call of Tech' (2023)",
-                achievement_3: "Membre Actif, Club de Recherche Scientifique COD'IN (2021–2024)",
-                achievement_4: "Participant, Forum National Tech Algérie 2.0 (2024)",
-                achievement_5: "Participant, Sommet de l'Emploi Algérie 2025",
-                
-                lang_arabic: "Arabe",
-                lang_english: "Anglais",
-                lang_french: "Français",
-                lang_native: "Langue Maternelle",
-                lang_fluent: "Courant",
-                lang_fluent2: "Courant",
-                
-                interest_1: "ML pour la Vision par Ordinateur & Fusion de Capteurs",
-                interest_2: "IA en Bordure & Systèmes IoT Distribués",
-                interest_3: "IA pour les Technologies d'Assistance",
-                interest_4: "Informatique Durable & IA Environnementale",
-                
-                footer_copyright: "© 2026 DJELTI ILYES. Tous droits réservés.",
-                footer_tagline: "Chercheur en IA | Candidat au Doctorat en Intelligence Artificielle & Apprentissage Automatique",
-                footer_nav_home: "Accueil",
-                footer_nav_projects: "Projets",
-                footer_nav_research: "Recherche",
-                footer_nav_contact: "Contact"
-            },
-            
-            ru: {
-                // Russian translations
-                name: "Джелти Ильес",
-                name2: "Джелти Ильес",
-                nav_home: "Главная",
-                nav_projects: "Проекты",
-                nav_research: "Исследования",
-                nav_contact: "Контакты",
-                
-                title_line: "Кандидат наук в области ИИ и машинного обучения",
-                age: "Возраст: 24 года",
-                tagline: "Специализация: ИИ для Интернета вещей с акцентом на вспомогательные технологии и устойчивые вычисления",
-                btn_view_resume: "Посмотреть резюме",
-                btn_featured_project: "Избранный проект",
-                btn_save_pdf: "Сохранить как PDF",
-                
-                section_profile: "Личный профиль",
-                section_education: "Образование",
-                section_research: "Исследовательский опыт",
-                section_skills: "Технические навыки",
-                section_achievements: "Достижения",
-                section_languages: "Языки",
-                section_interests: "Исследовательские интересы",
-                
-                profile_text: "Мотивированный 24-летний выпускник компьютерных наук со степенью магистра в области искусственного интеллекта для Интернета вещей. Продемонстрировал превосходство благодаря почти идеальному баллу дипломной работы (19,5/20) и отмеченным наградами проектам. Обладает сильными практическими навыками в ИИ/МО, системах IoT, VR/AR и разработке программного обеспечения, с подтвержденной способностью проводить инновационные исследования, направленные на решение реальных проблем. Стремится внести вклад в продвинутые докторские исследования в области искусственного интеллекта и машинного обучения.",
-                
-                edu_masters: "Магистр компьютерных наук – ИИ для Интернета вещей",
-                edu_bachelor: "Бакалавр компьютерных систем",
-                grade: "Оценка",
-                grade2: "Оценка",
-                excellent: "Отлично",
-                very_good: "Очень хорошо",
-                thesis: "Дипломная работа",
-                thesis_title: "Интеллектуальная навигационная система для слепых и слабовидящих",
-                
-                project_lunav_title: "Дипломная работа магистра: Навигационная система LUNAV (2023–2024)",
-                project_lunav_1: "Разработал носимый прибор на основе ИИ для слабовидящих людей",
-                project_lunav_2: "Интегрировал компьютерное зрение (OpenCV/TensorFlow), AR и датчики IoT",
-                project_lunav_3: "Реализовал обнаружение препятствий в реальном времени и пространственную аудионавигацию",
-                
-                project_desertcool_title: "Конкурсный проект: DesertCool – Система устойчивого снижения температуры (2023)",
-                project_desertcool_1: "🏆 2-е место в национальном конкурсе 'The Call of Tech'",
-                project_desertcool_2: "Разработал устойчивую систему охлаждения на основе IoT для засушливых сред",
-                project_desertcool_3: "Реализовал сети датчиков для мониторинга и контроля климата",
-                
-                skill_ai: "ИИ и машинное обучение",
-                skill_ai_list: "Python, TensorFlow, PyTorch, Компьютерное зрение, Нейронные сети, Глубокое обучение, Обучение с подкреплением",
-                skill_iot: "IoT и встроенные системы",
-                skill_iot_list: "Arduino, Raspberry Pi, ESP32, Интеграция датчиков, MQTT, LoRaWAN",
-                skill_programming: "Программирование",
-                skill_programming_list: "Python (Продвинутый), C/C++ (Средний), Java, JavaScript, SQL",
-                skill_tools: "Инструменты и платформы",
-                skill_tools_list: "Git, Docker, Kubernetes, AWS, Azure, MATLAB, Unity, ROS",
-                
-                achievement_1: "Балл дипломной работы магистра: 19,5/20 (Топ 5% потока)",
-                achievement_2: "2-е место, национальный конкурс 'The Call of Tech' (2023)",
-                achievement_3: "Активный участник, научно-исследовательского клуба COD'IN (2021–2024)",
-                achievement_4: "Участник, национального технологического форума Алжир 2.0 (2024)",
-                achievement_5: "Посетитель, Саммита вакансий Алжир 2025",
-                
-                lang_arabic: "Арабский",
-                lang_english: "Английский",
-                lang_french: "Французский",
-                lang_native: "Родной",
-                lang_fluent: "Свободно",
-                lang_fluent2: "Свободно",
-                
-                interest_1: "МО для компьютерного зрения и слияния датчиков",
-                interest_2: "Периферийный ИИ и распределенные IoT системы",
-                interest_3: "ИИ для вспомогательных технологий",
-                interest_4: "Устойчивые вычисления и экологический ИИ",
-                
-                footer_copyright: "© 2026 Джелти Ильес. Все права защищены.",
-                footer_tagline: "Исследователь ИИ | Кандидат наук в области искусственного интеллекта и машинного обучения",
-                footer_nav_home: "Главная",
-                footer_nav_projects: "Проекты",
-                footer_nav_research: "Исследования",
-                footer_nav_contact: "Контакты"
+                btn_save_pdf: "تحميل PDF"
             }
         };
 
         // Function to apply translation
         function applyTranslation(language) {
             const langData = translations[language];
+            if (!langData) return;
             
-            // Update all elements with translations
             for (const [key, value] of Object.entries(langData)) {
                 const element = document.getElementById(key);
                 if (element) {
-                    // Special handling for elements that might contain HTML
-                    if (element.tagName === 'SPAN' || element.tagName === 'P' || element.tagName === 'H1' || 
-                        element.tagName === 'H2' || element.tagName === 'H3' || element.tagName === 'H4' ||
-                        element.tagName === 'LI' || element.tagName === 'A' || element.tagName === 'BUTTON') {
-                        element.textContent = value;
-                    } else {
-                        element.innerHTML = value;
-                    }
+                    element.textContent = value;
                 }
             }
             
-            // Update page title
-            document.title = langData.name + " | AI Researcher";
-            
-            // Update language selector
             document.getElementById('languageSelect').value = language;
-            
-            // Save language preference
             localStorage.setItem('preferredLanguage', language);
             
-            // Update RTL/LTR direction for Arabic
             if (language === 'ar') {
                 document.body.setAttribute('dir', 'rtl');
                 document.body.style.textAlign = 'right';
@@ -1324,16 +1471,11 @@
 
         // Initialize language on page load
         document.addEventListener('DOMContentLoaded', function() {
-            // Get saved language or default to English
             const savedLanguage = localStorage.getItem('preferredLanguage') || 'en';
-            
-            // Apply translation
             applyTranslation(savedLanguage);
             
-            // Set up language selector change event
             document.getElementById('languageSelect').addEventListener('change', function() {
-                const selectedLanguage = this.value;
-                applyTranslation(selectedLanguage);
+                applyTranslation(this.value);
             });
         });
 
