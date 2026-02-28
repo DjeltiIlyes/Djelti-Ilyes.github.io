@@ -1,1995 +1,1368 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DJELTI ILYES | AI Researcher</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Raleway:wght@400;600;800&display=swap" rel="stylesheet">
+    <title>DJELTI ILYES | AI Engineer & Researcher</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&family=Noto+Sans+Arabic:wght@400;700&family=Noto+Sans+SC:wght@400;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'Noto Sans Arabic', 'Noto Sans SC', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        ai: {
+                            dark: '#0a0a0f',
+                            card: '#12121a',
+                            accent: '#00d4ff',
+                            purple: '#7c3aed',
+                            pink: '#ec4899',
+                            surface: '#1a1a2e'
+                        }
+                    },
+                    animation: {
+                        'gradient': 'gradient 8s linear infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'glow': 'glow 2s ease-in-out infinite alternate',
+                    },
+                    keyframes: {
+                        gradient: {
+                            '0%, 100%': { backgroundPosition: '0% 50%' },
+                            '50%': { backgroundPosition: '100% 50%' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        },
+                        glow: {
+                            '0%': { boxShadow: '0 0 5px #00d4ff, 0 0 10px #00d4ff' },
+                            '100%': { boxShadow: '0 0 20px #00d4ff, 0 0 30px #00d4ff' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        /* ===== CSS VARIABLES ===== */
-        :root {
-            --primary-blue: #0d47a1;
-            --secondary-blue: #42a5f5;
-            --accent-teal: #26c6da;
-            --accent-green: #66bb6a;
-            --dark-blue: #0a2a5a;
-            --light-blue: #e3f2fd;
-            --text-dark: #333333;
-            --text-light: #f8f9fa;
-            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-            --transition-smooth: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
-        }
-
-        /* ===== RESET & BASE STYLES ===== */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
         body {
-            font-family: 'Poppins', sans-serif;
-            line-height: 1.6;
-            color: var(--text-dark);
-            background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
-            min-height: 100vh;
+            background-color: #0a0a0f;
+            color: #e2e8f0;
+            overflow-x: hidden;
+        }
+        
+        [dir="rtl"] {
+            font-family: 'Noto Sans Arabic', 'Inter', sans-serif;
+        }
+        
+        .glass {
+            background: rgba(26, 26, 46, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .glass-strong {
+            background: rgba(18, 18, 26, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #00d4ff 0%, #7c3aed 50%, #ec4899 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            background-size: 200% 200%;
+            animation: gradient 8s linear infinite;
+        }
+        
+        .grid-pattern {
+            background-image: 
+                linear-gradient(rgba(0, 212, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 212, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+        
+        .project-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.1), transparent);
+            transition: left 0.5s;
+        }
+        
+        .project-card:hover::before {
+            left: 100%;
+        }
+        
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px -15px rgba(0, 212, 255, 0.3);
+            border-color: rgba(0, 212, 255, 0.5);
+        }
+        
+        .skill-tag {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .skill-tag::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.3s;
+        }
+        
+        .skill-tag:hover::after {
+            left: 100%;
+        }
+        
+        .stat-number {
+            background: linear-gradient(180deg, #00d4ff 0%, #7c3aed 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+        }
+        
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.4;
+        }
+        
+        .scroll-indicator {
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+        
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+        
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .typing-cursor::after {
+            content: '|';
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        /* Language Selector Styles */
+        .lang-btn {
+            transition: all 0.3s ease;
+        }
+        
+        .lang-btn.active {
+            background: rgba(0, 212, 255, 0.2);
+            border-color: #00d4ff;
+            color: #00d4ff;
+        }
+
+        .lang-dropdown {
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
             transition: all 0.3s ease;
         }
 
-        body[dir="rtl"] {
-            font-family: 'Cairo', 'Poppins', sans-serif;
-        }
-
-        .container {
-            width: 90%;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        /* ===== LANGUAGE SELECTOR ===== */
-        .language-selector {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 1000;
-            background: white;
-            border-radius: 25px;
-            padding: 5px;
-            box-shadow: var(--card-shadow);
-            animation: slideInRight 0.5s ease-out;
-        }
-
-        #languageSelect {
-            border: none;
-            background: transparent;
-            padding: 8px 15px;
-            font-family: 'Poppins', sans-serif;
-            font-size: 0.9rem;
-            cursor: pointer;
-            outline: none;
-        }
-
-        /* ===== NAVIGATION ===== */
-        .navbar {
-            background-color: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 999;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            padding: 15px 0;
-            transition: var(--transition-smooth);
-        }
-
-        .navbar.scrolled {
-            padding: 10px 0;
-            background-color: rgba(255, 255, 255, 0.98);
-        }
-
-        .nav-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            font-family: 'Raleway', sans-serif;
-            font-size: 1.8rem;
-            font-weight: 800;
-            color: var(--primary-blue);
-            text-decoration: none;
-            background: linear-gradient(45deg, var(--primary-blue), var(--accent-teal));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: gradientShift 3s ease infinite;
-        }
-
-        .nav-menu {
-            display: flex;
-            list-style: none;
-        }
-
-        .nav-menu li {
-            margin-left: 30px;
-        }
-
-        body[dir="rtl"] .nav-menu li {
-            margin-left: 0;
-            margin-right: 30px;
-        }
-
-        .nav-menu a {
-            color: var(--text-dark);
-            text-decoration: none;
-            font-weight: 500;
-            padding: 8px 15px;
-            border-radius: 25px;
-            transition: var(--transition-smooth);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .nav-menu a::before {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: -100%;
-            width: 100%;
-            height: 2px;
-            background: linear-gradient(90deg, var(--primary-blue), var(--accent-teal));
-            transition: left 0.3s ease;
-        }
-
-        body[dir="rtl"] .nav-menu a::before {
-            left: 100%;
-            right: -100%;
-        }
-
-        .nav-menu a:hover::before {
-            left: 0;
-        }
-
-        body[dir="rtl"] .nav-menu a:hover::before {
-            right: 0;
-        }
-
-        .nav-menu a.active {
-            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
-            color: white;
-            box-shadow: 0 4px 15px rgba(13, 71, 161, 0.2);
-        }
-
-        .menu-toggle {
-            display: none;
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            color: var(--primary-blue);
-            cursor: pointer;
-            padding: 10px;
-            border-radius: 5px;
-            transition: var(--transition-smooth);
-        }
-
-        .menu-toggle:hover {
-            background-color: var(--light-blue);
-        }
-
-        /* ===== HERO SECTION ===== */
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            padding: 100px 0 50px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(45deg, rgba(13, 71, 161, 0.1), rgba(38, 198, 218, 0.1));
-            z-index: -1;
-        }
-
-        .hero-content {
-            display: flex;
-            align-items: center;
-            gap: 50px;
-            animation: fadeUp 1s ease-out;
-        }
-
-        body[dir="rtl"] .hero-content {
-            flex-direction: row-reverse;
-        }
-
-        .hero-text {
-            flex: 1;
-        }
-
-        .hero-image {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            animation: float 6s ease-in-out infinite;
-        }
-
-        .hero h1 {
-            font-family: 'Raleway', sans-serif;
-            font-size: 3.5rem;
-            font-weight: 800;
-            margin-bottom: 10px;
-            background: linear-gradient(45deg, var(--primary-blue), var(--accent-teal));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: textGlow 3s ease-in-out infinite alternate;
-        }
-
-        .hero h2 {
-            font-size: 1.5rem;
-            font-weight: 400;
-            color: var(--text-dark);
-            margin-bottom: 20px;
-            opacity: 0.8;
-            animation: slideInFromLeft 1.2s ease-out;
-        }
-
-        body[dir="rtl"] .hero h2 {
-            animation: slideInFromRight 1.2s ease-out;
-        }
-
-        .age {
-            display: inline-block;
-            background: linear-gradient(135deg, var(--accent-teal), var(--accent-green));
-            color: white;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            margin-bottom: 20px;
-            animation: pulse 2s infinite, bounceIn 1s ease-out;
-        }
-
-        .tagline {
-            font-size: 1.2rem;
-            color: var(--text-dark);
-            margin-bottom: 30px;
-            line-height: 1.8;
-            animation: slideInFromRight 1.4s ease-out;
-        }
-
-        body[dir="rtl"] .tagline {
-            animation: slideInFromLeft 1.4s ease-out;
-        }
-
-        .hero-buttons {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-
-        body[dir="rtl"] .hero-buttons {
-            flex-direction: row-reverse;
-        }
-
-        .btn-primary, .btn-secondary, .btn-print {
-            padding: 12px 30px;
-            border-radius: 30px;
-            font-weight: 600;
-            text-decoration: none;
-            transition: var(--transition-smooth);
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            border: none;
-            cursor: pointer;
-            font-family: 'Poppins', sans-serif;
-            font-size: 1rem;
-            animation: fadeInUp 1.6s ease-out;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
-            color: white;
-            box-shadow: 0 4px 15px rgba(13, 71, 161, 0.3);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-5px) scale(1.05);
-            box-shadow: 0 8px 25px rgba(13, 71, 161, 0.4);
-            animation: buttonShake 0.5s ease;
-        }
-
-        .btn-secondary {
-            background: transparent;
-            color: var(--primary-blue);
-            border: 2px solid var(--primary-blue);
-        }
-
-        .btn-secondary:hover {
-            background: var(--primary-blue);
-            color: white;
-            transform: translateY(-5px);
-        }
-
-        .btn-print {
-            background: linear-gradient(135deg, #ff6b6b, #ff8e53);
-            color: white;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
-        }
-
-        .btn-print:hover {
-            background: linear-gradient(135deg, #ff5252, #ff7a45);
-            color: white;
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
-        }
-
-        .btn-print::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            transform: rotate(45deg);
-            animation: shine 3s infinite;
-        }
-
-        .avatar-placeholder {
-            width: 300px;
-            height: 300px;
-            background: linear-gradient(135deg, var(--primary-blue), var(--accent-teal));
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 6rem;
-            color: white;
-            box-shadow: var(--card-shadow);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .avatar-placeholder::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            transform: rotate(45deg);
-            animation: shine 3s infinite;
-        }
-
-        /* ===== RESUME SECTIONS ===== */
-        .resume-card {
-            background: white;
-            border-radius: 20px;
-            padding: 50px;
-            box-shadow: var(--card-shadow);
-            margin: 50px 0;
-            animation: fadeIn 0.8s ease-out;
-        }
-
-        .resume-section {
-            margin-bottom: 40px;
-            padding-bottom: 30px;
-            border-bottom: 2px solid var(--light-blue);
-            opacity: 0;
-            transform: translateY(30px);
-            animation: fadeUp 0.6s ease-out forwards;
-        }
-
-        .resume-section:nth-child(2) { animation-delay: 0.1s; }
-        .resume-section:nth-child(3) { animation-delay: 0.2s; }
-        .resume-section:nth-child(4) { animation-delay: 0.3s; }
-        .resume-section:nth-child(5) { animation-delay: 0.4s; }
-        .resume-section:nth-child(6) { animation-delay: 0.5s; }
-        .resume-section:nth-child(7) { animation-delay: 0.6s; }
-        .resume-section:nth-child(8) { animation-delay: 0.7s; }
-
-        .resume-section h2 {
-            font-family: 'Raleway', sans-serif;
-            font-size: 2rem;
-            color: var(--primary-blue);
-            margin-bottom: 25px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            position: relative;
-        }
-
-        body[dir="rtl"] .resume-section h2 {
-            flex-direction: row-reverse;
-        }
-
-        .resume-section h2 i {
-            color: var(--accent-teal);
-            background: var(--light-blue);
-            padding: 15px;
-            border-radius: 15px;
-            animation: iconPulse 2s infinite;
-        }
-
-        .resume-section h2::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0;
-            height: 3px;
-            background: linear-gradient(90deg, var(--primary-blue), var(--accent-teal));
-            animation: expandLine 1s ease-out 0.5s forwards;
-        }
-
-        body[dir="rtl"] .resume-section h2::after {
-            left: auto;
-            right: 0;
-        }
-
-        /* ===== EDUCATION & PROJECT ITEMS ===== */
-        .education-item, .project-item {
-            background: var(--light-blue);
-            padding: 25px;
-            border-radius: 15px;
-            margin-bottom: 20px;
-            transition: var(--transition-smooth);
-            border-left: 5px solid var(--accent-teal);
-            animation: slideInFromRight 0.8s ease-out;
-        }
-
-        body[dir="rtl"] .education-item,
-        body[dir="rtl"] .project-item {
-            border-left: none;
-            border-right: 5px solid var(--accent-teal);
-            animation: slideInFromLeft 0.8s ease-out;
-        }
-
-        .education-item:hover, .project-item:hover {
-            transform: translateX(10px) scale(1.02);
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        body[dir="rtl"] .education-item:hover,
-        body[dir="rtl"] .project-item:hover {
-            transform: translateX(-10px) scale(1.02);
-        }
-
-        /* ===== SKILLS GRID ===== */
-        .skills-grid, .interests-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-        }
-
-        .skill-category, .interest-item {
-            background: white;
-            padding: 25px;
-            border-radius: 15px;
-            box-shadow: var(--card-shadow);
-            transition: var(--transition-smooth);
-            border: 2px solid transparent;
-            animation: zoomIn 0.8s ease-out;
-        }
-
-        .skill-category:hover, .interest-item:hover {
-            transform: translateY(-10px) rotate(1deg);
-            border-color: var(--accent-teal);
-            animation: cardHover 0.3s ease-out;
-        }
-
-        .interest-item {
-            text-align: center;
-            padding: 30px 20px;
-        }
-
-        .interest-item i {
-            font-size: 2.5rem;
-            color: var(--accent-teal);
-            margin-bottom: 15px;
-            display: block;
-            animation: iconBounce 2s infinite;
-        }
-
-        /* ===== DESERTCOOL PROJECT ===== */
-        .desertcool-details {
-            background: linear-gradient(135deg, var(--light-blue), #e8f4f8);
-            padding: 30px;
-            border-radius: 20px;
-            margin-top: 20px;
-            border-left: 5px solid var(--accent-green);
-            animation: slideInLeft 0.5s ease-out, glowingBorder 3s infinite alternate;
-        }
-
-        body[dir="rtl"] .desertcool-details {
-            border-left: none;
-            border-right: 5px solid var(--accent-green);
-        }
-
-        .tech-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin: 20px 0;
-        }
-
-        .tech-item {
-            background: white;
-            padding: 15px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            transition: var(--transition-smooth);
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
-            animation: fadeInUp 0.6s ease-out;
-        }
-
-        body[dir="rtl"] .tech-item {
-            flex-direction: row-reverse;
-        }
-
-        .tech-item:hover {
-            transform: translateY(-5px) scale(1.05);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .tech-item i {
-            color: var(--accent-teal);
-            font-size: 1.2rem;
-            animation: iconSpin 5s infinite linear;
-        }
-
-        /* ===== ACHIEVEMENTS ===== */
-        .achievements-list li {
-            background: white;
-            padding: 20px;
-            margin-bottom: 15px;
-            border-radius: 15px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            transition: var(--transition-smooth);
-            box-shadow: var(--card-shadow);
-            animation: slideInFromLeft 0.8s ease-out;
-        }
-
-        body[dir="rtl"] .achievements-list li {
-            flex-direction: row-reverse;
-            animation: slideInFromRight 0.8s ease-out;
-        }
-
-        .achievements-list li:hover {
-            transform: translateX(10px);
-            background: linear-gradient(135deg, white, var(--light-blue));
-        }
-
-        body[dir="rtl"] .achievements-list li:hover {
-            transform: translateX(-10px);
-        }
-
-        .achievements-list i {
-            color: var(--accent-teal);
-            font-size: 1.5rem;
-            min-width: 30px;
-            animation: trophyRotate 4s infinite linear;
-        }
-
-        /* ===== LANGUAGES ===== */
-        .languages {
-            margin: 20px 0;
-        }
-
-        .language-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 0;
-            border-bottom: 1px solid var(--light-blue);
-        }
-
-        .language-name {
-            font-weight: 500;
-        }
-
-        .language-level {
-            color: var(--accent-teal);
-            font-weight: 600;
-        }
-
-        /* ===== FOOTER ===== */
-        .footer {
-            background: linear-gradient(135deg, var(--dark-blue), var(--primary-blue));
-            color: white;
-            padding: 40px 0;
-            text-align: center;
-        }
-
-        .footer-content {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .footer-links {
-            margin-top: 20px;
-        }
-
-        .footer-links a {
-            color: white;
-            text-decoration: none;
-            margin: 0 10px;
-            transition: var(--transition-smooth);
-            position: relative;
-        }
-
-        .footer-links a::after {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            left: 0;
-            width: 0;
-            height: 1px;
-            background: var(--accent-teal);
-            transition: width 0.3s ease;
-        }
-
-        .footer-links a:hover::after {
-            width: 100%;
-        }
-
-        /* ===== PRINT STYLES - NO BLANK PAGES ===== */
-        @media print {
-            /* Hide all non-essential elements */
-            .language-selector,
-            .navbar,
-            .menu-toggle,
-            .hero-buttons,
-            .btn-print,
-            .footer,
-            .tech-grid,
-            .desertcool-details h4,
-            .tech-item i,
-            .avatar-placeholder::before,
-            .hero::before,
-            .hero-image,
-            .nav-menu,
-            .menu-toggle {
-                display: none !important;
-            }
-
-            /* Reset animations */
-            * {
-                animation: none !important;
-                transition: none !important;
-            }
-
-            /* Page setup */
-            @page {
-                size: A4;
-                margin: 15mm 20mm;
-            }
-
-            /* Body reset */
-            body {
-                background: white !important;
-                color: black !important;
-                font-size: 11pt !important;
-                line-height: 1.4 !important;
-                min-height: auto !important;
-                width: 100% !important;
-                overflow: visible !important;
-                margin: 0 !important;
-                padding: 0 !important;
-            }
-
-            .container {
-                width: 100% !important;
-                max-width: 100% !important;
-                padding: 0 !important;
-                margin: 0 !important;
-            }
-
-            /* Hero section - compact */
-            .hero {
-                min-height: auto !important;
-                padding: 0 !important;
-                margin: 0 0 20px !important;
-                page-break-after: avoid !important;
-            }
-
-            .hero-content {
-                flex-direction: column !important;
-                text-align: center !important;
-                gap: 10px !important;
-                margin: 0 !important;
-            }
-
-            .hero h1 {
-                font-size: 24pt !important;
-                color: black !important;
-                -webkit-text-fill-color: black !important;
-                margin: 10px 0 5px !important;
-            }
-
-            .hero h2 {
-                font-size: 14pt !important;
-                margin: 5px 0 !important;
-            }
-
-            .age {
-                background: none !important;
-                color: black !important;
-                border: 1px solid #ccc !important;
-                padding: 2px 10px !important;
-                margin: 5px 0 !important;
-            }
-
-            .tagline {
-                font-size: 11pt !important;
-                margin: 10px 0 !important;
-            }
-
-            .avatar-placeholder {
-                width: 120px !important;
-                height: 120px !important;
-                font-size: 3rem !important;
-                margin: 0 auto 20px !important;
-            }
-
-            /* Resume card */
-            .resume-card {
-                box-shadow: none !important;
-                padding: 0 !important;
-                margin: 0 !important;
-                background: none !important;
-                border-radius: 0 !important;
-            }
-
-            .resume-section {
-                margin: 0 0 20px !important;
-                padding: 0 0 15px !important;
-                border-bottom: 1px solid #ddd !important;
-                page-break-inside: avoid !important;
-            }
-
-            .resume-section:last-child {
-                border-bottom: none !important;
-                margin-bottom: 0 !important;
-            }
-
-            .resume-section h2 {
-                font-size: 16pt !important;
-                color: black !important;
-                margin: 15px 0 10px !important;
-            }
-
-            .resume-section h2::after {
-                display: none !important;
-            }
-
-            .resume-section h2 i {
-                background: none !important;
-                padding: 0 !important;
-                margin-right: 10px !important;
-            }
-
-            /* Education & Projects */
-            .education-item,
-            .project-item {
-                background: none !important;
-                border-left: 3px solid #ccc !important;
-                padding: 10px !important;
-                margin: 10px 0 !important;
-                page-break-inside: avoid !important;
-            }
-
-            /* Skills */
-            .skills-grid,
-            .interests-grid {
-                grid-template-columns: repeat(2, 1fr) !important;
-                gap: 10px !important;
-                margin: 10px 0 !important;
-            }
-
-            .skill-category,
-            .interest-item {
-                box-shadow: none !important;
-                border: 1px solid #ddd !important;
-                padding: 10px !important;
-                margin: 0 !important;
-                page-break-inside: avoid !important;
-            }
-
-            .interest-item i {
-                font-size: 1.5rem !important;
-            }
-
-            /* DesertCool */
-            .desertcool-details {
-                background: none !important;
-                border: 1px solid #ddd !important;
-                border-left: 4px solid #ccc !important;
-                padding: 15px !important;
-                margin: 15px 0 !important;
-            }
-
-            /* Achievements */
-            .achievements-list li {
-                box-shadow: none !important;
-                background: none !important;
-                border: 1px solid #ddd !important;
-                padding: 10px !important;
-                margin: 5px 0 !important;
-            }
-
-            /* Lists */
-            ul, ol {
-                margin-left: 20px !important;
-                padding-left: 0 !important;
-            }
-
-            li {
-                margin: 3px 0 !important;
-                font-size: 10pt !important;
-            }
-
-            /* Paragraphs */
-            p {
-                margin: 8px 0 !important;
-                font-size: 11pt !important;
-            }
-
-            /* Headings */
-            h3, h4 {
-                margin: 10px 0 5px !important;
-                font-size: 12pt !important;
-            }
-
-            /* Remove all transforms */
-            * {
-                transform: none !important;
-            }
-
-            /* Page breaks */
-            .resume-section:nth-child(4) {
-                page-break-before: always !important;
-            }
-        }
-
-        /* ===== ANIMATIONS ===== */
-        @keyframes fadeUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        @keyframes slideInRight {
-            from {
-                opacity: 0;
-                transform: translateX(50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        @keyframes slideInLeft {
-            from {
-                opacity: 0;
-                transform: translateX(-50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        @keyframes float {
-            0%, 100% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-20px);
-            }
-        }
-
-        @keyframes pulse {
-            0%, 100% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.05);
-            }
-        }
-
-        @keyframes shine {
-            0% {
-                transform: translateX(-100%) translateY(-100%) rotate(45deg);
-            }
-            100% {
-                transform: translateX(100%) translateY(100%) rotate(45deg);
-            }
-        }
-
-        @keyframes gradientShift {
-            0%, 100% {
-                background-position: 0% 50%;
-            }
-            50% {
-                background-position: 100% 50%;
-            }
-        }
-
-        @keyframes textGlow {
-            0%, 100% {
-                text-shadow: 0 0 10px rgba(38, 198, 218, 0.3),
-                           0 0 20px rgba(38, 198, 218, 0.2);
-            }
-            50% {
-                text-shadow: 0 0 20px rgba(38, 198, 218, 0.5),
-                           0 0 30px rgba(38, 198, 218, 0.3);
-            }
-        }
-
-        @keyframes bounceIn {
-            0% {
-                transform: scale(0.8);
-                opacity: 0;
-            }
-            50% {
-                transform: scale(1.1);
-            }
-            100% {
-                transform: scale(1);
-                opacity: 1;
-            }
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes buttonShake {
-            0%, 100% {
-                transform: translateX(0) scale(1.05);
-            }
-            25% {
-                transform: translateX(-5px) scale(1.05);
-            }
-            75% {
-                transform: translateX(5px) scale(1.05);
-            }
-        }
-
-        @keyframes iconPulse {
-            0%, 100% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.1);
-            }
-        }
-
-        @keyframes expandLine {
-            from {
-                width: 0;
-            }
-            to {
-                width: 100px;
-            }
-        }
-
-        @keyframes zoomIn {
-            from {
-                opacity: 0;
-                transform: scale(0.9);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-
-        @keyframes cardHover {
-            0% {
-                transform: translateY(-10px) rotate(0deg);
-            }
-            50% {
-                transform: translateY(-10px) rotate(1.5deg);
-            }
-            100% {
-                transform: translateY(-10px) rotate(1deg);
-            }
-        }
-
-        @keyframes iconBounce {
-            0%, 100% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-10px);
-            }
-        }
-
-        @keyframes glowingBorder {
-            0%, 100% {
-                box-shadow: 0 0 5px rgba(38, 198, 218, 0.3);
-            }
-            50% {
-                box-shadow: 0 0 15px rgba(38, 198, 218, 0.5);
-            }
-        }
-
-        @keyframes iconSpin {
-            0% {
-                transform: rotate(0deg);
-            }
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-
-        @keyframes trophyRotate {
-            0%, 100% {
-                transform: rotate(0deg);
-            }
-            25% {
-                transform: rotate(15deg);
-            }
-            75% {
-                transform: rotate(-15deg);
-            }
-        }
-
-        /* ===== RESPONSIVE DESIGN ===== */
-        @media (max-width: 992px) {
-            .hero-content {
-                flex-direction: column;
-                text-align: center;
-            }
-            
-            body[dir="rtl"] .hero-content {
-                flex-direction: column;
-            }
-            
-            .hero h1 {
-                font-size: 2.8rem;
-            }
-            
-            .avatar-placeholder {
-                width: 250px;
-                height: 250px;
-                font-size: 5rem;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .menu-toggle {
-                display: block;
-            }
-            
-            .nav-menu {
-                position: fixed;
-                top: 80px;
-                left: -100%;
-                width: 100%;
-                background: white;
-                flex-direction: column;
-                align-items: center;
-                padding: 30px 0;
-                transition: left 0.3s ease;
-                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-                z-index: 999;
-            }
-            
-            body[dir="rtl"] .nav-menu {
-                left: auto;
-                right: -100%;
-                transition: right 0.3s ease;
-            }
-            
-            .nav-menu.active {
-                left: 0;
-            }
-            
-            body[dir="rtl"] .nav-menu.active {
-                left: auto;
-                right: 0;
-            }
-            
-            .nav-menu li {
-                margin: 15px 0;
-            }
-            
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-            
-            .resume-card {
-                padding: 30px 20px;
-            }
-            
-            .skills-grid, .interests-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @media (max-width: 576px) {
-            .hero h1 {
-                font-size: 2rem;
-            }
-            
-            .hero h2 {
-                font-size: 1.2rem;
-            }
-            
-            .hero-buttons {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            
-            .btn-primary, .btn-secondary, .btn-print {
-                width: 100%;
-                justify-content: center;
-            }
+        .lang-dropdown.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
         }
     </style>
 </head>
-<body>
-    <!-- Language Selector -->
-    <div class="language-selector">
-        <select id="languageSelect">
-            <option value="en">🇬🇧 English</option>
-            <option value="ar">🇸🇦 العربية</option>
-            <option value="ru">🇷🇺 Русский</option>
-            <option value="fr">🇫🇷 Français</option>
-        </select>
-    </div>
+<body class="font-sans antialiased selection:bg-ai-accent selection:text-ai-dark">
+
+    <!-- Neural Network Background -->
+    <div id="canvas-container"></div>
+    
+    <!-- Grid Pattern Overlay -->
+    <div class="fixed inset-0 grid-pattern pointer-events-none z-0"></div>
 
     <!-- Navigation -->
-    <nav class="navbar">
-        <div class="container nav-container">
-            <a href="index.html" class="logo" id="name">DJELTI ILYES</a>
-            <ul class="nav-menu">
-                <li><a href="index.html" class="active" id="nav_home">Home</a></li>
-                <li><a href="projects.html" id="nav_projects">Projects</a></li>
-                <li><a href="research.html" id="nav_research">Research</a></li>
-                <li><a href="contact.html" id="nav_contact">Contact</a></li>
-            </ul>
-            <button class="menu-toggle">
-                <i class="fas fa-bars"></i>
+    <nav class="fixed top-0 w-full z-50 glass-strong border-b border-white/10 transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="font-mono text-xl font-bold gradient-text tracking-tighter">
+                &lt;DJELTI ILYES /&gt;
+            </div>
+            
+            <!-- Desktop Menu -->
+            <div class="hidden md:flex space-x-8 text-sm font-medium items-center">
+                <a href="#about" class="hover:text-ai-accent transition-colors" data-i18n="nav_about">About</a>
+                <a href="#projects" class="hover:text-ai-accent transition-colors" data-i18n="nav_projects">Projects</a>
+                <a href="#skills" class="hover:text-ai-accent transition-colors" data-i18n="nav_skills">Skills</a>
+                <a href="#contact" class="hover:text-ai-accent transition-colors" data-i18n="nav_contact">Contact</a>
+                
+                <!-- Language Selector -->
+                <div class="relative ml-4">
+                    <button id="langToggle" class="flex items-center gap-2 px-3 py-1.5 rounded-lg glass border border-white/20 hover:border-ai-accent/50 transition-all text-sm">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"></path>
+                        </svg>
+                        <span id="currentLang">EN</span>
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    
+                    <div id="langDropdown" class="lang-dropdown absolute right-0 mt-2 w-32 glass-strong rounded-lg border border-white/10 overflow-hidden">
+                        <button onclick="changeLanguage('en')" class="lang-btn w-full px-4 py-2 text-left text-sm hover:bg-white/5 flex items-center gap-2" data-lang="en">
+                            <span class="w-2 h-2 rounded-full bg-ai-accent"></span>
+                            English
+                        </button>
+                        <button onclick="changeLanguage('ar')" class="lang-btn w-full px-4 py-2 text-left text-sm hover:bg-white/5 flex items-center gap-2" data-lang="ar">
+                            <span class="w-2 h-2 rounded-full bg-ai-accent"></span>
+                            العربية
+                        </button>
+                        <button onclick="changeLanguage('fr')" class="lang-btn w-full px-4 py-2 text-left text-sm hover:bg-white/5 flex items-center gap-2" data-lang="fr">
+                            <span class="w-2 h-2 rounded-full bg-ai-accent"></span>
+                            Français
+                        </button>
+                        <button onclick="changeLanguage('ru')" class="lang-btn w-full px-4 py-2 text-left text-sm hover:bg-white/5 flex items-center gap-2" data-lang="ru">
+                            <span class="w-2 h-2 rounded-full bg-ai-accent"></span>
+                            Русский
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <button onclick="document.getElementById('contact').scrollIntoView({behavior: 'smooth'})" 
+                    class="md:hidden px-6 py-2 rounded-full border border-ai-accent text-ai-accent hover:bg-ai-accent hover:text-ai-dark transition-all duration-300 font-mono text-sm">
+                Hire Me
             </button>
         </div>
     </nav>
 
     <!-- Hero Section -->
-    <header class="hero">
-        <div class="container">
-            <div class="hero-content">
-                <div class="hero-text">
-                    <h1 id="name2">DJELTI ILYES</h1>
-                    <h2 id="title_line">Doctoral Candidate in AI & Machine Learning</h2>
-                    <p class="age" id="age">Age: 24 years</p>
-                    <p class="tagline" id="tagline">Specializing in AI for IoT with focus on assistive technologies and sustainable computing</p>
-                    <div class="hero-buttons">
-                        <a href="#resume" class="btn-primary" id="btn_view_resume">View Resume</a>
-                        <a href="#desertcool" class="btn-secondary" id="btn_featured_project">Featured Project</a>
-                        <button onclick="generatePDF()" class="btn-print" id="btn_save_pdf">
-                            <i class="fas fa-file-pdf"></i> <span>Download PDF</span>
-                        </button>
+    <section class="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center relative z-10">
+            <div class="space-y-8">
+                <div class="inline-flex items-center space-x-2 px-4 py-2 rounded-full glass border border-ai-accent/30 text-ai-accent font-mono text-sm">
+                    <span class="w-2 h-2 rounded-full bg-ai-accent animate-pulse"></span>
+                    <span data-i18n="available">Available for Opportunities</span>
+                </div>
+                
+                <h1 class="text-5xl md:text-7xl font-bold leading-tight">
+                    <span data-i18n="hero_title1">AI Engineer &</span><br>
+                    <span class="gradient-text typing-cursor" id="typewriter">Innovator</span>
+                </h1>
+                
+                <p class="text-xl text-gray-400 max-w-lg leading-relaxed" data-i18n="hero_desc">
+                    Master's graduate specializing in Computer Vision, IoT, and intelligent systems. 
+                    Creating technology that bridges the gap between AI research and real-world impact.
+                </p>
+                
+                <div class="flex flex-wrap gap-4">
+                    <button onclick="document.getElementById('projects').scrollIntoView({behavior: 'smooth'})" 
+                            class="px-8 py-4 rounded-lg bg-gradient-to-r from-ai-accent to-ai-purple text-white font-semibold hover:shadow-lg hover:shadow-ai-accent/25 transition-all duration-300 transform hover:scale-105">
+                        <span data-i18n="view_projects">View Projects</span>
+                    </button>
+                    <button onclick="downloadCV()" class="px-8 py-4 rounded-lg glass border border-white/20 hover:border-ai-accent/50 transition-all duration-300 flex items-center gap-2 group">
+                        <span data-i18n="download_cv">Download CV</span>
+                        <svg class="w-4 h-4 transform group-hover:translate-y-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Quick Stats -->
+                <div class="grid grid-cols-3 gap-6 pt-8 border-t border-white/10">
+                    <div>
+                        <div class="text-3xl font-bold stat-number">19.5</div>
+                        <div class="text-sm text-gray-500 mt-1" data-i18n="master_score">Master's Score</div>
+                    </div>
+                    <div>
+                        <div class="text-3xl font-bold stat-number">95%</div>
+                        <div class="text-sm text-gray-500 mt-1" data-i18n="accuracy">Model Accuracy</div>
+                    </div>
+                    <div>
+                        <div class="text-3xl font-bold stat-number">2nd</div>
+                        <div class="text-sm text-gray-500 mt-1" data-i18n="national_rank">National Rank</div>
                     </div>
                 </div>
-                <div class="hero-image">
-                    <div class="avatar-placeholder">
-                        <i class="fas fa-user-graduate"></i>
+            </div>
+
+            <!-- Hero Visual -->
+            <div class="relative hidden md:block">
+                <div class="relative w-full aspect-square max-w-md mx-auto">
+                    <div class="absolute inset-0 bg-gradient-to-br from-ai-accent/20 to-ai-purple/20 rounded-full blur-3xl animate-pulse-slow"></div>
+                    <div class="relative glass-strong rounded-2xl p-8 border border-ai-accent/20 animate-float">
+                        <div class="flex items-center gap-2 mb-4 text-ai-accent font-mono text-sm">
+                            <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                            <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                            <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                            <span class="ml-2">LUNAV_AI.py</span>
+                        </div>
+                        <pre class="font-mono text-sm text-gray-300 overflow-hidden">
+<code class="language-python">
+<span class="text-ai-accent">class</span> <span class="text-ai-purple font-bold">AIEngineer</span>:
+    <span class="text-gray-500">def __init__(self):</span>
+        self.name = <span class="text-green-400">"DJELTI ILYES"</span>
+        self.focus = [<span class="text-green-400">"Computer Vision"</span>, 
+                     <span class="text-green-400">"IoT"</span>, 
+                     <span class="text-green-400">"Edge AI"</span>]
+        self.mission = <span class="text-green-400">"Tech for Good"</span>
+    
+    <span class="text-gray-500">def innovate(self):</span>
+        <span class="text-ai-accent">return</span> <span class="text-green-400">"Real-world Impact"</span>
+</code>
+                        </pre>
+                    </div>
+                    
+                    <!-- Floating Elements -->
+                    <div class="absolute -top-4 -right-4 glass px-4 py-2 rounded-lg border border-ai-accent/30 animate-float" style="animation-delay: 1s;">
+                        <span class="text-ai-accent font-mono text-xs">PyTorch</span>
+                    </div>
+                    <div class="absolute -bottom-4 -left-4 glass px-4 py-2 rounded-lg border border-ai-purple/30 animate-float" style="animation-delay: 2s;">
+                        <span class="text-ai-purple font-mono text-xs">OpenCV</span>
                     </div>
                 </div>
             </div>
         </div>
-    </header>
 
-    <!-- Resume Section -->
-    <main class="container" id="resume">
-        <div class="resume-card">
-            <!-- Personal Profile -->
-            <section class="resume-section">
-                <h2><i class="fas fa-user"></i> <span id="section_profile">Personal Profile</span></h2>
-                <p id="profile_text">A highly motivated 24-year-old Computer Science graduate with a Master's degree specializing in Artificial Intelligence for the Internet of Things. Demonstrated excellence through a near-perfect thesis score (19.5/20) and award-winning project work. Possesses strong practical skills in AI/ML, IoT systems, VR/AR, and software development, with a proven ability to conduct innovative research aimed at solving real-world challenges. Seeking to contribute to advanced doctoral research in Artificial Intelligence and Machine Learning.</p>
-            </section>
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 scroll-indicator">
+            <svg class="w-6 h-6 text-ai-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+            </svg>
+        </div>
+    </section>
 
-            <!-- Education -->
-            <section class="resume-section">
-                <h2><i class="fas fa-graduation-cap"></i> <span id="section_education">Education</span></h2>
-                <div class="education-item">
-                    <h3 id="edu_masters">Master of Computer Science – AI for Internet of Things</h3>
-                    <p class="institution">Université de Mostaganem, Algeria</p>
-                    <p class="date">2022–2024 | <span id="grade">Grade</span>: 19.5/20 (<span id="excellent">Excellent</span>)</p>
-                    <p class="thesis"><strong id="thesis">Thesis</strong>: "LUNAV: <span id="thesis_title">Intelligent Navigation System for the Blind and Visually Impaired</span>"</p>
-                </div>
-                <div class="education-item">
-                    <h3 id="edu_bachelor">Bachelor of Computer Systems</h3>
-                    <p class="institution">Université de Mostaganem, Algeria</p>
-                    <p class="date">2019–2022 | <span id="grade2">Grade</span>: <span id="very_good">Very Good</span></p>
-                </div>
-            </section>
-
-            <!-- Research Experience -->
-            <section class="resume-section">
-                <h2><i class="fas fa-briefcase"></i> <span id="section_research">Research Experience</span></h2>
-                <div class="project-item">
-                    <h3 id="project_lunav_title">Master's Thesis: LUNAV Navigation System (2023–2024)</h3>
-                    <ul>
-                        <li id="project_lunav_1">Developed AI-powered wearable device for visually impaired individuals</li>
-                        <li id="project_lunav_2">Integrated computer vision (OpenCV/TensorFlow), AR, and IoT sensors</li>
-                        <li id="project_lunav_3">Implemented real-time obstacle detection and spatial audio navigation</li>
-                    </ul>
+    <!-- About Section -->
+    <section id="about" class="py-20 relative">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid md:grid-cols-2 gap-16 items-center">
+                <div class="reveal">
+                    <h2 class="text-4xl font-bold mb-6"><span data-i18n="about_title1">Bridging</span> <span class="gradient-text" data-i18n="about_title2">AI Research</span> <span data-i18n="about_title3">& Real Impact</span></h2>
+                    <div class="space-y-4 text-gray-400 leading-relaxed">
+                        <p data-i18n="about_p1">
+                            As a Master's graduate with a score of <span class="text-white font-semibold">19.5/20</span>, I specialize in developing intelligent systems that solve critical real-world problems. My work focuses on the intersection of computer vision, embedded systems, and human-centered design.
+                        </p>
+                        <p data-i18n="about_p2">
+                            From creating navigation aids for the visually impaired to developing sustainable cooling solutions, I believe in technology that serves humanity. My approach combines rigorous engineering with creative problem-solving.
+                        </p>
+                    </div>
+                    
+                    <div class="mt-8 grid grid-cols-2 gap-4">
+                        <div class="glass p-4 rounded-lg border border-white/10">
+                            <div class="text-ai-accent font-bold text-2xl mb-1">AI/ML</div>
+                            <div class="text-sm text-gray-500" data-i18n="skill1">Deep Learning & CV</div>
+                        </div>
+                        <div class="glass p-4 rounded-lg border border-white/10">
+                            <div class="text-ai-purple font-bold text-2xl mb-1">IoT</div>
+                            <div class="text-sm text-gray-500" data-i18n="skill2">Embedded Systems</div>
+                        </div>
+                        <div class="glass p-4 rounded-lg border border-white/10">
+                            <div class="text-ai-pink font-bold text-2xl mb-1">Edge</div>
+                            <div class="text-sm text-gray-500" data-i18n="skill3">Real-time Processing</div>
+                        </div>
+                        <div class="glass p-4 rounded-lg border border-white/10">
+                            <div class="text-green-400 font-bold text-2xl mb-1">Research</div>
+                            <div class="text-sm text-gray-500" data-i18n="skill4">Academic Excellence</div>
+                        </div>
+                    </div>
                 </div>
                 
-                <!-- Enhanced DesertCool Project -->
-                <div class="project-item" id="desertcool">
-                    <h3 id="project_desertcool_title">Competition Project: DesertCool – Sustainable Heat Reduction System (2023)</h3>
-                    <ul>
-                        <li id="project_desertcool_1">🏆 2nd Place in "The Call of Tech" National Competition</li>
-                        <li id="project_desertcool_2">Designed IoT-based sustainable cooling system for arid environments</li>
-                        <li id="project_desertcool_3">Implemented sensor networks for climate monitoring and control</li>
-                    </ul>
-                    
-                    <div class="desertcool-details">
-                        <h4>Project Details & Technologies</h4>
-                        <p><strong>Objective:</strong> Reduce urban heat in desert cities like Adrar using AI and IoT technology</p>
+                <div class="relative reveal">
+                    <div class="absolute inset-0 bg-gradient-to-r from-ai-accent to-ai-purple opacity-20 blur-3xl rounded-full"></div>
+                    <div class="relative glass-strong rounded-2xl p-8 border border-white/10">
+                        <h3 class="text-xl font-bold mb-6 flex items-center gap-2">
+                            <span class="w-2 h-2 bg-ai-accent rounded-full animate-pulse"></span>
+                            <span data-i18n="edu_title">Education & Achievements</span>
+                        </h3>
                         
-                        <div class="tech-grid">
-                            <div class="tech-item">
-                                <i class="fas fa-solar-panel"></i>
-                                <span>Solar Energy System</span>
+                        <div class="space-y-6">
+                            <div class="border-l-2 border-ai-accent pl-4 relative">
+                                <div class="absolute -left-[5px] top-0 w-2 h-2 bg-ai-accent rounded-full"></div>
+                                <div class="text-sm text-ai-accent font-mono mb-1">2023-2024</div>
+                                <div class="font-semibold text-lg" data-i18n="master_degree">Master's Degree</div>
+                                <div class="text-gray-400 text-sm" data-i18n="master_field">AI & Data Science</div>
+                                <div class="mt-2 inline-block px-3 py-1 rounded-full bg-ai-accent/10 text-ai-accent text-sm font-bold">
+                                    <span data-i18n="score_label">Score</span>: 19.5/20
+                                </div>
                             </div>
-                            <div class="tech-item">
-                                <i class="fas fa-wind"></i>
-                                <span>Wind Turbines Integration</span>
-                            </div>
-                            <div class="tech-item">
-                                <i class="fas fa-recycle"></i>
-                                <span>Water Recycling System</span>
-                            </div>
-                            <div class="tech-item">
-                                <i class="fas fa-spray-can"></i>
-                                <span>Smart Misting System</span>
-                            </div>
-                            <div class="tech-item">
-                                <i class="fas fa-brain"></i>
-                                <span>AI Smart Grid</span>
-                            </div>
-                            <div class="tech-item">
-                                <i class="fas fa-seedling"></i>
-                                <span>Strategic Planting</span>
+                            
+                            <div class="border-l-2 border-ai-purple pl-4 relative">
+                                <div class="absolute -left-[5px] top-0 w-2 h-2 bg-ai-purple rounded-full"></div>
+                                <div class="text-sm text-ai-purple font-mono mb-1">2023</div>
+                                <div class="font-semibold text-lg" data-i18n="competition">National Competition</div>
+                                <div class="text-gray-400 text-sm" data-i18n="competition_name">The Call of Tech</div>
+                                <div class="mt-2 inline-block px-3 py-1 rounded-full bg-ai-purple/10 text-ai-purple text-sm font-bold" data-i18n="second_place">
+                                    2nd Place Winner
+                                </div>
                             </div>
                         </div>
-                        
-                        <p><strong>AI Integration:</strong></p>
-                        <ul>
-                            <li>Predictive climate modeling using historical temperature data</li>
-                            <li>Smart grid optimization with reinforcement learning</li>
-                            <li>Real-time sensor data processing and anomaly detection</li>
-                            <li>Computer vision for monitoring vegetation health</li>
-                        </ul>
-                        
-                        <p><strong>Results:</strong> 30°C temperature reduction in targeted areas, 40% energy efficiency improvement, 100% renewable energy utilization</p>
                     </div>
-                </div>
-            </section>
-
-            <!-- Skills -->
-            <section class="resume-section">
-                <h2><i class="fas fa-code"></i> <span id="section_skills">Technical Skills</span></h2>
-                <div class="skills-grid">
-                    <div class="skill-category">
-                        <h4 id="skill_ai">AI & Machine Learning</h4>
-                        <p id="skill_ai_list">Python, TensorFlow, PyTorch, Computer Vision, Neural Networks, Deep Learning, Reinforcement Learning</p>
-                    </div>
-                    <div class="skill-category">
-                        <h4 id="skill_iot">IoT & Embedded Systems</h4>
-                        <p id="skill_iot_list">Arduino, Raspberry Pi, ESP32, Sensor Integration, MQTT, LoRaWAN</p>
-                    </div>
-                    <div class="skill-category">
-                        <h4 id="skill_programming">Programming</h4>
-                        <p id="skill_programming_list">Python (Advanced), C/C++ (Intermediate), Java, JavaScript, SQL</p>
-                    </div>
-                    <div class="skill-category">
-                        <h4 id="skill_tools">Tools & Platforms</h4>
-                        <p id="skill_tools_list">Git, Docker, Kubernetes, AWS, Azure, MATLAB, Unity, ROS</p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Achievements -->
-            <section class="resume-section">
-                <h2><i class="fas fa-trophy"></i> <span id="section_achievements">Achievements</span></h2>
-                <ul class="achievements-list">
-                    <li><i class="fas fa-award"></i> <span id="achievement_1">Master's Thesis Score: 19.5/20 (Top 5% of cohort)</span></li>
-                    <li><i class="fas fa-medal"></i> <span id="achievement_2">2nd Place, "The Call of Tech" National Competition (2023)</span></li>
-                    <li><i class="fas fa-users"></i> <span id="achievement_3">Active Member, COD'IN Scientific Research Club (2021–2024)</span></li>
-                    <li><i class="fas fa-calendar-alt"></i> <span id="achievement_4">Participant, Algeria 2.0 National Tech Forum (2024)</span></li>
-                    <li><i class="fas fa-calendar-check"></i> <span id="achievement_5">Attendee, Algeria Job Summit 2025</span></li>
-                </ul>
-            </section>
-
-            <!-- Languages -->
-            <section class="resume-section">
-                <h2><i class="fas fa-language"></i> <span id="section_languages">Languages</span></h2>
-                <div class="languages">
-                    <div class="language-item">
-                        <span class="language-name" id="lang_arabic">Arabic</span>
-                        <span class="language-level" id="lang_native">Native</span>
-                    </div>
-                    <div class="language-item">
-                        <span class="language-name" id="lang_english">English</span>
-                        <span class="language-level" id="lang_fluent">Fluent</span>
-                    </div>
-                    <div class="language-item">
-                        <span class="language-name" id="lang_french">French</span>
-                        <span class="language-level" id="lang_fluent2">Fluent</span>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Research Interests -->
-            <section class="resume-section">
-                <h2><i class="fas fa-search"></i> <span id="section_interests">Research Interests</span></h2>
-                <div class="interests-grid">
-                    <div class="interest-item">
-                        <i class="fas fa-eye"></i>
-                        <h4 id="interest_1">ML for Computer Vision & Sensor Fusion</h4>
-                    </div>
-                    <div class="interest-item">
-                        <i class="fas fa-microchip"></i>
-                        <h4 id="interest_2">Edge AI & Distributed IoT Systems</h4>
-                    </div>
-                    <div class="interest-item">
-                        <i class="fas fa-heartbeat"></i>
-                        <h4 id="interest_3">AI for Assistive Technologies</h4>
-                    </div>
-                    <div class="interest-item">
-                        <i class="fas fa-leaf"></i>
-                        <h4 id="interest_4">Sustainable Computing & Environmental AI</h4>
-                    </div>
-                </div>
-            </section>
-        </div>
-    </main>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <p id="footer_copyright">© 2026 DJELTI ILYES. All rights reserved.</p>
-                <p id="footer_tagline">AI Researcher | Doctoral Candidate in Artificial Intelligence & Machine Learning</p>
-                <div class="footer-links">
-                    <a href="index.html" id="footer_nav_home">Home</a> |
-                    <a href="projects.html" id="footer_nav_projects">Projects</a> |
-                    <a href="research.html" id="footer_nav_research">Research</a> |
-                    <a href="contact.html" id="footer_nav_contact">Contact</a>
                 </div>
             </div>
         </div>
-    </footer>
+    </section>
+
+    <!-- Featured Project (LUNAV) -->
+    <section class="py-20 relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-b from-ai-accent/5 to-transparent"></div>
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
+            <div class="glass-strong rounded-3xl p-8 md:p-12 border border-ai-accent/20 reveal">
+                <div class="grid md:grid-cols-2 gap-12 items-center">
+                    <div>
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="px-3 py-1 rounded-full bg-ai-accent/10 text-ai-accent text-sm font-mono border border-ai-accent/20" data-i18n="master_thesis">Master's Thesis</span>
+                            <span class="text-2xl font-bold text-ai-accent">19.5/20</span>
+                        </div>
+                        <h2 class="text-4xl md:text-5xl font-bold mb-6">LUNAV</h2>
+                        <p class="text-xl text-gray-300 mb-6" data-i18n="lunav_subtitle">Intelligent Navigation System for the Visually Impaired</p>
+                        
+                        <div class="space-y-4 mb-8">
+                            <div class="flex items-start gap-3">
+                                <div class="w-6 h-6 rounded-full bg-ai-accent/20 flex items-center justify-center mt-1">
+                                    <svg class="w-4 h-4 text-ai-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <div class="font-semibold" data-i18n="feature1_title">Real-time Object Detection</div>
+                                    <div class="text-sm text-gray-400" data-i18n="feature1_desc">YOLO-based computer vision at 30 FPS</div>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <div class="w-6 h-6 rounded-full bg-ai-accent/20 flex items-center justify-center mt-1">
+                                    <svg class="w-4 h-4 text-ai-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <div class="font-semibold" data-i18n="feature2_title">3D Spatial Audio</div>
+                                    <div class="text-sm text-gray-400" data-i18n="feature2_desc">Haptic feedback & directional sound guidance</div>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <div class="w-6 h-6 rounded-full bg-ai-accent/20 flex items-center justify-center mt-1">
+                                    <svg class="w-4 h-4 text-ai-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <div class="font-semibold" data-i18n="feature3_title">Edge Computing</div>
+                                    <div class="text-sm text-gray-400" data-i18n="feature3_desc">Raspberry Pi 4 + Ultrasonic sensors</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-wrap gap-2 mb-6">
+                            <span class="skill-tag px-4 py-2 rounded-full glass border border-ai-accent/30 text-sm font-mono text-ai-accent">Python</span>
+                            <span class="skill-tag px-4 py-2 rounded-full glass border border-ai-accent/30 text-sm font-mono text-ai-accent">OpenCV</span>
+                            <span class="skill-tag px-4 py-2 rounded-full glass border border-ai-accent/30 text-sm font-mono text-ai-accent">TensorFlow</span>
+                            <span class="skill-tag px-4 py-2 rounded-full glass border border-ai-accent/30 text-sm font-mono text-ai-accent">IoT</span>
+                            <span class="skill-tag px-4 py-2 rounded-full glass border border-ai-accent/30 text-sm font-mono text-ai-accent">AR/VR</span>
+                        </div>
+
+                        <div class="grid grid-cols-3 gap-4 pt-6 border-t border-white/10">
+                            <div class="text-center">
+                                <div class="text-2xl font-bold text-ai-accent">95%</div>
+                                <div class="text-xs text-gray-500" data-i18n="stat_accuracy">Accuracy</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-2xl font-bold text-ai-accent">30</div>
+                                <div class="text-xs text-gray-500">FPS</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-2xl font-bold text-ai-accent">8h+</div>
+                                <div class="text-xs text-gray-500" data-i18n="stat_battery">Battery</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="relative">
+                        <div class="absolute inset-0 bg-ai-accent/20 blur-3xl rounded-full"></div>
+                        <div class="relative glass rounded-2xl p-6 border border-ai-accent/20">
+                            <div class="aspect-video rounded-lg bg-gradient-to-br from-ai-dark to-ai-surface flex items-center justify-center mb-4 overflow-hidden relative">
+                                <div class="absolute inset-0 opacity-30">
+                                    <div class="absolute top-1/4 left-1/4 w-2 h-2 bg-ai-accent rounded-full animate-ping"></div>
+                                    <div class="absolute top-1/2 right-1/3 w-2 h-2 bg-ai-purple rounded-full animate-ping" style="animation-delay: 0.5s"></div>
+                                    <div class="absolute bottom-1/3 left-1/2 w-2 h-2 bg-ai-pink rounded-full animate-ping" style="animation-delay: 1s"></div>
+                                </div>
+                                <svg class="w-32 h-32 text-ai-accent/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                                </svg>
+                            </div>
+                            <div class="space-y-2">
+                                <div class="h-2 bg-white/10 rounded-full overflow-hidden">
+                                    <div class="h-full bg-ai-accent w-[95%] rounded-full"></div>
+                                </div>
+                                <div class="flex justify-between text-xs text-gray-500 font-mono">
+                                    <span data-i18n="confidence">Object Detection Confidence</span>
+                                    <span>95%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Grid -->
+    <section id="projects" class="py-20">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16 reveal">
+                <h2 class="text-4xl font-bold mb-4"><span data-i18n="other_projects">Other</span> <span class="gradient-text" data-i18n="projects_word">Projects</span></h2>
+                <p class="text-gray-400 max-w-2xl mx-auto" data-i18n="projects_desc">Innovative solutions combining hardware and software engineering</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- DesertCool -->
+                <div class="project-card glass rounded-2xl p-8 border border-white/10 reveal">
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-ai-purple to-ai-pink flex items-center justify-center">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                            </svg>
+                        </div>
+                        <span class="px-3 py-1 rounded-full bg-ai-purple/10 text-ai-purple text-sm font-mono border border-ai-purple/20">2nd Place</span>
+                    </div>
+                    
+                    <h3 class="text-2xl font-bold mb-2">DesertCool</h3>
+                    <p class="text-gray-400 mb-4" data-i18n="desertcool_desc">Sustainable cooling solution using evaporative techniques with smart IoT monitoring for arid regions.</p>
+                    
+                    <div class="space-y-3 mb-6">
+                        <div class="flex items-center gap-2 text-sm">
+                            <span class="w-1.5 h-1.5 rounded-full bg-ai-purple"></span>
+                            <span class="text-gray-300"><span data-i18n="temp_reduction">Temperature reduction</span>: <span class="text-white font-semibold">10-15°C</span></span>
+                        </div>
+                        <div class="flex items-center gap-2 text-sm">
+                            <span class="w-1.5 h-1.5 rounded-full bg-ai-purple"></span>
+                            <span class="text-gray-300"><span data-i18n="energy_savings">Energy savings</span>: <span class="text-white font-semibold">80%</span> <span data-i18n="vs_conventional">vs conventional AC</span></span>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-3 py-1 rounded-full glass text-xs font-mono text-ai-purple border border-ai-purple/20">Arduino</span>
+                        <span class="px-3 py-1 rounded-full glass text-xs font-mono text-ai-purple border border-ai-purple/20" data-i18n="tag_sensors">Sensors</span>
+                        <span class="px-3 py-1 rounded-full glass text-xs font-mono text-ai-purple border border-ai-purple/20" data-i18n="tag_sustainability">Sustainability</span>
+                    </div>
+                </div>
+
+                <!-- Educational Robotics -->
+                <div class="project-card glass rounded-2xl p-8 border border-white/10 reveal">
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-green-400 to-ai-accent flex items-center justify-center">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                            </svg>
+                        </div>
+                        <span class="px-3 py-1 rounded-full bg-green-400/10 text-green-400 text-sm font-mono border border-green-400/20" data-i18n="tag_workshop">Workshop</span>
+                    </div>
+                    
+                    <h3 class="text-2xl font-bold mb-2" data-i18n="robotics_title">Educational Robotics</h3>
+                    <p class="text-gray-400 mb-4" data-i18n="robotics_desc">Designed and taught comprehensive Arduino robotics workshops for university students.</p>
+                    
+                    <div class="space-y-3 mb-6">
+                        <div class="flex items-center gap-2 text-sm">
+                            <span class="w-1.5 h-1.5 rounded-full bg-green-400"></span>
+                            <span class="text-gray-300" data-i18n="hands_on">Hands-on learning approach</span>
+                        </div>
+                        <div class="flex items-center gap-2 text-sm">
+                            <span class="w-1.5 h-1.5 rounded-full bg-green-400"></span>
+                            <span class="text-gray-300" data-i18n="project_based">Project-based curriculum</span>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-3 py-1 rounded-full glass text-xs font-mono text-green-400 border border-green-400/20" data-i18n="tag_teaching">Teaching</span>
+                        <span class="px-3 py-1 rounded-full glass text-xs font-mono text-green-400 border border-green-400/20">Arduino</span>
+                        <span class="px-3 py-1 rounded-full glass text-xs font-mono text-green-400 border border-green-400/20">STEM</span>
+                    </div>
+                </div>
+
+                <!-- Network Optimization -->
+                <div class="project-card glass rounded-2xl p-8 border border-white/10 reveal">
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-ai-pink to-red-500 flex items-center justify-center">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                            </svg>
+                        </div>
+                        <span class="px-3 py-1 rounded-full bg-ai-pink/10 text-ai-pink text-sm font-mono border border-ai-pink/20" data-i18n="tag_tool">Tool</span>
+                    </div>
+                    
+                    <h3 class="text-2xl font-bold mb-2" data-i18n="network_title">Network Optimizer</h3>
+                    <p class="text-gray-400 mb-4" data-i18n="network_desc">Python-based network analysis and optimization tool for performance monitoring.</p>
+                    
+                    <div class="space-y-3 mb-6">
+                        <div class="flex items-center gap-2 text-sm">
+                            <span class="w-1.5 h-1.5 rounded-full bg-ai-pink"></span>
+                            <span class="text-gray-300" data-i18n="realtime_monitoring">Real-time monitoring</span>
+                        </div>
+                        <div class="flex items-center gap-2 text-sm">
+                            <span class="w-1.5 h-1.5 rounded-full bg-ai-pink"></span>
+                            <span class="text-gray-300" data-i18n="auto_optimization">Automated optimization</span>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-3 py-1 rounded-full glass text-xs font-mono text-ai-pink border border-ai-pink/20">Python</span>
+                        <span class="px-3 py-1 rounded-full glass text-xs font-mono text-ai-pink border border-ai-pink/20" data-i18n="tag_networking">Networking</span>
+                        <span class="px-3 py-1 rounded-full glass text-xs font-mono text-ai-pink border border-ai-pink/20" data-i18n="tag_automation">Automation</span>
+                    </div>
+                </div>
+
+                <!-- Placeholder for future project -->
+                <div class="project-card glass rounded-2xl p-8 border border-white/10 border-dashed flex flex-col items-center justify-center text-center reveal group cursor-pointer hover:border-ai-accent/50">
+                    <div class="w-16 h-16 rounded-full glass flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                        <svg class="w-8 h-8 text-gray-500 group-hover:text-ai-accent transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-400 group-hover:text-white transition-colors" data-i18n="next_project">Your Next Project?</h3>
+                    <p class="text-sm text-gray-600 mt-2" data-i18n="lets_collab">Let's collaborate</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="py-20 relative">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16 reveal">
+                <h2 class="text-4xl font-bold mb-4"><span data-i18n="technical">Technical</span> <span class="gradient-text" data-i18n="expertise">Expertise</span></h2>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- AI/ML -->
+                <div class="glass rounded-2xl p-8 border border-white/10 hover:border-ai-accent/30 transition-colors reveal">
+                    <div class="w-14 h-14 rounded-xl bg-ai-accent/10 flex items-center justify-center mb-6">
+                        <svg class="w-7 h-7 text-ai-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4" data-i18n="aiml_title">AI & Machine Learning</h3>
+                    <ul class="space-y-3 text-gray-400">
+                        <li class="flex items-center gap-2">
+                            <span class="w-1.5 h-1.5 rounded-full bg-ai-accent"></span>
+                            <span data-i18n="aiml_1">Computer Vision (OpenCV, YOLO)</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <span class="w-1.5 h-1.5 rounded-full bg-ai-accent"></span>
+                            <span data-i18n="aiml_2">Deep Learning (TensorFlow, PyTorch)</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <span class="w-1.5 h-1.5 rounded-full bg-ai-accent"></span>
+                            <span data-i18n="aiml_3">Edge AI & Model Optimization</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <span class="w-1.5 h-1.5 rounded-full bg-ai-accent"></span>
+                            <span data-i18n="aiml_4">Signal Processing</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- IoT & Hardware -->
+                <div class="glass rounded-2xl p-8 border border-white/10 hover:border-ai-purple/30 transition-colors reveal">
+                    <div class="w-14 h-14 rounded-xl bg-ai-purple/10 flex items-center justify-center mb-6">
+                        <svg class="w-7 h-7 text-ai-purple" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4" data-i18n="iot_title">IoT & Embedded</h3>
+                    <ul class="space-y-3 text-gray-400">
+                        <li class="flex items-center gap-2">
+                            <span class="w-1.5 h-1.5 rounded-full bg-ai-purple"></span>
+                            <span data-i18n="iot_1">Raspberry Pi & Arduino</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <span class="w-1.5 h-1.5 rounded-full bg-ai-purple"></span>
+                            <span data-i18n="iot_2">Sensor Integration</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <span class="w-1.5 h-1.5 rounded-full bg-ai-purple"></span>
+                            <span data-i18n="iot_3">Real-time Systems</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <span class="w-1.5 h-1.5 rounded-full bg-ai-purple"></span>
+                            <span data-i18n="iot_4">PCB Design Basics</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Software -->
+                <div class="glass rounded-2xl p-8 border border-white/10 hover:border-ai-pink/30 transition-colors reveal">
+                    <div class="w-14 h-14 rounded-xl bg-ai-pink/10 flex items-center justify-center mb-6">
+                        <svg class="w-7 h-7 text-ai-pink" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4" data-i18n="software_title">Software Development</h3>
+                    <ul class="space-y-3 text-gray-400">
+                        <li class="flex items-center gap-2">
+                            <span class="w-1.5 h-1.5 rounded-full bg-ai-pink"></span>
+                            <span data-i18n="software_1">Python (Advanced)</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <span class="w-1.5 h-1.5 rounded-full bg-ai-pink"></span>
+                            <span data-i18n="software_2">C/C++ (Embedded)</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <span class="w-1.5 h-1.5 rounded-full bg-ai-pink"></span>
+                            <span data-i18n="software_3">Data Structures & Algorithms</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <span class="w-1.5 h-1.5 rounded-full bg-ai-pink"></span>
+                            <span data-i18n="software_4">Git & DevOps Basics</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 relative">
+        <div class="max-w-4xl mx-auto px-6">
+            <div class="glass-strong rounded-3xl p-8 md:p-12 border border-ai-accent/20 text-center reveal">
+                <h2 class="text-4xl font-bold mb-4" data-i18n="contact_title">Let's Build the <span class="gradient-text">Future</span> Together</h2>
+                <p class="text-gray-400 mb-8 max-w-xl mx-auto" data-i18n="contact_desc">Open to opportunities in AI research, computer vision, and innovative IoT projects.</p>
+                
+                <div class="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+                    <a href="mailto:djeltiilyes@gmail.com" class="px-8 py-4 rounded-lg bg-gradient-to-r from-ai-accent to-ai-purple text-white font-semibold hover:shadow-lg hover:shadow-ai-accent/25 transition-all duration-300">
+                        <span data-i18n="get_in_touch">Get In Touch</span>
+                    </a>
+                    <a href="https://github.com/DjeltiIlyes" target="_blank" class="px-8 py-4 rounded-lg glass border border-white/20 hover:border-ai-accent/50 transition-all duration-300 flex items-center justify-center gap-2">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                        </svg>
+                        GitHub
+                    </a>
+                    <a href="https://linkedin.com/in/djeltiilyes" target="_blank" class="px-8 py-4 rounded-lg glass border border-white/20 hover:border-ai-accent/50 transition-all duration-300 flex items-center justify-center gap-2">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                        </svg>
+                        LinkedIn
+                    </a>
+                </div>
+
+                <div class="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-gray-500">
+                    <div class="font-mono">© 2026 DJELTI ILYES. <span data-i18n="rights">All rights reserved</span>.</div>
+                    <div class="flex gap-6">
+                        <span class="flex items-center gap-2">
+                            <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                            <span data-i18n="open_to_work">Open to work</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <script>
-        // ===== FIXED TRANSLATION SYSTEM =====
+        // Neural Network Background Animation
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+        // Create particles
+        const particlesGeometry = new THREE.BufferGeometry();
+        const particlesCount = 100;
+        const posArray = new Float32Array(particlesCount * 3);
+
+        for(let i = 0; i < particlesCount * 3; i++) {
+            posArray[i] = (Math.random() - 0.5) * 50;
+        }
+
+        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+        const particlesMaterial = new THREE.PointsMaterial({
+            size: 0.1,
+            color: 0x00d4ff,
+            transparent: true,
+            opacity: 0.8,
+        });
+
+        const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+        scene.add(particlesMesh);
+
+        camera.position.z = 30;
+
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            particlesMesh.rotation.x += 0.0005;
+            particlesMesh.rotation.y += 0.0005;
+            
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        // Resize handler
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // Typewriter effect
+        const words = {
+            en: ["Innovator", "Researcher", "Engineer", "Creator"],
+            ar: ["مبتكر", "باحث", "مهندس", "مبدع"],
+            fr: ["Innovateur", "Chercheur", "Ingénieur", "Créateur"],
+            ru: ["Новатор", "Исследователь", "Инженер", "Создатель"]
+        };
         
-        // Translations object
+        let wordIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+        const typewriterElement = document.getElementById('typewriter');
+        let currentLang = 'en';
+
+        function typeWriter() {
+            const currentWord = words[currentLang][wordIndex];
+            
+            if (isDeleting) {
+                typewriterElement.textContent = currentWord.substring(0, charIndex - 1);
+                charIndex--;
+            } else {
+                typewriterElement.textContent = currentWord.substring(0, charIndex + 1);
+                charIndex++;
+            }
+
+            let typeSpeed = isDeleting ? 50 : 100;
+
+            if (!isDeleting && charIndex === currentWord.length) {
+                typeSpeed = 2000;
+                isDeleting = true;
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                wordIndex = (wordIndex + 1) % words[currentLang].length;
+                typeSpeed = 500;
+            }
+
+            setTimeout(typeWriter, typeSpeed);
+        }
+        typeWriter();
+
+        // Translations
         const translations = {
             en: {
-                // Navigation
-                name: "DJELTI ILYES",
-                name2: "DJELTI ILYES",
-                nav_home: "Home",
+                nav_about: "About",
                 nav_projects: "Projects",
-                nav_research: "Research",
+                nav_skills: "Skills",
                 nav_contact: "Contact",
-                
-                // Hero Section
-                title_line: "Doctoral Candidate in AI & Machine Learning",
-                age: "Age: 24 years",
-                tagline: "Specializing in AI for IoT with focus on assistive technologies and sustainable computing",
-                btn_view_resume: "View Resume",
-                btn_featured_project: "Featured Project",
-                btn_save_pdf: "Download PDF",
-                
-                // Resume Sections
-                section_profile: "Personal Profile",
-                section_education: "Education",
-                section_research: "Research Experience",
-                section_skills: "Technical Skills",
-                section_achievements: "Achievements",
-                section_languages: "Languages",
-                section_interests: "Research Interests",
-                
-                // Profile
-                profile_text: "A highly motivated 24-year-old Computer Science graduate with a Master's degree specializing in Artificial Intelligence for the Internet of Things. Demonstrated excellence through a near-perfect thesis score (19.5/20) and award-winning project work. Possesses strong practical skills in AI/ML, IoT systems, VR/AR, and software development, with a proven ability to conduct innovative research aimed at solving real-world challenges. Seeking to contribute to advanced doctoral research in Artificial Intelligence and Machine Learning.",
-                
-                // Education
-                edu_masters: "Master of Computer Science – AI for Internet of Things",
-                edu_bachelor: "Bachelor of Computer Systems",
-                grade: "Grade",
-                grade2: "Grade",
-                excellent: "Excellent",
-                very_good: "Very Good",
-                thesis: "Thesis",
-                thesis_title: "Intelligent Navigation System for the Blind and Visually Impaired",
-                
-                // Projects
-                project_lunav_title: "Master's Thesis: LUNAV Navigation System (2023–2024)",
-                project_lunav_1: "Developed AI-powered wearable device for visually impaired individuals",
-                project_lunav_2: "Integrated computer vision (OpenCV/TensorFlow), AR, and IoT sensors",
-                project_lunav_3: "Implemented real-time obstacle detection and spatial audio navigation",
-                
-                project_desertcool_title: "Competition Project: DesertCool – Sustainable Heat Reduction System (2023)",
-                project_desertcool_1: "🏆 2nd Place in 'The Call of Tech' National Competition",
-                project_desertcool_2: "Designed IoT-based sustainable cooling system for arid environments",
-                project_desertcool_3: "Implemented sensor networks for climate monitoring and control",
-                
-                // Skills
-                skill_ai: "AI & Machine Learning",
-                skill_ai_list: "Python, TensorFlow, PyTorch, Computer Vision, Neural Networks, Deep Learning, Reinforcement Learning",
-                skill_iot: "IoT & Embedded Systems",
-                skill_iot_list: "Arduino, Raspberry Pi, ESP32, Sensor Integration, MQTT, LoRaWAN",
-                skill_programming: "Programming",
-                skill_programming_list: "Python (Advanced), C/C++ (Intermediate), Java, JavaScript, SQL",
-                skill_tools: "Tools & Platforms",
-                skill_tools_list: "Git, Docker, Kubernetes, AWS, Azure, MATLAB, Unity, ROS",
-                
-                // Achievements
-                achievement_1: "Master's Thesis Score: 19.5/20 (Top 5% of cohort)",
-                achievement_2: "2nd Place, 'The Call of Tech' National Competition (2023)",
-                achievement_3: "Active Member, COD'IN Scientific Research Club (2021–2024)",
-                achievement_4: "Participant, Algeria 2.0 National Tech Forum (2024)",
-                achievement_5: "Attendee, Algeria Job Summit 2025",
-                
-                // Languages
-                lang_arabic: "Arabic",
-                lang_english: "English",
-                lang_french: "French",
-                lang_native: "Native",
-                lang_fluent: "Fluent",
-                lang_fluent2: "Fluent",
-                
-                // Interests
-                interest_1: "ML for Computer Vision & Sensor Fusion",
-                interest_2: "Edge AI & Distributed IoT Systems",
-                interest_3: "AI for Assistive Technologies",
-                interest_4: "Sustainable Computing & Environmental AI",
-                
-                // Footer
-                footer_copyright: "© 2026 DJELTI ILYES. All rights reserved.",
-                footer_tagline: "AI Researcher | Doctoral Candidate in Artificial Intelligence & Machine Learning",
-                footer_nav_home: "Home",
-                footer_nav_projects: "Projects",
-                footer_nav_research: "Research",
-                footer_nav_contact: "Contact"
+                available: "Available for Opportunities",
+                hero_title1: "AI Engineer &",
+                hero_desc: "Master's graduate specializing in Computer Vision, IoT, and intelligent systems. Creating technology that bridges the gap between AI research and real-world impact.",
+                view_projects: "View Projects",
+                download_cv: "Download CV",
+                master_score: "Master's Score",
+                accuracy: "Model Accuracy",
+                national_rank: "National Rank",
+                about_title1: "Bridging",
+                about_title2: "AI Research",
+                about_title3: "& Real Impact",
+                about_p1: "As a Master's graduate with a score of 19.5/20, I specialize in developing intelligent systems that solve critical real-world problems. My work focuses on the intersection of computer vision, embedded systems, and human-centered design.",
+                about_p2: "From creating navigation aids for the visually impaired to developing sustainable cooling solutions, I believe in technology that serves humanity. My approach combines rigorous engineering with creative problem-solving.",
+                skill1: "Deep Learning & CV",
+                skill2: "Embedded Systems",
+                skill3: "Real-time Processing",
+                skill4: "Academic Excellence",
+                edu_title: "Education & Achievements",
+                master_degree: "Master's Degree",
+                master_field: "AI & Data Science",
+                score_label: "Score",
+                competition: "National Competition",
+                competition_name: "The Call of Tech",
+                second_place: "2nd Place Winner",
+                master_thesis: "Master's Thesis",
+                lunav_subtitle: "Intelligent Navigation System for the Visually Impaired",
+                feature1_title: "Real-time Object Detection",
+                feature1_desc: "YOLO-based computer vision at 30 FPS",
+                feature2_title: "3D Spatial Audio",
+                feature2_desc: "Haptic feedback & directional sound guidance",
+                feature3_title: "Edge Computing",
+                feature3_desc: "Raspberry Pi 4 + Ultrasonic sensors",
+                stat_accuracy: "Accuracy",
+                stat_battery: "Battery",
+                confidence: "Object Detection Confidence",
+                other_projects: "Other",
+                projects_word: "Projects",
+                projects_desc: "Innovative solutions combining hardware and software engineering",
+                desertcool_desc: "Sustainable cooling solution using evaporative techniques with smart IoT monitoring for arid regions.",
+                temp_reduction: "Temperature reduction",
+                energy_savings: "Energy savings",
+                vs_conventional: "vs conventional AC",
+                tag_sensors: "Sensors",
+                tag_sustainability: "Sustainability",
+                tag_workshop: "Workshop",
+                robotics_title: "Educational Robotics",
+                robotics_desc: "Designed and taught comprehensive Arduino robotics workshops for university students.",
+                hands_on: "Hands-on learning approach",
+                project_based: "Project-based curriculum",
+                tag_teaching: "Teaching",
+                tag_tool: "Tool",
+                network_title: "Network Optimizer",
+                network_desc: "Python-based network analysis and optimization tool for performance monitoring.",
+                realtime_monitoring: "Real-time monitoring",
+                auto_optimization: "Automated optimization",
+                tag_networking: "Networking",
+                tag_automation: "Automation",
+                next_project: "Your Next Project?",
+                lets_collab: "Let's collaborate",
+                technical: "Technical",
+                expertise: "Expertise",
+                aiml_title: "AI & Machine Learning",
+                aiml_1: "Computer Vision (OpenCV, YOLO)",
+                aiml_2: "Deep Learning (TensorFlow, PyTorch)",
+                aiml_3: "Edge AI & Model Optimization",
+                aiml_4: "Signal Processing",
+                iot_title: "IoT & Embedded",
+                iot_1: "Raspberry Pi & Arduino",
+                iot_2: "Sensor Integration",
+                iot_3: "Real-time Systems",
+                iot_4: "PCB Design Basics",
+                software_title: "Software Development",
+                software_1: "Python (Advanced)",
+                software_2: "C/C++ (Embedded)",
+                software_3: "Data Structures & Algorithms",
+                software_4: "Git & DevOps Basics",
+                contact_title: "Let's Build the Future Together",
+                contact_desc: "Open to opportunities in AI research, computer vision, and innovative IoT projects.",
+                get_in_touch: "Get In Touch",
+                rights: "All rights reserved",
+                open_to_work: "Open to work"
             },
-            
             ar: {
-                // Navigation
-                name: "جلطي إلياس",
-                name2: "جلطي إلياس",
-                nav_home: "الرئيسية",
+                nav_about: "نبذة عني",
                 nav_projects: "المشاريع",
-                nav_research: "البحث",
-                nav_contact: "اتصل",
-                
-                // Hero Section
-                title_line: "مرشح دكتوراه في الذكاء الاصطناعي والتعلم الآلي",
-                age: "العمر: 24 سنة",
-                tagline: "متخصص في الذكاء الاصطناعي لإنترنت الأشياء مع التركيز على التقنيات المساعدة والحوسبة المستدامة",
-                btn_view_resume: "عرض السيرة الذاتية",
-                btn_featured_project: "المشروع المميز",
-                btn_save_pdf: "تحميل PDF",
-                
-                // Resume Sections
-                section_profile: "الملف الشخصي",
-                section_education: "التعليم",
-                section_research: "خبرة البحث",
-                section_skills: "المهارات التقنية",
-                section_achievements: "الإنجازات",
-                section_languages: "اللغات",
-                section_interests: "مجالات الاهتمام البحثية",
-                
-                // Profile
-                profile_text: "خريج علوم حاسوب متحمس للغاية يبلغ من العمر 24 عامًا وحاصل على درجة الماجستير في الذكاء الاصطناعي لإنترنت الأشياء. أظهر تفوقًا من خلال درجة أطروحة شبه مثالية (19.5/20) وأعمال مشاريع حاصلة على جوائز. يمتلك مهارات عملية قوية في الذكاء الاصطناعي/التعلم الآلي، وأنظمة إنترنت الأشياء، والواقع الافتراضي/المعزز، وتطوير البرمجيات، مع قدرة مثبتة على إجراء بحث ابتكاري يهدف إلى حل التحديات الواقعية. يسعى للمساهمة في بحث الدكتوراه المتقدم في الذكاء الاصطناعي والتعلم الآلي.",
-                
-                // Education
-                edu_masters: "ماجستير علوم الحاسوب – الذكاء الاصطناعي لإنترنت الأشياء",
-                edu_bachelor: "بكالوريوس أنظمة الحاسوب",
-                grade: "الدرجة",
-                grade2: "الدرجة",
-                excellent: "ممتاز",
-                very_good: "جيد جدًا",
-                thesis: "الأطروحة",
-                thesis_title: "نظام ملاحي ذكي للمكفوفين وضعاف البصر",
-                
-                // Projects
-                project_lunav_title: "أطروحة الماجستير: نظام الملاحة LUNAV (2023-2024)",
-                project_lunav_1: "طورت جهازًا قابلًا للارتداء يعمل بالذكاء الاصطناعي للأفراد ضعاف البصر",
-                project_lunav_2: "دمجت رؤية الحاسوب (OpenCV/TensorFlow)، والواقع المعزز، ومستشعرات إنترنت الأشياء",
-                project_lunav_3: "نفذت كشف العوائق في الوقت الحقيقي والملاحة الصوتية المكانية",
-                
-                project_desertcool_title: "مشروع المسابقة: DesertCool – نظام تخفيض الحرارة المستدام (2023)",
-                project_desertcool_1: "🏆 المركز الثاني في المسابقة الوطنية 'The Call of Tech'",
-                project_desertcool_2: "صممت نظام تبريد مستدام قائم على إنترنت الأشياء للبيئات القاحلة",
-                project_desertcool_3: "نفذت شبكات استشعار لمراقبة المناخ والتحكم فيه",
-                
-                // Skills
-                skill_ai: "الذكاء الاصطناعي والتعلم الآلي",
-                skill_ai_list: "Python, TensorFlow, PyTorch, رؤية الحاسوب, الشبكات العصبية, التعلم العميق, التعلم المعزز",
-                skill_iot: "إنترنت الأشياء والأنظمة المضمنة",
-                skill_iot_list: "Arduino, Raspberry Pi, ESP32, تكامل المستشعرات, MQTT, LoRaWAN",
-                skill_programming: "البرمجة",
-                skill_programming_list: "Python (متقدم), C/C++ (متوسط), Java, JavaScript, SQL",
-                skill_tools: "الأدوات والمنصات",
-                skill_tools_list: "Git, Docker, Kubernetes, AWS, Azure, MATLAB, Unity, ROS",
-                
-                // Achievements
-                achievement_1: "درجة أطروحة الماجستير: 19.5/20 (أعلى 5٪ من الدفعة)",
-                achievement_2: "المركز الثاني، المسابقة الوطنية 'The Call of Tech' (2023)",
-                achievement_3: "عضو نشط، نادي COD'IN للبحث العلمي (2024-2021)",
-                achievement_4: "مشارك، المنتدى الوطني للتكنولوجيا الجزائر 2.0 (2024)",
-                achievement_5: "حاضر، قمة الوظائف الجزائر 2025",
-                
-                // Languages
-                lang_arabic: "العربية",
-                lang_english: "الإنجليزية",
-                lang_french: "الفرنسية",
-                lang_native: "اللغة الأم",
-                lang_fluent: "بطلاقة",
-                lang_fluent2: "بطلاقة",
-                
-                // Interests
-                interest_1: "التعلم الآلي لرؤية الحاسوب ودمج المستشعرات",
-                interest_2: "الذكاء الاصطناعي على الحافة وأنظمة إنترنت الأشياء الموزعة",
-                interest_3: "الذكاء الاصطناعي للتقنيات المساعدة",
-                interest_4: "الحوسبة المستدامة والذكاء الاصطناعي البيئي",
-                
-                // Footer
-                footer_copyright: "© 2026 جلطي إلياس. جميع الحقوق محفوظة.",
-                footer_tagline: "باحث في الذكاء الاصطناعي | مرشح دكتوراه في الذكاء الاصطناعي والتعلم الآلي",
-                footer_nav_home: "الرئيسية",
-                footer_nav_projects: "المشاريع",
-                footer_nav_research: "البحث",
-                footer_nav_contact: "اتصل"
+                nav_skills: "المهارات",
+                nav_contact: "تواصل",
+                available: "متاح للفرص",
+                hero_title1: "مهندس ذكاء اصطناعي &",
+                hero_desc: "حاصل على ماجستير متخصص في الرؤية الحاسوبية وإنترنت الأشياء والأنظمة الذكية. أصنع تكنولوجيا تربط بين بحث الذكاء الاصطناعي والتأثير في العالم الحقيقي.",
+                view_projects: "عرض المشاريع",
+                download_cv: "تحميل السيرة الذاتية",
+                master_score: "معدل الماجستير",
+                accuracy: "دقة النموذج",
+                national_rank: "الترتيب الوطني",
+                about_title1: "ربط",
+                about_title2: "بحث الذكاء الاصطناعي",
+                about_title3: "بالتأثير الحقيقي",
+                about_p1: "كحاصل على ماجستير بمعدل 19.5/20، أتخصص في تطوير الأنظمة الذكية التي تحل مشاكل العالم الحقيقي الحرجة. يركز عملي على تقاطع الرؤية الحاسوبية والأنظمة المدمجة والتصميم المتمحور حول الإنسان.",
+                about_p2: "من إنشاء أدوات الملاحة للمكفوفين إلى تطوير حلول التبريد المستدامة، أؤمن بالتكنولوجيا التي تخدم الإنسانية. يجمع نهجي بين الهندسة الصارمة وحل المشكلات الإبداعي.",
+                skill1: "التعلم العميق والرؤية الحاسوبية",
+                skill2: "الأنظمة المدمجة",
+                skill3: "المعالجة في الوقت الفعلي",
+                skill4: "التميز الأكاديمي",
+                edu_title: "التعليم والإنجازات",
+                master_degree: "درجة الماجستير",
+                master_field: "الذكاء الاصطناعي وعلم البيانات",
+                score_label: "المعدل",
+                competition: "المسابقة الوطنية",
+                competition_name: "نداء التكنولوجيا",
+                second_place: "المركز الثاني",
+                master_thesis: "أطروحة الماجستير",
+                lunav_subtitle: "نظام ملاحة ذكي للمكفوفين",
+                feature1_title: "اكتشاف الأجسام في الوقت الفعلي",
+                feature1_desc: "رؤية حاسوبية قائمة على YOLO بمعدل 30 إطار في الثانية",
+                feature2_title: "الصوت المكاني ثلاثي الأبعاد",
+                feature2_desc: "تعليقات لمسية وتوجيه صوتي",
+                feature3_title: "الحوسبة الطرفية",
+                feature3_desc: "راسبيري باي 4 + مستشعرات فوق صوتية",
+                stat_accuracy: "الدقة",
+                stat_battery: "البطارية",
+                confidence: "ثقة الكشف عن الأجسام",
+                other_projects: "مشاريع",
+                projects_word: "أخرى",
+                projects_desc: "حلول مبتكرة تجمع بين الهندسة البرمجية والمادية",
+                desertcool_desc: "حل تبريد مستدام باستخدام تقنيات التبخر مع مراقبة إنترنت الأشياء الذكية للمناطق القاحلة.",
+                temp_reduction: "خفض درجة الحرارة",
+                energy_savings: "توفير الطاقة",
+                vs_conventional: "مقارنة بالمكيفات التقليدية",
+                tag_sensors: "المستشعرات",
+                tag_sustainability: "الاستدامة",
+                tag_workshop: "ورشة عمل",
+                robotics_title: "الروبوتات التعليمية",
+                robotics_desc: "تصميم وتدريس ورش عمل شاملة في روبوتات الأردوينو لطلاب الجامعات.",
+                hands_on: "نهج التعلم العملي",
+                project_based: "منهجية قائمة على المشاريع",
+                tag_teaching: "تدريس",
+                tag_tool: "أداة",
+                network_title: "محسن الشبكة",
+                network_desc: "أداة تحليل وتحسين الشبكة مبنية على بايثون لمراقبة الأداء.",
+                realtime_monitoring: "المراقبة في الوقت الفعلي",
+                auto_optimization: "التحسين التلقائي",
+                tag_networking: "الشبكات",
+                tag_automation: "الأتمتة",
+                next_project: "مشروعك القادم؟",
+                lets_collab: "لنتعاون",
+                technical: "الخبرة",
+                expertise: "التقنية",
+                aiml_title: "الذكاء الاصطناعي والتعلم الآلي",
+                aiml_1: "الرؤية الحاسوبية (OpenCV, YOLO)",
+                aiml_2: "التعلم العميق (TensorFlow, PyTorch)",
+                aiml_3: "الذكاء الاصطناعي الطرفي وتحسين النماذج",
+                aiml_4: "معالجة الإشارات",
+                iot_title: "إنترنت الأشياء والأنظمة المدمجة",
+                iot_1: "راسبيري باي وأردوينو",
+                iot_2: "تكامل المستشعرات",
+                iot_3: "الأنظمة في الوقت الفعلي",
+                iot_4: "أساسيات تصميم الدوائر المطبوعة",
+                software_title: "تطوير البرمجيات",
+                software_1: "بايثون (متقدم)",
+                software_2: "C/C++ (الأنظمة المدمجة)",
+                software_3: "هياكل البيانات والخوارزميات",
+                software_4: "أساسيات Git وDevOps",
+                contact_title: "لنبني المستقبل معاً",
+                contact_desc: "متاح لفرص في بحث الذكاء الاصطناعي والرؤية الحاسوبية ومشاريع إنترنت الأشياء المبتكرة.",
+                get_in_touch: "تواصل معي",
+                rights: "جميع الحقوق محفوظة",
+                open_to_work: "متاح للعمل"
             },
-            
             fr: {
-                // French translations (simplified for example)
-                name: "DJELTI ILYES",
-                name2: "DJELTI ILYES",
-                nav_home: "Accueil",
+                nav_about: "À propos",
                 nav_projects: "Projets",
-                nav_research: "Recherche",
+                nav_skills: "Compétences",
                 nav_contact: "Contact",
-                title_line: "Candidat au Doctorat en IA & Apprentissage Automatique",
-                age: "Âge: 24 ans",
-                tagline: "Spécialisé en IA pour l'Internet des Objets avec un accent sur les technologies d'assistance et l'informatique durable",
-                btn_view_resume: "Voir le CV",
-                btn_featured_project: "Projet Vedette",
-                btn_save_pdf: "Télécharger PDF"
+                available: "Disponible pour des opportunités",
+                hero_title1: "Ingénieur IA &",
+                hero_desc: "Diplômé d'un Master spécialisé en Vision par Ordinateur, IoT et systèmes intelligents. Création de technologies qui comblent le fossé entre la recherche en IA et l'impact réel.",
+                view_projects: "Voir les Projets",
+                download_cv: "Télécharger CV",
+                master_score: "Score Master",
+                accuracy: "Précision du Modèle",
+                national_rank: "Rang National",
+                about_title1: "Relier la",
+                about_title2: "Recherche en IA",
+                about_title3: "à l'Impact Réel",
+                about_p1: "Diplômé d'un Master avec un score de 19.5/20, je me spécialise dans le développement de systèmes intelligents qui résolvent des problèmes réels critiques. Mon travail se concentre sur l'intersection de la vision par ordinateur, des systèmes embarqués et de la conception centrée sur l'humain.",
+                about_p2: "De la création d'aides à la navigation pour les malvoyants au développement de solutions de refroidissement durables, je crois en une technologie au service de l'humanité. Mon approche combine ingénierie rigoureuse et résolution créative de problèmes.",
+                skill1: "Deep Learning & Vision",
+                skill2: "Systèmes Embarqués",
+                skill3: "Traitement Temps Réel",
+                skill4: "Excellence Académique",
+                edu_title: "Formation & Réalisations",
+                master_degree: "Master",
+                master_field: "IA & Science des Données",
+                score_label: "Score",
+                competition: "Concours National",
+                competition_name: "The Call of Tech",
+                second_place: "2ème Prix",
+                master_thesis: "Thèse de Master",
+                lunav_subtitle: "Système de Navigation Intelligent pour Malvoyants",
+                feature1_title: "Détection d'Objets Temps Réel",
+                feature1_desc: "Vision par ordinateur YOLO à 30 FPS",
+                feature2_title: "Audio Spatial 3D",
+                feature2_desc: "Retour haptique et guidage sonore directionnel",
+                feature3_title: "Edge Computing",
+                feature3_desc: "Raspberry Pi 4 + Capteurs ultrasons",
+                stat_accuracy: "Précision",
+                stat_battery: "Batterie",
+                confidence: "Confiance de Détection",
+                other_projects: "Autres",
+                projects_word: "Projets",
+                projects_desc: "Solutions innovantes combinant matériel et logiciel",
+                desertcool_desc: "Solution de refroidissement durable utilisant des techniques évaporatives avec surveillance IoT intelligente pour les régions arides.",
+                temp_reduction: "Réduction de température",
+                energy_savings: "Économies d'énergie",
+                vs_conventional: "vs climatisation conventionnelle",
+                tag_sensors: "Capteurs",
+                tag_sustainability: "Durabilité",
+                tag_workshop: "Atelier",
+                robotics_title: "Robotique Éducative",
+                robotics_desc: "Conception et enseignement d'ateliers complets de robotique Arduino pour étudiants universitaires.",
+                hands_on: "Approche d'apprentissage pratique",
+                project_based: "Curriculum basé sur des projets",
+                tag_teaching: "Enseignement",
+                tag_tool: "Outil",
+                network_title: "Optimiseur Réseau",
+                network_desc: "Outil d'analyse et d'optimisation réseau basé sur Python pour le monitoring des performances.",
+                realtime_monitoring: "Monitoring temps réel",
+                auto_optimization: "Optimisation automatisée",
+                tag_networking: "Réseaux",
+                tag_automation: "Automatisation",
+                next_project: "Votre Prochain Projet ?",
+                lets_collab: "Collaborons",
+                technical: "Expertise",
+                expertise: "Technique",
+                aiml_title: "IA & Machine Learning",
+                aiml_1: "Vision par Ordinateur (OpenCV, YOLO)",
+                aiml_2: "Deep Learning (TensorFlow, PyTorch)",
+                aiml_3: "Edge AI & Optimisation de Modèles",
+                aiml_4: "Traitement du Signal",
+                iot_title: "IoT & Embarqué",
+                iot_1: "Raspberry Pi & Arduino",
+                iot_2: "Intégration de Capteurs",
+                iot_3: "Systèmes Temps Réel",
+                iot_4: "Bases de Conception PCB",
+                software_title: "Développement Logiciel",
+                software_1: "Python (Avancé)",
+                software_2: "C/C++ (Embarqué)",
+                software_3: "Structures de Données & Algorithmes",
+                software_4: "Bases de Git & DevOps",
+                contact_title: "Construisons l'Avenir Ensemble",
+                contact_desc: "Ouvert aux opportunités en recherche IA, vision par ordinateur et projets IoT innovants.",
+                get_in_touch: "Me Contacter",
+                rights: "Tous droits réservés",
+                open_to_work: "Disponible"
             },
-            
             ru: {
-                // Russian translations (simplified for example)
-                name: "Джелти Ильес",
-                name2: "Джелти Ильес",
-                nav_home: "Главная",
+                nav_about: "Обо мне",
                 nav_projects: "Проекты",
-                nav_research: "Исследования",
+                nav_skills: "Навыки",
                 nav_contact: "Контакты",
-                title_line: "Кандидат наук в области ИИ и машинного обучения",
-                age: "Возраст: 24 года",
-                tagline: "Специализация: ИИ для Интернета вещей с акцентом на вспомогательные технологии и устойчивые вычисления",
-                btn_view_resume: "Посмотреть резюме",
-                btn_featured_project: "Избранный проект",
-                btn_save_pdf: "Скачать PDF"
+                available: "Открыт для предложений",
+                hero_title1: "Инженер ИИ &",
+                hero_desc: "Выпускник магистратуры, специализирующийся на компьютерном зрении, IoT и интеллектуальных системах. Создание технологий, связывающих исследования в области ИИ с реальным воздействием.",
+                view_projects: "Смотреть Проекты",
+                download_cv: "Скачать Резюме",
+                master_score: "Оценка Магистра",
+                accuracy: "Точность Модели",
+                national_rank: "Национальный Рейтинг",
+                about_title1: "Связь",
+                about_title2: "Исследований ИИ",
+                about_title3: "и Реального Влияния",
+                about_p1: "Как выпускник магистратуры с оценкой 19.5/20, я специализируюсь на разработке интеллектуальных систем, решающих критические реальные проблемы. Моя работа сосредоточена на пересечении компьютерного зрения, встроенных систем и ориентированного на человека дизайна.",
+                about_p2: "От создания навигационных средств для слабовидящих до разработки устойчивых решений по охлаждению, я верю в технологии, служащие человечеству. Мой подход сочетает строгую инженерию с творческим решением проблем.",
+                skill1: "Глубокое Обучение и Компьютерное Зрение",
+                skill2: "Встроенные Системы",
+                skill3: "Обработка в Реальном Времени",
+                skill4: "Академическое Превосходство",
+                edu_title: "Образование и Достижения",
+                master_degree: "Степень Магистра",
+                master_field: "ИИ и Наука о Данных",
+                score_label: "Оценка",
+                competition: "Национальный Конкурс",
+                competition_name: "The Call of Tech",
+                second_place: "2-е Место",
+                master_thesis: "Магистерская Диссертация",
+                lunav_subtitle: "Интеллектуальная Навигационная Система для Слабовидящих",
+                feature1_title: "Обнаружение Объектов в Реальном Времени",
+                feature1_desc: "Компьютерное зрение на базе YOLO со скоростью 30 FPS",
+                feature2_title: "3D Пространственный Аудио",
+                feature2_desc: "Тактильная обратная связь и направленное звуковое сопровождение",
+                feature3_title: "Edge Computing",
+                feature3_desc: "Raspberry Pi 4 + Ультразвуковые датчики",
+                stat_accuracy: "Точность",
+                stat_battery: "Батарея",
+                confidence: "Уверенность Обнаружения",
+                other_projects: "Другие",
+                projects_word: "Проекты",
+                projects_desc: "Инновационные решения, сочетающие аппаратное и программное обеспечение",
+                desertcool_desc: "Устойчивое решение для охлаждения с использованием испарительных техник с интеллектуальным IoT мониторингом для засушливых регионов.",
+                temp_reduction: "Снижение температуры",
+                energy_savings: "Экономия энергии",
+                vs_conventional: "по сравнению с обычным кондиционером",
+                tag_sensors: "Датчики",
+                tag_sustainability: "Устойчивость",
+                tag_workshop: "Мастер-класс",
+                robotics_title: "Образовательная Робототехника",
+                robotics_desc: "Разработка и преподавание комплексных мастер-классов по робототехнике Arduino для студентов университета.",
+                hands_on: "Практический подход к обучению",
+                project_based: "Проектно-ориентированная программа",
+                tag_teaching: "Преподавание",
+                tag_tool: "Инструмент",
+                network_title: "Оптимизатор Сети",
+                network_desc: "Инструмент анализа и оптимизации сети на Python для мониторинга производительности.",
+                realtime_monitoring: "Мониторинг в реальном времени",
+                auto_optimization: "Автоматическая оптимизация",
+                tag_networking: "Сети",
+                tag_automation: "Автоматизация",
+                next_project: "Ваш Следующий Проект?",
+                lets_collab: "Давайте сотрудничать",
+                technical: "Техническая",
+                expertise: "Экспертиза",
+                aiml_title: "ИИ и Машинное Обучение",
+                aiml_1: "Компьютерное Зрение (OpenCV, YOLO)",
+                aiml_2: "Глубокое Обучение (TensorFlow, PyTorch)",
+                aiml_3: "Edge AI и Оптимизация Моделей",
+                aiml_4: "Обработка Сигналов",
+                iot_title: "IoT и Встроенные Системы",
+                iot_1: "Raspberry Pi и Arduino",
+                iot_2: "Интеграция Датчиков",
+                iot_3: "Системы Реального Времени",
+                iot_4: "Основы Проектирования Печатных Плат",
+                software_title: "Разработка Программного Обеспечения",
+                software_1: "Python (Продвинутый)",
+                software_2: "C/C++ (Встроенный)",
+                software_3: "Структуры Данных и Алгоритмы",
+                software_4: "Основы Git и DevOps",
+                contact_title: "Давайте Строить Будущее Вместе",
+                contact_desc: "Открыт для возможностей в исследованиях ИИ, компьютерном зрении и инновационных IoT проектах.",
+                get_in_touch: "Связаться",
+                rights: "Все права защищены",
+                open_to_work: "Открыт для работы"
             }
         };
 
-        // Function to apply translation
-        function applyTranslation(language) {
-            console.log("Applying translation for language:", language);
-            
-            const langData = translations[language];
-            const fallbackData = translations['en']; // English as fallback
-            
-            if (!langData) {
-                console.error("No translation data for language:", language);
-                return;
-            }
-            
-            // Update all elements with translations
-            for (const [key, value] of Object.entries(langData)) {
-                try {
-                    const element = document.getElementById(key);
-                    if (element) {
-                        // Special handling for different element types
-                        if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA' || element.tagName === 'SELECT') {
-                            element.value = value;
-                        } else if (element.tagName === 'IMG') {
-                            element.alt = value;
-                        } else {
-                            // For other elements, set text content
-                            element.textContent = value;
-                        }
-                        console.log("Updated element with id:", key);
-                    } else {
-                        // Try to find element by class or other means if not found by id
-                        console.warn("Element not found for id:", key);
-                    }
-                } catch (error) {
-                    console.error("Error updating element", key, ":", error);
-                }
-            }
-            
-            // Also check for any elements that might have been missed
-            const allIds = [
-                'name', 'name2', 'nav_home', 'nav_projects', 'nav_research', 'nav_contact',
-                'title_line', 'age', 'tagline', 'btn_view_resume', 'btn_featured_project', 'btn_save_pdf',
-                'section_profile', 'section_education', 'section_research', 'section_skills',
-                'section_achievements', 'section_languages', 'section_interests',
-                'profile_text', 'edu_masters', 'edu_bachelor', 'grade', 'grade2', 'excellent',
-                'very_good', 'thesis', 'thesis_title', 'project_lunav_title', 'project_lunav_1',
-                'project_lunav_2', 'project_lunav_3', 'project_desertcool_title', 'project_desertcool_1',
-                'project_desertcool_2', 'project_desertcool_3', 'skill_ai', 'skill_ai_list',
-                'skill_iot', 'skill_iot_list', 'skill_programming', 'skill_programming_list',
-                'skill_tools', 'skill_tools_list', 'achievement_1', 'achievement_2',
-                'achievement_3', 'achievement_4', 'achievement_5', 'lang_arabic', 'lang_english',
-                'lang_french', 'lang_native', 'lang_fluent', 'lang_fluent2', 'interest_1',
-                'interest_2', 'interest_3', 'interest_4', 'footer_copyright', 'footer_tagline',
-                'footer_nav_home', 'footer_nav_projects', 'footer_nav_research', 'footer_nav_contact'
-            ];
-            
-            // Update page title
-            document.title = langData['name'] + " | AI Researcher";
-            
-            // Update language selector
-            const languageSelect = document.getElementById('languageSelect');
-            if (languageSelect) {
-                languageSelect.value = language;
-            }
-            
-            // Save language preference
-            localStorage.setItem('preferredLanguage', language);
-            
-            // Update RTL/LTR direction for Arabic
-            if (language === 'ar') {
-                document.body.setAttribute('dir', 'rtl');
-                document.body.style.textAlign = 'right';
-                // Add Arabic font
-                const link = document.createElement('link');
-                link.href = 'https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap';
-                link.rel = 'stylesheet';
-                document.head.appendChild(link);
-            } else {
-                document.body.setAttribute('dir', 'ltr');
-                document.body.style.textAlign = 'left';
-            }
-            
-            console.log("Translation applied successfully for", language);
-        }
+        // Language switcher functionality
+        const langToggle = document.getElementById('langToggle');
+        const langDropdown = document.getElementById('langDropdown');
+        const currentLangSpan = document.getElementById('currentLang');
+        const langBtns = document.querySelectorAll('.lang-btn');
 
-        // Initialize translation system
-        function initTranslation() {
-            console.log("Initializing translation system...");
+        langToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            langDropdown.classList.toggle('show');
+        });
+
+        document.addEventListener('click', () => {
+            langDropdown.classList.remove('show');
+        });
+
+        langDropdown.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+
+        function changeLanguage(lang) {
+            currentLang = lang;
+            currentLangSpan.textContent = lang.toUpperCase();
             
-            // Get saved language or default to English
-            let savedLanguage = localStorage.getItem('preferredLanguage');
-            
-            // If no saved language, detect browser language
-            if (!savedLanguage) {
-                const browserLang = navigator.language || navigator.userLanguage;
-                if (browserLang.startsWith('ar')) {
-                    savedLanguage = 'ar';
-                } else if (browserLang.startsWith('fr')) {
-                    savedLanguage = 'fr';
-                } else if (browserLang.startsWith('ru')) {
-                    savedLanguage = 'ru';
+            // Update active state
+            langBtns.forEach(btn => {
+                if(btn.dataset.lang === lang) {
+                    btn.classList.add('active');
                 } else {
-                    savedLanguage = 'en';
-                }
-            }
-            
-            // Apply translation
-            applyTranslation(savedLanguage);
-            
-            // Set up language selector change event
-            const languageSelect = document.getElementById('languageSelect');
-            if (languageSelect) {
-                languageSelect.value = savedLanguage;
-                languageSelect.addEventListener('change', function() {
-                    console.log("Language changed to:", this.value);
-                    applyTranslation(this.value);
-                });
-            }
-            
-            console.log("Translation system initialized with language:", savedLanguage);
-        }
-
-        // ===== OTHER JAVASCRIPT FUNCTIONS =====
-        
-        // Mobile Navigation Toggle
-        const menuToggle = document.querySelector('.menu-toggle');
-        const navMenu = document.querySelector('.nav-menu');
-        
-        if (menuToggle && navMenu) {
-            menuToggle.addEventListener('click', () => {
-                navMenu.classList.toggle('active');
-                menuToggle.innerHTML = navMenu.classList.contains('active') 
-                    ? '<i class="fas fa-times"></i>' 
-                    : '<i class="fas fa-bars"></i>';
-            });
-            
-            // Close mobile menu when clicking a link
-            document.querySelectorAll('.nav-menu a').forEach(link => {
-                link.addEventListener('click', () => {
-                    navMenu.classList.remove('active');
-                    menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
-                });
-            });
-        }
-        
-        // Header scroll effect
-        window.addEventListener('scroll', () => {
-            const navbar = document.querySelector('.navbar');
-            if (navbar && window.scrollY > 50) {
-                navbar.classList.add('scrolled');
-            } else if (navbar) {
-                navbar.classList.remove('scrolled');
-            }
-        });
-        
-        // Smooth scrolling for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const targetId = this.getAttribute('href');
-                if (targetId === '#') return;
-                
-                const targetElement = document.querySelector(targetId);
-                if (targetElement) {
-                    window.scrollTo({
-                        top: targetElement.offsetTop - 80,
-                        behavior: 'smooth'
-                    });
+                    btn.classList.remove('active');
                 }
             });
-        });
 
-        // Enhanced PDF Generation Function
-        function generatePDF() {
-            // Create a loading animation
-            const originalButton = document.querySelector('.btn-print');
-            const originalContent = originalButton.innerHTML;
-            originalButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>Preparing PDF...</span>';
-            originalButton.disabled = true;
-
-            // Show instructions dialog
-            const dialog = document.createElement('div');
-            dialog.style.cssText = `
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
-                color: white;
-                padding: 30px;
-                border-radius: 15px;
-                z-index: 9999;
-                text-align: center;
-                box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-                animation: fadeIn 0.3s ease-out;
-                width: 350px;
-                max-width: 90%;
-            `;
-            dialog.innerHTML = `
-                <h3 style="margin-bottom: 15px;"><i class="fas fa-file-pdf"></i> PDF Instructions</h3>
-                <p style="margin-bottom: 15px; font-size: 14px;">To download as PDF:</p>
-                <ol style="text-align: left; margin: 15px 0; padding-left: 20px; font-size: 13px;">
-                    <li>Click "Print" in the dialog</li>
-                    <li>Select "Save as PDF" as printer</li>
-                    <li>Make sure pages are set to "All"</li>
-                    <li>Click "Save" and choose location</li>
-                </ol>
-                <p style="font-size: 12px; opacity: 0.8; margin-top: 15px; color: #e3f2fd;">Note: Only 1-2 pages will generate (no blank pages)</p>
-                <div style="margin-top: 20px; display: flex; gap: 10px; justify-content: center;">
-                    <button id="cancelPrint" style="padding: 8px 20px; background: rgba(255,255,255,0.2); color: white; border: 1px solid white; border-radius: 20px; cursor: pointer;">
-                        Cancel
-                    </button>
-                    <button id="continuePrint" style="padding: 8px 20px; background: white; color: var(--primary-blue); border: none; border-radius: 20px; cursor: pointer; font-weight: bold;">
-                        Continue to Print
-                    </button>
-                </div>
-            `;
-            document.body.appendChild(dialog);
-
-            // Add event listener to the continue button
-            document.getElementById('continuePrint').addEventListener('click', function() {
-                // Remove dialog
-                dialog.style.animation = 'fadeOut 0.3s ease-out';
-                setTimeout(() => {
-                    if (dialog.parentNode) {
-                        document.body.removeChild(dialog);
-                    }
-                }, 300);
-
-                // Small delay before printing
-                setTimeout(() => {
-                    // Trigger the print dialog
-                    window.print();
-                    
-                    // Restore button after printing
-                    setTimeout(() => {
-                        originalButton.innerHTML = originalContent;
-                        originalButton.disabled = false;
-                        
-                        // Show success message
-                        showSuccessMessage();
-                    }, 1000);
-                }, 500);
-            });
-
-            // Cancel button
-            document.getElementById('cancelPrint').addEventListener('click', function() {
-                dialog.style.animation = 'fadeOut 0.3s ease-out';
-                setTimeout(() => {
-                    if (dialog.parentNode) {
-                        document.body.removeChild(dialog);
-                    }
-                    originalButton.innerHTML = originalContent;
-                    originalButton.disabled = false;
-                }, 300);
-            });
-
-            // Close on outside click
-            dialog.addEventListener('click', function(e) {
-                if (e.target === dialog) {
-                    dialog.style.animation = 'fadeOut 0.3s ease-out';
-                    setTimeout(() => {
-                        if (dialog.parentNode) {
-                            document.body.removeChild(dialog);
-                        }
-                        originalButton.innerHTML = originalContent;
-                        originalButton.disabled = false;
-                    }, 300);
+            // Update text content
+            const elements = document.querySelectorAll('[data-i18n]');
+            elements.forEach(el => {
+                const key = el.dataset.i18n;
+                if(translations[lang][key]) {
+                    el.textContent = translations[lang][key];
                 }
             });
+
+            // Handle RTL for Arabic
+            if(lang === 'ar') {
+                document.documentElement.dir = 'rtl';
+                document.body.style.fontFamily = "'Noto Sans Arabic', 'Inter', sans-serif";
+            } else {
+                document.documentElement.dir = 'ltr';
+                document.body.style.fontFamily = "'Inter', sans-serif";
+            }
+
+            // Close dropdown
+            langDropdown.classList.remove('show');
+            
+            // Update typewriter words
+            wordIndex = 0;
+            charIndex = 0;
+            isDeleting = false;
         }
 
-        // Show success message
-        function showSuccessMessage() {
-            const success = document.createElement('div');
-            success.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background: linear-gradient(135deg, var(--accent-green), #66bb6a);
-                color: white;
-                padding: 15px 25px;
-                border-radius: 10px;
-                z-index: 9999;
-                animation: slideInRight 0.5s ease-out;
-                box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-                display: flex;
-                align-items: center;
-                gap: 10px;
-                max-width: 300px;
-            `;
-            success.innerHTML = `
-                <i class="fas fa-check-circle"></i>
-                <div>
-                    <strong>PDF Generated!</strong><br>
-                    <small>Check your downloads folder</small>
-                </div>
-            `;
-            document.body.appendChild(success);
-            
-            // Remove success message after 4 seconds
-            setTimeout(() => {
-                success.style.animation = 'slideOutRight 0.5s ease-out';
-                setTimeout(() => {
-                    if (success.parentNode) {
-                        document.body.removeChild(success);
-                    }
-                }, 500);
-            }, 4000);
-        }
-
-        // Add CSS for dialog animations
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes fadeOut {
-                from { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-                to { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
-            }
-            
-            @keyframes slideOutRight {
-                from { transform: translateX(0); opacity: 1; }
-                to { transform: translateX(100%); opacity: 0; }
-            }
-        `;
-        document.head.appendChild(style);
-
-        // Animation on scroll
+        // Scroll reveal animation
         const observerOptions = {
             threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
+            rootMargin: "0px 0px -50px 0px"
         };
-        
+
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
+                    entry.target.classList.add('active');
                 }
             });
         }, observerOptions);
-        
-        // Observe all resume sections
-        document.querySelectorAll('.resume-section').forEach(section => {
-            observer.observe(section);
+
+        document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+
+        // Navbar scroll effect
+        let lastScroll = 0;
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            const currentScroll = window.pageYOffset;
+            
+            if (currentScroll > 100) {
+                navbar.classList.add('glass-strong');
+                navbar.classList.remove('py-4');
+                navbar.classList.add('py-2');
+            } else {
+                navbar.classList.remove('glass-strong');
+                navbar.classList.add('py-4');
+                navbar.classList.remove('py-2');
+            }
+            
+            lastScroll = currentScroll;
         });
-        
-        // Add animation to DesertCool details
-        const desertcoolDetails = document.querySelector('.desertcool-details');
-        if (desertcoolDetails) {
-            observer.observe(desertcoolDetails);
+
+        // Download CV function
+        function downloadCV() {
+            const link = document.createElement('a');
+            link.href = '#';
+            link.download = 'DJELTI_ILYES_CV.pdf';
+            link.click();
+            showNotification(translations[currentLang].download_cv + ' started!');
         }
 
-        // ===== INITIALIZE EVERYTHING WHEN PAGE LOADS =====
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log("DOM fully loaded, initializing...");
+        // Notification system
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.className = 'fixed bottom-4 right-4 glass-strong px-6 py-3 rounded-lg border border-ai-accent/30 text-ai-accent z-50 transform translate-y-20 transition-transform duration-300';
+            notification.textContent = message;
+            document.body.appendChild(notification);
             
-            // Initialize translation system FIRST
-            initTranslation();
+            setTimeout(() => {
+                notification.classList.remove('translate-y-20');
+            }, 100);
             
-            // Initialize other systems
-            console.log("Page fully initialized");
+            setTimeout(() => {
+                notification.classList.add('translate-y-20');
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
         });
 
-        // Also initialize if DOM is already loaded
-        if (document.readyState === 'complete' || document.readyState === 'interactive') {
-            console.log("DOM already ready, initializing now...");
-            setTimeout(initTranslation, 100);
-        }
+        // Initialize
+        changeLanguage('en');
     </script>
 </body>
 </html>
