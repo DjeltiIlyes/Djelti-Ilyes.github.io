@@ -6,7 +6,9 @@
     <title>DJELTI ILYES | AI Engineer & Researcher</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&family=Noto+Sans+Arabic:wght@400;700&family=Noto+Sans+SC:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Noto+Sans+Arabic:wght@400;500;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -22,7 +24,9 @@
                             accent: '#00d4ff',
                             purple: '#7c3aed',
                             pink: '#ec4899',
-                            surface: '#1a1a2e'
+                            surface: '#1a1a2e',
+                            cyan: '#22d3ee',
+                            indigo: '#6366f1'
                         }
                     },
                     animation: {
@@ -30,6 +34,11 @@
                         'float': 'float 6s ease-in-out infinite',
                         'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
                         'glow': 'glow 2s ease-in-out infinite alternate',
+                        'shimmer': 'shimmer 2s linear infinite',
+                        'orbit': 'orbit 20s linear infinite',
+                        'float-3d': 'float3d 8s ease-in-out infinite',
+                        'scan': 'scan 3s ease-in-out infinite',
+                        'breathe': 'breathe 4s ease-in-out infinite'
                     },
                     keyframes: {
                         gradient: {
@@ -43,6 +52,26 @@
                         glow: {
                             '0%': { boxShadow: '0 0 5px #00d4ff, 0 0 10px #00d4ff' },
                             '100%': { boxShadow: '0 0 20px #00d4ff, 0 0 30px #00d4ff' }
+                        },
+                        shimmer: {
+                            '0%': { backgroundPosition: '-200% 0' },
+                            '100%': { backgroundPosition: '200% 0' }
+                        },
+                        orbit: {
+                            '0%': { transform: 'rotate(0deg)' },
+                            '100%': { transform: 'rotate(360deg)' }
+                        },
+                        float3d: {
+                            '0%, 100%': { transform: 'translateY(0) rotateX(10deg) rotateY(10deg)' },
+                            '50%': { transform: 'translateY(-20px) rotateX(-10deg) rotateY(-10deg)' }
+                        },
+                        scan: {
+                            '0%, 100%': { transform: 'translateY(-100%)' },
+                            '50%': { transform: 'translateY(100%)' }
+                        },
+                        breathe: {
+                            '0%, 100%': { transform: 'scale(1)', opacity: '0.5' },
+                            '50%': { transform: 'scale(1.2)', opacity: '0.8' }
                         }
                     }
                 }
@@ -81,6 +110,13 @@
             animation: gradient 8s linear infinite;
         }
         
+        .gradient-border {
+            position: relative;
+            background: linear-gradient(#12121a, #12121a) padding-box,
+                        linear-gradient(135deg, #00d4ff, #7c3aed, #ec4899) border-box;
+            border: 2px solid transparent;
+        }
+        
         .grid-pattern {
             background-image: 
                 linear-gradient(rgba(0, 212, 255, 0.03) 1px, transparent 1px),
@@ -110,14 +146,20 @@
         }
         
         .project-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px -15px rgba(0, 212, 255, 0.3);
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px -20px rgba(0, 212, 255, 0.4);
             border-color: rgba(0, 212, 255, 0.5);
         }
         
         .skill-tag {
             position: relative;
             overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .skill-tag:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 212, 255, 0.3);
         }
         
         .skill-tag::after {
@@ -149,28 +191,7 @@
             width: 100%;
             height: 100%;
             z-index: -1;
-            opacity: 0.4;
-        }
-        
-        .scroll-indicator {
-            animation: bounce 2s infinite;
-        }
-        
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-            40% { transform: translateY(-10px); }
-            60% { transform: translateY(-5px); }
-        }
-        
-        .reveal {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.8s ease-out;
-        }
-        
-        .reveal.active {
-            opacity: 1;
-            transform: translateY(0);
+            opacity: 0.5;
         }
         
         .typing-cursor::after {
@@ -182,90 +203,260 @@
             0%, 50% { opacity: 1; }
             51%, 100% { opacity: 0; }
         }
+        
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
 
-        /* Language Selector Styles */
+        /* Floating Language Selector - Prominent Position */
+        .lang-selector {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
         .lang-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(18, 18, 26, 0.9);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            color: #94a3b8;
+            font-weight: 600;
+            font-size: 12px;
+            cursor: pointer;
             transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            text-transform: uppercase;
+        }
+        
+        .lang-btn:hover {
+            transform: scale(1.1);
+            border-color: rgba(0, 212, 255, 0.5);
+            color: #00d4ff;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
         }
         
         .lang-btn.active {
-            background: rgba(0, 212, 255, 0.2);
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(124, 58, 237, 0.2));
             border-color: #00d4ff;
             color: #00d4ff;
+            box-shadow: 0 0 25px rgba(0, 212, 255, 0.4);
         }
 
-        .lang-dropdown {
+        /* Orbital animation for hero */
+        .orbital-ring {
+            position: absolute;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 50%;
+            animation: orbit 20s linear infinite;
+        }
+        
+        .orbital-ring::before {
+            content: '';
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: #00d4ff;
+            border-radius: 50%;
+            box-shadow: 0 0 15px #00d4ff;
+            top: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .orbital-ring:nth-child(2) {
+            width: 200px;
+            height: 200px;
+            animation-duration: 15s;
+            animation-direction: reverse;
+        }
+        
+        .orbital-ring:nth-child(3) {
+            width: 300px;
+            height: 300px;
+            animation-duration: 25s;
+        }
+        
+        .orbital-ring:nth-child(3)::before {
+            background: #7c3aed;
+            box-shadow: 0 0 15px #7c3aed;
+        }
+
+        /* Glowing button effect */
+        .glow-btn {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .glow-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .glow-btn:hover::before {
+            left: 100%;
+        }
+
+        /* Code typing effect */
+        .code-line {
             opacity: 0;
-            visibility: hidden;
-            transform: translateY(-10px);
-            transition: all 0.3s ease;
+            animation: codeReveal 0.5s ease forwards;
+        }
+        
+        @keyframes codeReveal {
+            from { opacity: 0; transform: translateX(-10px); }
+            to { opacity: 1; transform: translateX(0); }
         }
 
-        .lang-dropdown.show {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
+        /* Noise texture overlay */
+        .noise-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+        }
+
+        /* Download progress */
+        .download-progress {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: rgba(18, 18, 26, 0.95);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 12px;
+            padding: 16px 24px;
+            z-index: 1000;
+            display: none;
+            backdrop-filter: blur(20px);
+        }
+        
+        .download-progress.show {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Hexagon grid background */
+        .hex-grid {
+            position: absolute;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%2300d4ff' fill-opacity='0.02'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9zM0 15l12.98-7.5V0h-2v6.35L0 12.69v2.3zm0 18.5L12.98 41v8h-2v-6.85L0 35.81v-2.3zM15 0v7.5L27.99 15H28v-2.31h-.01L17 6.35V0h-2zm0 49v-8l12.99-7.5H28v2.31h-.01L17 42.15V49h-2z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+
+        @media (max-width: 768px) {
+            .lang-selector {
+                top: auto;
+                bottom: 20px;
+                right: 50%;
+                transform: translateX(50%);
+                flex-direction: row;
+            }
         }
     </style>
 </head>
 <body class="font-sans antialiased selection:bg-ai-accent selection:text-ai-dark">
 
+    <!-- Noise Texture -->
+    <div class="noise-overlay"></div>
+    
     <!-- Neural Network Background -->
     <div id="canvas-container"></div>
     
     <!-- Grid Pattern Overlay -->
     <div class="fixed inset-0 grid-pattern pointer-events-none z-0"></div>
+    
+    <!-- Hex Pattern -->
+    <div class="fixed inset-0 hex-grid pointer-events-none z-0 opacity-50"></div>
+
+    <!-- Floating Language Selector - PROMINENT -->
+    <div class="lang-selector">
+        <button onclick="changeLanguage('en')" class="lang-btn active" data-lang="en" title="English">
+            EN
+        </button>
+        <button onclick="changeLanguage('ar')" class="lang-btn" data-lang="ar" title="العربية">
+            AR
+        </button>
+        <button onclick="changeLanguage('fr')" class="lang-btn" data-lang="fr" title="Français">
+            FR
+        </button>
+        <button onclick="changeLanguage('ru')" class="lang-btn" data-lang="ru" title="Русский">
+            RU
+        </button>
+    </div>
+
+    <!-- Download Progress Indicator -->
+    <div class="download-progress" id="downloadProgress">
+        <svg class="animate-spin w-5 h-5 text-ai-accent" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        <span class="text-sm text-gray-300" id="downloadText">Generating CV...</span>
+    </div>
 
     <!-- Navigation -->
     <nav class="fixed top-0 w-full z-50 glass-strong border-b border-white/10 transition-all duration-300" id="navbar">
         <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-            <div class="font-mono text-xl font-bold gradient-text tracking-tighter">
-                &lt;DJELTI ILYES /&gt;
+            <div class="font-mono text-xl font-bold gradient-text tracking-tighter flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-ai-accent to-ai-purple flex items-center justify-center">
+                    <span class="text-white font-bold text-sm">DI</span>
+                </div>
+                <span>&lt;DJELTI ILYES /&gt;</span>
             </div>
             
             <!-- Desktop Menu -->
             <div class="hidden md:flex space-x-8 text-sm font-medium items-center">
-                <a href="#about" class="hover:text-ai-accent transition-colors" data-i18n="nav_about">About</a>
-                <a href="#projects" class="hover:text-ai-accent transition-colors" data-i18n="nav_projects">Projects</a>
-                <a href="#skills" class="hover:text-ai-accent transition-colors" data-i18n="nav_skills">Skills</a>
-                <a href="#contact" class="hover:text-ai-accent transition-colors" data-i18n="nav_contact">Contact</a>
-                
-                <!-- Language Selector -->
-                <div class="relative ml-4">
-                    <button id="langToggle" class="flex items-center gap-2 px-3 py-1.5 rounded-lg glass border border-white/20 hover:border-ai-accent/50 transition-all text-sm">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"></path>
-                        </svg>
-                        <span id="currentLang">EN</span>
-                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                        </svg>
-                    </button>
-                    
-                    <div id="langDropdown" class="lang-dropdown absolute right-0 mt-2 w-32 glass-strong rounded-lg border border-white/10 overflow-hidden">
-                        <button onclick="changeLanguage('en')" class="lang-btn w-full px-4 py-2 text-left text-sm hover:bg-white/5 flex items-center gap-2" data-lang="en">
-                            <span class="w-2 h-2 rounded-full bg-ai-accent"></span>
-                            English
-                        </button>
-                        <button onclick="changeLanguage('ar')" class="lang-btn w-full px-4 py-2 text-left text-sm hover:bg-white/5 flex items-center gap-2" data-lang="ar">
-                            <span class="w-2 h-2 rounded-full bg-ai-accent"></span>
-                            العربية
-                        </button>
-                        <button onclick="changeLanguage('fr')" class="lang-btn w-full px-4 py-2 text-left text-sm hover:bg-white/5 flex items-center gap-2" data-lang="fr">
-                            <span class="w-2 h-2 rounded-full bg-ai-accent"></span>
-                            Français
-                        </button>
-                        <button onclick="changeLanguage('ru')" class="lang-btn w-full px-4 py-2 text-left text-sm hover:bg-white/5 flex items-center gap-2" data-lang="ru">
-                            <span class="w-2 h-2 rounded-full bg-ai-accent"></span>
-                            Русский
-                        </button>
-                    </div>
-                </div>
+                <a href="#about" class="hover:text-ai-accent transition-all duration-300 relative group" data-i18n="nav_about">
+                    About
+                    <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-ai-accent transition-all duration-300 group-hover:w-full"></span>
+                </a>
+                <a href="#projects" class="hover:text-ai-accent transition-all duration-300 relative group" data-i18n="nav_projects">
+                    Projects
+                    <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-ai-accent transition-all duration-300 group-hover:w-full"></span>
+                </a>
+                <a href="#skills" class="hover:text-ai-accent transition-all duration-300 relative group" data-i18n="nav_skills">
+                    Skills
+                    <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-ai-accent transition-all duration-300 group-hover:w-full"></span>
+                </a>
+                <a href="#contact" class="px-5 py-2 rounded-full bg-gradient-to-r from-ai-accent to-ai-purple text-white font-semibold hover:shadow-lg hover:shadow-ai-accent/30 transition-all duration-300 transform hover:scale-105" data-i18n="nav_contact">
+                    Contact
+                </a>
             </div>
 
             <!-- Mobile Menu Button -->
             <button onclick="document.getElementById('contact').scrollIntoView({behavior: 'smooth'})" 
-                    class="md:hidden px-6 py-2 rounded-full border border-ai-accent text-ai-accent hover:bg-ai-accent hover:text-ai-dark transition-all duration-300 font-mono text-sm">
+                    class="md:hidden px-5 py-2 rounded-full border border-ai-accent text-ai-accent hover:bg-ai-accent hover:text-ai-dark transition-all duration-300 font-mono text-sm">
                 Hire Me
             </button>
         </div>
@@ -273,10 +464,17 @@
 
     <!-- Hero Section -->
     <section class="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
+        <!-- Orbital Rings -->
+        <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <div class="orbital-ring"></div>
+            <div class="orbital-ring"></div>
+            <div class="orbital-ring"></div>
+        </div>
+        
         <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center relative z-10">
             <div class="space-y-8">
-                <div class="inline-flex items-center space-x-2 px-4 py-2 rounded-full glass border border-ai-accent/30 text-ai-accent font-mono text-sm">
-                    <span class="w-2 h-2 rounded-full bg-ai-accent animate-pulse"></span>
+                <div class="inline-flex items-center space-x-2 px-5 py-2.5 rounded-full glass border border-ai-accent/30 text-ai-accent font-mono text-sm animate-glow">
+                    <span class="w-2.5 h-2.5 rounded-full bg-ai-accent animate-pulse"></span>
                     <span data-i18n="available">Available for Opportunities</span>
                 </div>
                 
@@ -292,86 +490,93 @@
                 
                 <div class="flex flex-wrap gap-4">
                     <button onclick="document.getElementById('projects').scrollIntoView({behavior: 'smooth'})" 
-                            class="px-8 py-4 rounded-lg bg-gradient-to-r from-ai-accent to-ai-purple text-white font-semibold hover:shadow-lg hover:shadow-ai-accent/25 transition-all duration-300 transform hover:scale-105">
+                            class="glow-btn px-8 py-4 rounded-xl bg-gradient-to-r from-ai-accent to-ai-purple text-white font-semibold hover:shadow-lg hover:shadow-ai-accent/30 transition-all duration-300 transform hover:scale-105 hover:-translate-y-1">
                         <span data-i18n="view_projects">View Projects</span>
                     </button>
-                    <button onclick="downloadCV()" class="px-8 py-4 rounded-lg glass border border-white/20 hover:border-ai-accent/50 transition-all duration-300 flex items-center gap-2 group">
-                        <span data-i18n="download_cv">Download CV</span>
-                        <svg class="w-4 h-4 transform group-hover:translate-y-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <button onclick="generateAndDownloadCV()" class="glow-btn px-8 py-4 rounded-xl glass border border-white/20 hover:border-ai-accent/50 transition-all duration-300 flex items-center gap-2 group">
+                        <svg class="w-5 h-5 transform group-hover:translate-y-1 transition-transform text-ai-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
                         </svg>
+                        <span data-i18n="download_cv">Download CV</span>
                     </button>
                 </div>
 
                 <!-- Quick Stats -->
                 <div class="grid grid-cols-3 gap-6 pt-8 border-t border-white/10">
-                    <div>
-                        <div class="text-3xl font-bold stat-number">19.5</div>
+                    <div class="group">
+                        <div class="text-4xl font-bold stat-number group-hover:scale-110 transition-transform">19.5</div>
                         <div class="text-sm text-gray-500 mt-1" data-i18n="master_score">Master's Score</div>
                     </div>
-                    <div>
-                        <div class="text-3xl font-bold stat-number">95%</div>
+                    <div class="group">
+                        <div class="text-4xl font-bold stat-number group-hover:scale-110 transition-transform">95%</div>
                         <div class="text-sm text-gray-500 mt-1" data-i18n="accuracy">Model Accuracy</div>
                     </div>
-                    <div>
-                        <div class="text-3xl font-bold stat-number">2nd</div>
+                    <div class="group">
+                        <div class="text-4xl font-bold stat-number group-hover:scale-110 transition-transform">2nd</div>
                         <div class="text-sm text-gray-500 mt-1" data-i18n="national_rank">National Rank</div>
                     </div>
                 </div>
             </div>
 
-            <!-- Hero Visual -->
+            <!-- Hero Visual with 3D Effect -->
             <div class="relative hidden md:block">
-                <div class="relative w-full aspect-square max-w-md mx-auto">
-                    <div class="absolute inset-0 bg-gradient-to-br from-ai-accent/20 to-ai-purple/20 rounded-full blur-3xl animate-pulse-slow"></div>
-                    <div class="relative glass-strong rounded-2xl p-8 border border-ai-accent/20 animate-float">
-                        <div class="flex items-center gap-2 mb-4 text-ai-accent font-mono text-sm">
+                <div class="relative w-full aspect-square max-w-md mx-auto animate-float-3d">
+                    <div class="absolute inset-0 bg-gradient-to-br from-ai-accent/30 to-ai-purple/30 rounded-full blur-3xl animate-pulse-slow"></div>
+                    
+                    <!-- Orbital decorations -->
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64">
+                        <div class="absolute inset-0 border border-ai-accent/20 rounded-full animate-spin" style="animation-duration: 10s;"></div>
+                        <div class="absolute inset-4 border border-ai-purple/20 rounded-full animate-spin" style="animation-duration: 15s; animation-direction: reverse;"></div>
+                        <div class="absolute inset-8 border border-ai-pink/20 rounded-full animate-spin" style="animation-duration: 20s;"></div>
+                    </div>
+                    
+                    <div class="relative glass-strong rounded-2xl p-6 border border-ai-accent/20 transform rotate-y-12 rotate-x-6 perspective-1000">
+                        <div class="flex items-center gap-2 mb-4 text-ai-accent font-mono text-xs">
                             <div class="w-3 h-3 rounded-full bg-red-500"></div>
                             <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
                             <div class="w-3 h-3 rounded-full bg-green-500"></div>
                             <span class="ml-2">LUNAV_AI.py</span>
                         </div>
-                        <pre class="font-mono text-sm text-gray-300 overflow-hidden">
-<code class="language-python">
-<span class="text-ai-accent">class</span> <span class="text-ai-purple font-bold">AIEngineer</span>:
-    <span class="text-gray-500">def __init__(self):</span>
-        self.name = <span class="text-green-400">"DJELTI ILYES"</span>
-        self.focus = [<span class="text-green-400">"Computer Vision"</span>, 
-                     <span class="text-green-400">"IoT"</span>, 
-                     <span class="text-green-400">"Edge AI"</span>]
-        self.mission = <span class="text-green-400">"Tech for Good"</span>
-    
-    <span class="text-gray-500">def innovate(self):</span>
-        <span class="text-ai-accent">return</span> <span class="text-green-400">"Real-world Impact"</span>
-</code>
+                        <pre class="font-mono text-xs text-gray-300 overflow-hidden"><code><span class="text-ai-accent code-line" style="animation-delay: 0.1s;">class</span> <span class="text-ai-purple font-bold code-line" style="animation-delay: 0.2s;">AIEngineer</span><span class="text-white code-line" style="animation-delay: 0.3s;">:</span>
+<span class="text-gray-500 code-line" style="animation-delay: 0.4s;">    def</span> <span class="text-white code-line" style="animation-delay: 0.5s;">__init__</span><span class="text-white code-line" style="animation-delay: 0.6s;">(</span><span class="text-white code-line" style="animation-delay: 0.7s;">self</span><span class="text-white code-line" style="animation-delay: 0.8s;">)</span><span class="text-white code-line" style="animation-delay: 0.9s;">:</span>
+<span class="text-white code-line" style="animation-delay: 1.0s;">        self</span><span class="text-white code-line" style="animation-delay: 1.1s;">.</span><span class="text-ai-accent code-line" style="animation-delay: 1.2s;">name</span> <span class="text-white code-line" style="animation-delay: 1.3s;">=</span> <span class="text-green-400 code-line" style="animation-delay: 1.4s;">"DJELTI ILYES"</span>
+<span class="text-white code-line" style="animation-delay: 1.5s;">        self</span><span class="text-white code-line" style="animation-delay: 1.6s;">.</span><span class="text-ai-accent code-line" style="animation-delay: 1.7s;">focus</span> <span class="text-white code-line" style="animation-delay: 1.8s;">=</span> <span class="text-white code-line" style="animation-delay: 1.9s;">[</span><span class="text-green-400 code-line" style="animation-delay: 2.0s;">"CV"</span><span class="text-white code-line" style="animation-delay: 2.1s;">,</span> <span class="text-green-400 code-line" style="animation-delay: 2.2s;">"IoT"</span><span class="text-white code-line" style="animation-delay: 2.3s;">]</span>
+<span class="text-gray-500 code-line" style="animation-delay: 2.4s;">    def</span> <span class="text-white code-line" style="animation-delay: 2.5s;">innovate</span><span class="text-white code-line" style="animation-delay: 2.6s;">(</span><span class="text-white code-line" style="animation-delay: 2.7s;">self</span><span class="text-white code-line" style="animation-delay: 2.8s;">)</span><span class="text-white code-line" style="animation-delay: 2.9s;">:</span>
+<span class="text-ai-accent code-line" style="animation-delay: 3.0s;">        return</span> <span class="text-green-400 code-line" style="animation-delay: 3.1s;">"Impact!"</span></code>
                         </pre>
                     </div>
                     
-                    <!-- Floating Elements -->
-                    <div class="absolute -top-4 -right-4 glass px-4 py-2 rounded-lg border border-ai-accent/30 animate-float" style="animation-delay: 1s;">
+                    <!-- Floating badges -->
+                    <div class="absolute -top-2 -right-2 glass px-4 py-2 rounded-xl border border-ai-accent/30 animate-float glow-btn">
                         <span class="text-ai-accent font-mono text-xs">PyTorch</span>
                     </div>
-                    <div class="absolute -bottom-4 -left-4 glass px-4 py-2 rounded-lg border border-ai-purple/30 animate-float" style="animation-delay: 2s;">
+                    <div class="absolute -bottom-2 -left-2 glass px-4 py-2 rounded-xl border border-ai-purple/30 animate-float glow-btn" style="animation-delay: 1s;">
                         <span class="text-ai-purple font-mono text-xs">OpenCV</span>
+                    </div>
+                    <div class="absolute top-1/3 -left-6 glass px-3 py-1.5 rounded-lg border border-ai-pink/30 animate-float glow-btn" style="animation-delay: 2s;">
+                        <span class="text-ai-pink font-mono text-xs">Edge AI</span>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Scroll Indicator -->
-        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 scroll-indicator">
-            <svg class="w-6 h-6 text-ai-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
-            </svg>
+        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2">
+            <div class="flex flex-col items-center gap-2 animate-bounce">
+                <span class="text-xs text-gray-500 font-mono" data-i18n="scroll_down">Scroll</span>
+                <svg class="w-5 h-5 text-ai-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+                </svg>
+            </div>
         </div>
     </section>
 
     <!-- About Section -->
-    <section id="about" class="py-20 relative">
+    <section id="about" class="py-24 relative">
         <div class="max-w-7xl mx-auto px-6">
             <div class="grid md:grid-cols-2 gap-16 items-center">
                 <div class="reveal">
-                    <h2 class="text-4xl font-bold mb-6"><span data-i18n="about_title1">Bridging</span> <span class="gradient-text" data-i18n="about_title2">AI Research</span> <span data-i18n="about_title3">& Real Impact</span></h2>
+                    <h2 class="text-4xl md:text-5xl font-bold mb-6"><span data-i18n="about_title1">Bridging</span> <span class="gradient-text" data-i18n="about_title2">AI Research</span> <span data-i18n="about_title3">& Real Impact</span></h2>
                     <div class="space-y-4 text-gray-400 leading-relaxed">
                         <p data-i18n="about_p1">
                             As a Master's graduate with a score of <span class="text-white font-semibold">19.5/20</span>, I specialize in developing intelligent systems that solve critical real-world problems. My work focuses on the intersection of computer vision, embedded systems, and human-centered design.
@@ -382,50 +587,50 @@
                     </div>
                     
                     <div class="mt-8 grid grid-cols-2 gap-4">
-                        <div class="glass p-4 rounded-lg border border-white/10">
-                            <div class="text-ai-accent font-bold text-2xl mb-1">AI/ML</div>
+                        <div class="glass p-5 rounded-xl border border-white/10 hover:border-ai-accent/30 transition-all duration-300 group">
+                            <div class="text-ai-accent font-bold text-3xl mb-1 group-hover:scale-110 transition-transform">AI/ML</div>
                             <div class="text-sm text-gray-500" data-i18n="skill1">Deep Learning & CV</div>
                         </div>
-                        <div class="glass p-4 rounded-lg border border-white/10">
-                            <div class="text-ai-purple font-bold text-2xl mb-1">IoT</div>
+                        <div class="glass p-5 rounded-xl border border-white/10 hover:border-ai-purple/30 transition-all duration-300 group">
+                            <div class="text-ai-purple font-bold text-3xl mb-1 group-hover:scale-110 transition-transform">IoT</div>
                             <div class="text-sm text-gray-500" data-i18n="skill2">Embedded Systems</div>
                         </div>
-                        <div class="glass p-4 rounded-lg border border-white/10">
-                            <div class="text-ai-pink font-bold text-2xl mb-1">Edge</div>
+                        <div class="glass p-5 rounded-xl border border-white/10 hover:border-ai-pink/30 transition-all duration-300 group">
+                            <div class="text-ai-pink font-bold text-3xl mb-1 group-hover:scale-110 transition-transform">Edge</div>
                             <div class="text-sm text-gray-500" data-i18n="skill3">Real-time Processing</div>
                         </div>
-                        <div class="glass p-4 rounded-lg border border-white/10">
-                            <div class="text-green-400 font-bold text-2xl mb-1">Research</div>
+                        <div class="glass p-5 rounded-xl border border-white/10 hover:border-green-400/30 transition-all duration-300 group">
+                            <div class="text-green-400 font-bold text-3xl mb-1 group-hover:scale-110 transition-transform">Research</div>
                             <div class="text-sm text-gray-500" data-i18n="skill4">Academic Excellence</div>
                         </div>
                     </div>
                 </div>
                 
                 <div class="relative reveal">
-                    <div class="absolute inset-0 bg-gradient-to-r from-ai-accent to-ai-purple opacity-20 blur-3xl rounded-full"></div>
+                    <div class="absolute inset-0 bg-gradient-to-r from-ai-accent to-ai-purple opacity-20 blur-3xl rounded-3xl"></div>
                     <div class="relative glass-strong rounded-2xl p-8 border border-white/10">
-                        <h3 class="text-xl font-bold mb-6 flex items-center gap-2">
-                            <span class="w-2 h-2 bg-ai-accent rounded-full animate-pulse"></span>
+                        <h3 class="text-xl font-bold mb-6 flex items-center gap-3">
+                            <span class="w-3 h-3 bg-ai-accent rounded-full animate-pulse"></span>
                             <span data-i18n="edu_title">Education & Achievements</span>
                         </h3>
                         
-                        <div class="space-y-6">
-                            <div class="border-l-2 border-ai-accent pl-4 relative">
-                                <div class="absolute -left-[5px] top-0 w-2 h-2 bg-ai-accent rounded-full"></div>
+                        <div class="space-y-8">
+                            <div class="border-l-2 border-ai-accent pl-5 relative group">
+                                <div class="absolute -left-[5px] top-0 w-2.5 h-2.5 bg-ai-accent rounded-full group-hover:scale-150 transition-transform"></div>
                                 <div class="text-sm text-ai-accent font-mono mb-1">2023-2024</div>
                                 <div class="font-semibold text-lg" data-i18n="master_degree">Master's Degree</div>
                                 <div class="text-gray-400 text-sm" data-i18n="master_field">AI & Data Science</div>
-                                <div class="mt-2 inline-block px-3 py-1 rounded-full bg-ai-accent/10 text-ai-accent text-sm font-bold">
+                                <div class="mt-3 inline-block px-4 py-1.5 rounded-full bg-ai-accent/10 text-ai-accent text-sm font-bold">
                                     <span data-i18n="score_label">Score</span>: 19.5/20
                                 </div>
                             </div>
                             
-                            <div class="border-l-2 border-ai-purple pl-4 relative">
-                                <div class="absolute -left-[5px] top-0 w-2 h-2 bg-ai-purple rounded-full"></div>
+                            <div class="border-l-2 border-ai-purple pl-5 relative group">
+                                <div class="absolute -left-[5px] top-0 w-2.5 h-2.5 bg-ai-purple rounded-full group-hover:scale-150 transition-transform"></div>
                                 <div class="text-sm text-ai-purple font-mono mb-1">2023</div>
                                 <div class="font-semibold text-lg" data-i18n="competition">National Competition</div>
                                 <div class="text-gray-400 text-sm" data-i18n="competition_name">The Call of Tech</div>
-                                <div class="mt-2 inline-block px-3 py-1 rounded-full bg-ai-purple/10 text-ai-purple text-sm font-bold" data-i18n="second_place">
+                                <div class="mt-3 inline-block px-4 py-1.5 rounded-full bg-ai-purple/10 text-ai-purple text-sm font-bold" data-i18n="second_place">
                                     2nd Place Winner
                                 </div>
                             </div>
@@ -437,50 +642,51 @@
     </section>
 
     <!-- Featured Project (LUNAV) -->
-    <section class="py-20 relative overflow-hidden">
-        <div class="absolute inset-0 bg-gradient-to-b from-ai-accent/5 to-transparent"></div>
+    <section class="py-24 relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-b from-ai-accent/5 via-transparent to-ai-purple/5"></div>
         <div class="max-w-7xl mx-auto px-6 relative z-10">
             <div class="glass-strong rounded-3xl p-8 md:p-12 border border-ai-accent/20 reveal">
                 <div class="grid md:grid-cols-2 gap-12 items-center">
                     <div>
-                        <div class="flex items-center gap-3 mb-4">
-                            <span class="px-3 py-1 rounded-full bg-ai-accent/10 text-ai-accent text-sm font-mono border border-ai-accent/20" data-i18n="master_thesis">Master's Thesis</span>
-                            <span class="text-2xl font-bold text-ai-accent">19.5/20</span>
+                        <div class="flex items-center gap-4 mb-4">
+                            <span class="px-4 py-1.5 rounded-full bg-ai-accent/10 text-ai-accent text-sm font-mono border border-ai-accent/20" data-i18n="master_thesis">Master's Thesis</span>
+                            <span class="text-3xl font-bold text-ai-accent">19.5/20</span>
                         </div>
                         <h2 class="text-4xl md:text-5xl font-bold mb-6">LUNAV</h2>
                         <p class="text-xl text-gray-300 mb-6" data-i18n="lunav_subtitle">Intelligent Navigation System for the Visually Impaired</p>
                         
                         <div class="space-y-4 mb-8">
-                            <div class="flex items-start gap-3">
-                                <div class="w-6 h-6 rounded-full bg-ai-accent/20 flex items-center justify-center mt-1">
-                                    <svg class="w-4 h-4 text-ai-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            <div class="flex items-start gap-4 p-4 rounded-xl glass hover:bg-ai-accent/5 transition-all duration-300">
+                                <div class="w-10 h-10 rounded-xl bg-ai-accent/20 flex items-center justify-center mt-1 flex-shrink-0">
+                                    <svg class="w-5 h-5 text-ai-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                                     </svg>
                                 </div>
                                 <div>
-                                    <div class="font-semibold" data-i18n="feature1_title">Real-time Object Detection</div>
+                                    <div class="font-semibold text-white" data-i18n="feature1_title">Real-time Object Detection</div>
                                     <div class="text-sm text-gray-400" data-i18n="feature1_desc">YOLO-based computer vision at 30 FPS</div>
                                 </div>
                             </div>
-                            <div class="flex items-start gap-3">
-                                <div class="w-6 h-6 rounded-full bg-ai-accent/20 flex items-center justify-center mt-1">
-                                    <svg class="w-4 h-4 text-ai-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            <div class="flex items-start gap-4 p-4 rounded-xl glass hover:bg-ai-purple/5 transition-all duration-300">
+                                <div class="w-10 h-10 rounded-xl bg-ai-purple/20 flex items-center justify-center mt-1 flex-shrink-0">
+                                    <svg class="w-5 h-5 text-ai-purple" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M9 12a3 3 0 100-6 3 3 0 000 6z"></path>
                                     </svg>
                                 </div>
                                 <div>
-                                    <div class="font-semibold" data-i18n="feature2_title">3D Spatial Audio</div>
+                                    <div class="font-semibold text-white" data-i18n="feature2_title">3D Spatial Audio</div>
                                     <div class="text-sm text-gray-400" data-i18n="feature2_desc">Haptic feedback & directional sound guidance</div>
                                 </div>
                             </div>
-                            <div class="flex items-start gap-3">
-                                <div class="w-6 h-6 rounded-full bg-ai-accent/20 flex items-center justify-center mt-1">
-                                    <svg class="w-4 h-4 text-ai-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            <div class="flex items-start gap-4 p-4 rounded-xl glass hover:bg-ai-pink/5 transition-all duration-300">
+                                <div class="w-10 h-10 rounded-xl bg-ai-pink/20 flex items-center justify-center mt-1 flex-shrink-0">
+                                    <svg class="w-5 h-5 text-ai-pink" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path>
                                     </svg>
                                 </div>
                                 <div>
-                                    <div class="font-semibold" data-i18n="feature3_title">Edge Computing</div>
+                                    <div class="font-semibold text-white" data-i18n="feature3_title">Edge Computing</div>
                                     <div class="text-sm text-gray-400" data-i18n="feature3_desc">Raspberry Pi 4 + Ultrasonic sensors</div>
                                 </div>
                             </div>
@@ -495,15 +701,15 @@
                         </div>
 
                         <div class="grid grid-cols-3 gap-4 pt-6 border-t border-white/10">
-                            <div class="text-center">
+                            <div class="text-center p-3 rounded-xl glass hover:bg-ai-accent/10 transition-all">
                                 <div class="text-2xl font-bold text-ai-accent">95%</div>
                                 <div class="text-xs text-gray-500" data-i18n="stat_accuracy">Accuracy</div>
                             </div>
-                            <div class="text-center">
+                            <div class="text-center p-3 rounded-xl glass hover:bg-ai-accent/10 transition-all">
                                 <div class="text-2xl font-bold text-ai-accent">30</div>
                                 <div class="text-xs text-gray-500">FPS</div>
                             </div>
-                            <div class="text-center">
+                            <div class="text-center p-3 rounded-xl glass hover:bg-ai-accent/10 transition-all">
                                 <div class="text-2xl font-bold text-ai-accent">8h+</div>
                                 <div class="text-xs text-gray-500" data-i18n="stat_battery">Battery</div>
                             </div>
@@ -511,25 +717,44 @@
                     </div>
                     
                     <div class="relative">
-                        <div class="absolute inset-0 bg-ai-accent/20 blur-3xl rounded-full"></div>
+                        <div class="absolute inset-0 bg-ai-accent/20 blur-3xl rounded-3xl"></div>
                         <div class="relative glass rounded-2xl p-6 border border-ai-accent/20">
-                            <div class="aspect-video rounded-lg bg-gradient-to-br from-ai-dark to-ai-surface flex items-center justify-center mb-4 overflow-hidden relative">
-                                <div class="absolute inset-0 opacity-30">
-                                    <div class="absolute top-1/4 left-1/4 w-2 h-2 bg-ai-accent rounded-full animate-ping"></div>
-                                    <div class="absolute top-1/2 right-1/3 w-2 h-2 bg-ai-purple rounded-full animate-ping" style="animation-delay: 0.5s"></div>
-                                    <div class="absolute bottom-1/3 left-1/2 w-2 h-2 bg-ai-pink rounded-full animate-ping" style="animation-delay: 1s"></div>
+                            <div class="aspect-video rounded-xl bg-gradient-to-br from-ai-dark to-ai-surface flex items-center justify-center mb-4 overflow-hidden relative">
+                                <!-- Animated grid -->
+                                <div class="absolute inset-0">
+                                    <div class="absolute inset-0 bg-[linear-gradient(rgba(0,212,255,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(0,212,255,0.1)_1px,transparent_1px)] bg-[size:20px_20px]"></div>
+                                    <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-ai-accent to-transparent animate-scan"></div>
                                 </div>
-                                <svg class="w-32 h-32 text-ai-accent/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-                                </svg>
+                                
+                                <!-- Pulsing dots -->
+                                <div class="absolute inset-0">
+                                    <div class="absolute top-1/4 left-1/4 w-3 h-3 bg-ai-accent rounded-full animate-ping"></div>
+                                    <div class="absolute top-1/2 right-1/3 w-2 h-2 bg-ai-purple rounded-full animate-ping" style="animation-delay: 0.5s"></div>
+                                    <div class="absolute bottom-1/3 left-1/2 w-2.5 h-2.5 bg-ai-pink rounded-full animate-ping" style="animation-delay: 1s"></div>
+                                </div>
+                                
+                                <!-- Central icon -->
+                                <div class="relative z-10 w-24 h-24 rounded-2xl bg-ai-dark/80 border border-ai-accent/30 flex items-center justify-center">
+                                    <svg class="w-16 h-16 text-ai-accent/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                                    </svg>
+                                </div>
                             </div>
-                            <div class="space-y-2">
-                                <div class="h-2 bg-white/10 rounded-full overflow-hidden">
-                                    <div class="h-full bg-ai-accent w-[95%] rounded-full"></div>
+                            
+                            <!-- Progress bar -->
+                            <div class="space-y-3">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-sm text-gray-400 font-mono" data-i18n="confidence">Object Detection</span>
+                                    <span class="text-sm text-ai-accent font-bold">95%</span>
+                                </div>
+                                <div class="h-3 bg-white/5 rounded-full overflow-hidden">
+                                    <div class="h-full bg-gradient-to-r from-ai-accent to-ai-purple w-[95%] rounded-full relative overflow-hidden">
+                                        <div class="absolute inset-0 bg-white/20 animate-shimmer"></div>
+                                    </div>
                                 </div>
                                 <div class="flex justify-between text-xs text-gray-500 font-mono">
-                                    <span data-i18n="confidence">Object Detection Confidence</span>
-                                    <span>95%</span>
+                                    <span>YOLO v8</span>
+                                    <span>30 FPS</span>
                                 </div>
                             </div>
                         </div>
@@ -540,114 +765,114 @@
     </section>
 
     <!-- Projects Grid -->
-    <section id="projects" class="py-20">
+    <section id="projects" class="py-24">
         <div class="max-w-7xl mx-auto px-6">
             <div class="text-center mb-16 reveal">
-                <h2 class="text-4xl font-bold mb-4"><span data-i18n="other_projects">Other</span> <span class="gradient-text" data-i18n="projects_word">Projects</span></h2>
+                <h2 class="text-4xl md:text-5xl font-bold mb-4"><span data-i18n="other_projects">Other</span> <span class="gradient-text" data-i18n="projects_word">Projects</span></h2>
                 <p class="text-gray-400 max-w-2xl mx-auto" data-i18n="projects_desc">Innovative solutions combining hardware and software engineering</p>
             </div>
 
             <div class="grid md:grid-cols-2 gap-8">
                 <!-- DesertCool -->
-                <div class="project-card glass rounded-2xl p-8 border border-white/10 reveal">
+                <div class="project-card glass rounded-2xl p-8 border border-white/10 reveal group">
                     <div class="flex justify-between items-start mb-6">
-                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-ai-purple to-ai-pink flex items-center justify-center">
-                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-ai-purple to-ai-pink flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                             </svg>
                         </div>
-                        <span class="px-3 py-1 rounded-full bg-ai-purple/10 text-ai-purple text-sm font-mono border border-ai-purple/20">2nd Place</span>
+                        <span class="px-4 py-1.5 rounded-full bg-ai-purple/10 text-ai-purple text-sm font-mono border border-ai-purple/20">2nd Place</span>
                     </div>
                     
-                    <h3 class="text-2xl font-bold mb-2">DesertCool</h3>
-                    <p class="text-gray-400 mb-4" data-i18n="desertcool_desc">Sustainable cooling solution using evaporative techniques with smart IoT monitoring for arid regions.</p>
+                    <h3 class="text-2xl font-bold mb-3">DesertCool</h3>
+                    <p class="text-gray-400 mb-5" data-i18n="desertcool_desc">Sustainable cooling solution using evaporative techniques with smart IoT monitoring for arid regions.</p>
                     
                     <div class="space-y-3 mb-6">
-                        <div class="flex items-center gap-2 text-sm">
-                            <span class="w-1.5 h-1.5 rounded-full bg-ai-purple"></span>
+                        <div class="flex items-center gap-3 text-sm">
+                            <span class="w-2 h-2 rounded-full bg-ai-purple"></span>
                             <span class="text-gray-300"><span data-i18n="temp_reduction">Temperature reduction</span>: <span class="text-white font-semibold">10-15°C</span></span>
                         </div>
-                        <div class="flex items-center gap-2 text-sm">
-                            <span class="w-1.5 h-1.5 rounded-full bg-ai-purple"></span>
+                        <div class="flex items-center gap-3 text-sm">
+                            <span class="w-2 h-2 rounded-full bg-ai-purple"></span>
                             <span class="text-gray-300"><span data-i18n="energy_savings">Energy savings</span>: <span class="text-white font-semibold">80%</span> <span data-i18n="vs_conventional">vs conventional AC</span></span>
                         </div>
                     </div>
 
                     <div class="flex flex-wrap gap-2">
-                        <span class="px-3 py-1 rounded-full glass text-xs font-mono text-ai-purple border border-ai-purple/20">Arduino</span>
-                        <span class="px-3 py-1 rounded-full glass text-xs font-mono text-ai-purple border border-ai-purple/20" data-i18n="tag_sensors">Sensors</span>
-                        <span class="px-3 py-1 rounded-full glass text-xs font-mono text-ai-purple border border-ai-purple/20" data-i18n="tag_sustainability">Sustainability</span>
+                        <span class="px-3 py-1.5 rounded-full glass text-xs font-mono text-ai-purple border border-ai-purple/20">Arduino</span>
+                        <span class="px-3 py-1.5 rounded-full glass text-xs font-mono text-ai-purple border border-ai-purple/20" data-i18n="tag_sensors">Sensors</span>
+                        <span class="px-3 py-1.5 rounded-full glass text-xs font-mono text-ai-purple border border-ai-purple/20" data-i18n="tag_sustainability">Sustainability</span>
                     </div>
                 </div>
 
                 <!-- Educational Robotics -->
-                <div class="project-card glass rounded-2xl p-8 border border-white/10 reveal">
+                <div class="project-card glass rounded-2xl p-8 border border-white/10 reveal group">
                     <div class="flex justify-between items-start mb-6">
-                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-green-400 to-ai-accent flex items-center justify-center">
-                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-green-400 to-ai-accent flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
                             </svg>
                         </div>
-                        <span class="px-3 py-1 rounded-full bg-green-400/10 text-green-400 text-sm font-mono border border-green-400/20" data-i18n="tag_workshop">Workshop</span>
+                        <span class="px-4 py-1.5 rounded-full bg-green-400/10 text-green-400 text-sm font-mono border border-green-400/20" data-i18n="tag_workshop">Workshop</span>
                     </div>
                     
-                    <h3 class="text-2xl font-bold mb-2" data-i18n="robotics_title">Educational Robotics</h3>
-                    <p class="text-gray-400 mb-4" data-i18n="robotics_desc">Designed and taught comprehensive Arduino robotics workshops for university students.</p>
+                    <h3 class="text-2xl font-bold mb-3" data-i18n="robotics_title">Educational Robotics</h3>
+                    <p class="text-gray-400 mb-5" data-i18n="robotics_desc">Designed and taught comprehensive Arduino robotics workshops for university students.</p>
                     
                     <div class="space-y-3 mb-6">
-                        <div class="flex items-center gap-2 text-sm">
-                            <span class="w-1.5 h-1.5 rounded-full bg-green-400"></span>
+                        <div class="flex items-center gap-3 text-sm">
+                            <span class="w-2 h-2 rounded-full bg-green-400"></span>
                             <span class="text-gray-300" data-i18n="hands_on">Hands-on learning approach</span>
                         </div>
-                        <div class="flex items-center gap-2 text-sm">
-                            <span class="w-1.5 h-1.5 rounded-full bg-green-400"></span>
+                        <div class="flex items-center gap-3 text-sm">
+                            <span class="w-2 h-2 rounded-full bg-green-400"></span>
                             <span class="text-gray-300" data-i18n="project_based">Project-based curriculum</span>
                         </div>
                     </div>
 
                     <div class="flex flex-wrap gap-2">
-                        <span class="px-3 py-1 rounded-full glass text-xs font-mono text-green-400 border border-green-400/20" data-i18n="tag_teaching">Teaching</span>
-                        <span class="px-3 py-1 rounded-full glass text-xs font-mono text-green-400 border border-green-400/20">Arduino</span>
-                        <span class="px-3 py-1 rounded-full glass text-xs font-mono text-green-400 border border-green-400/20">STEM</span>
+                        <span class="px-3 py-1.5 rounded-full glass text-xs font-mono text-green-400 border border-green-400/20" data-i18n="tag_teaching">Teaching</span>
+                        <span class="px-3 py-1.5 rounded-full glass text-xs font-mono text-green-400 border border-green-400/20">Arduino</span>
+                        <span class="px-3 py-1.5 rounded-full glass text-xs font-mono text-green-400 border border-green-400/20">STEM</span>
                     </div>
                 </div>
 
                 <!-- Network Optimization -->
-                <div class="project-card glass rounded-2xl p-8 border border-white/10 reveal">
+                <div class="project-card glass rounded-2xl p-8 border border-white/10 reveal group">
                     <div class="flex justify-between items-start mb-6">
-                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-ai-pink to-red-500 flex items-center justify-center">
-                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-ai-pink to-red-500 flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
                             </svg>
                         </div>
-                        <span class="px-3 py-1 rounded-full bg-ai-pink/10 text-ai-pink text-sm font-mono border border-ai-pink/20" data-i18n="tag_tool">Tool</span>
+                        <span class="px-4 py-1.5 rounded-full bg-ai-pink/10 text-ai-pink text-sm font-mono border border-ai-pink/20" data-i18n="tag_tool">Tool</span>
                     </div>
                     
-                    <h3 class="text-2xl font-bold mb-2" data-i18n="network_title">Network Optimizer</h3>
-                    <p class="text-gray-400 mb-4" data-i18n="network_desc">Python-based network analysis and optimization tool for performance monitoring.</p>
+                    <h3 class="text-2xl font-bold mb-3" data-i18n="network_title">Network Optimizer</h3>
+                    <p class="text-gray-400 mb-5" data-i18n="network_desc">Python-based network analysis and optimization tool for performance monitoring.</p>
                     
                     <div class="space-y-3 mb-6">
-                        <div class="flex items-center gap-2 text-sm">
-                            <span class="w-1.5 h-1.5 rounded-full bg-ai-pink"></span>
+                        <div class="flex items-center gap-3 text-sm">
+                            <span class="w-2 h-2 rounded-full bg-ai-pink"></span>
                             <span class="text-gray-300" data-i18n="realtime_monitoring">Real-time monitoring</span>
                         </div>
-                        <div class="flex items-center gap-2 text-sm">
-                            <span class="w-1.5 h-1.5 rounded-full bg-ai-pink"></span>
+                        <div class="flex items-center gap-3 text-sm">
+                            <span class="w-2 h-2 rounded-full bg-ai-pink"></span>
                             <span class="text-gray-300" data-i18n="auto_optimization">Automated optimization</span>
                         </div>
                     </div>
 
                     <div class="flex flex-wrap gap-2">
-                        <span class="px-3 py-1 rounded-full glass text-xs font-mono text-ai-pink border border-ai-pink/20">Python</span>
-                        <span class="px-3 py-1 rounded-full glass text-xs font-mono text-ai-pink border border-ai-pink/20" data-i18n="tag_networking">Networking</span>
-                        <span class="px-3 py-1 rounded-full glass text-xs font-mono text-ai-pink border border-ai-pink/20" data-i18n="tag_automation">Automation</span>
+                        <span class="px-3 py-1.5 rounded-full glass text-xs font-mono text-ai-pink border border-ai-pink/20">Python</span>
+                        <span class="px-3 py-1.5 rounded-full glass text-xs font-mono text-ai-pink border border-ai-pink/20" data-i18n="tag_networking">Networking</span>
+                        <span class="px-3 py-1.5 rounded-full glass text-xs font-mono text-ai-pink border border-ai-pink/20" data-i18n="tag_automation">Automation</span>
                     </div>
                 </div>
 
                 <!-- Placeholder for future project -->
-                <div class="project-card glass rounded-2xl p-8 border border-white/10 border-dashed flex flex-col items-center justify-center text-center reveal group cursor-pointer hover:border-ai-accent/50">
-                    <div class="w-16 h-16 rounded-full glass flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                        <svg class="w-8 h-8 text-gray-500 group-hover:text-ai-accent transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="project-card glass rounded-2xl p-8 border border-white/10 border-dashed flex flex-col items-center justify-center text-center reveal group cursor-pointer hover:border-ai-accent/50" onclick="document.getElementById('contact').scrollIntoView({behavior: 'smooth'})">
+                    <div class="w-20 h-20 rounded-full glass flex items-center justify-center mb-5 group-hover:scale-110 group-hover:bg-ai-accent/10 transition-all duration-300">
+                        <svg class="w-10 h-10 text-gray-500 group-hover:text-ai-accent transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                         </svg>
                     </div>
@@ -659,35 +884,35 @@
     </section>
 
     <!-- Skills Section -->
-    <section id="skills" class="py-20 relative">
+    <section id="skills" class="py-24 relative">
         <div class="max-w-7xl mx-auto px-6">
             <div class="text-center mb-16 reveal">
-                <h2 class="text-4xl font-bold mb-4"><span data-i18n="technical">Technical</span> <span class="gradient-text" data-i18n="expertise">Expertise</span></h2>
+                <h2 class="text-4xl md:text-5xl font-bold mb-4"><span data-i18n="technical">Technical</span> <span class="gradient-text" data-i18n="expertise">Expertise</span></h2>
             </div>
 
             <div class="grid md:grid-cols-3 gap-8">
                 <!-- AI/ML -->
-                <div class="glass rounded-2xl p-8 border border-white/10 hover:border-ai-accent/30 transition-colors reveal">
-                    <div class="w-14 h-14 rounded-xl bg-ai-accent/10 flex items-center justify-center mb-6">
-                        <svg class="w-7 h-7 text-ai-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="glass rounded-2xl p-8 border border-white/10 hover:border-ai-accent/30 transition-all duration-500 reveal group">
+                    <div class="w-16 h-16 rounded-2xl bg-ai-accent/10 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-ai-accent/20 transition-all duration-300">
+                        <svg class="w-8 h-8 text-ai-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                         </svg>
                     </div>
                     <h3 class="text-xl font-bold mb-4" data-i18n="aiml_title">AI & Machine Learning</h3>
                     <ul class="space-y-3 text-gray-400">
-                        <li class="flex items-center gap-2">
+                        <li class="flex items-center gap-3">
                             <span class="w-1.5 h-1.5 rounded-full bg-ai-accent"></span>
                             <span data-i18n="aiml_1">Computer Vision (OpenCV, YOLO)</span>
                         </li>
-                        <li class="flex items-center gap-2">
+                        <li class="flex items-center gap-3">
                             <span class="w-1.5 h-1.5 rounded-full bg-ai-accent"></span>
                             <span data-i18n="aiml_2">Deep Learning (TensorFlow, PyTorch)</span>
                         </li>
-                        <li class="flex items-center gap-2">
+                        <li class="flex items-center gap-3">
                             <span class="w-1.5 h-1.5 rounded-full bg-ai-accent"></span>
                             <span data-i18n="aiml_3">Edge AI & Model Optimization</span>
                         </li>
-                        <li class="flex items-center gap-2">
+                        <li class="flex items-center gap-3">
                             <span class="w-1.5 h-1.5 rounded-full bg-ai-accent"></span>
                             <span data-i18n="aiml_4">Signal Processing</span>
                         </li>
@@ -695,27 +920,27 @@
                 </div>
 
                 <!-- IoT & Hardware -->
-                <div class="glass rounded-2xl p-8 border border-white/10 hover:border-ai-purple/30 transition-colors reveal">
-                    <div class="w-14 h-14 rounded-xl bg-ai-purple/10 flex items-center justify-center mb-6">
-                        <svg class="w-7 h-7 text-ai-purple" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="glass rounded-2xl p-8 border border-white/10 hover:border-ai-purple/30 transition-all duration-500 reveal group">
+                    <div class="w-16 h-16 rounded-2xl bg-ai-purple/10 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-ai-purple/20 transition-all duration-300">
+                        <svg class="w-8 h-8 text-ai-purple" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                         </svg>
                     </div>
                     <h3 class="text-xl font-bold mb-4" data-i18n="iot_title">IoT & Embedded</h3>
                     <ul class="space-y-3 text-gray-400">
-                        <li class="flex items-center gap-2">
+                        <li class="flex items-center gap-3">
                             <span class="w-1.5 h-1.5 rounded-full bg-ai-purple"></span>
                             <span data-i18n="iot_1">Raspberry Pi & Arduino</span>
                         </li>
-                        <li class="flex items-center gap-2">
+                        <li class="flex items-center gap-3">
                             <span class="w-1.5 h-1.5 rounded-full bg-ai-purple"></span>
                             <span data-i18n="iot_2">Sensor Integration</span>
                         </li>
-                        <li class="flex items-center gap-2">
+                        <li class="flex items-center gap-3">
                             <span class="w-1.5 h-1.5 rounded-full bg-ai-purple"></span>
                             <span data-i18n="iot_3">Real-time Systems</span>
                         </li>
-                        <li class="flex items-center gap-2">
+                        <li class="flex items-center gap-3">
                             <span class="w-1.5 h-1.5 rounded-full bg-ai-purple"></span>
                             <span data-i18n="iot_4">PCB Design Basics</span>
                         </li>
@@ -723,27 +948,27 @@
                 </div>
 
                 <!-- Software -->
-                <div class="glass rounded-2xl p-8 border border-white/10 hover:border-ai-pink/30 transition-colors reveal">
-                    <div class="w-14 h-14 rounded-xl bg-ai-pink/10 flex items-center justify-center mb-6">
-                        <svg class="w-7 h-7 text-ai-pink" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="glass rounded-2xl p-8 border border-white/10 hover:border-ai-pink/30 transition-all duration-500 reveal group">
+                    <div class="w-16 h-16 rounded-2xl bg-ai-pink/10 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-ai-pink/20 transition-all duration-300">
+                        <svg class="w-8 h-8 text-ai-pink" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
                         </svg>
                     </div>
                     <h3 class="text-xl font-bold mb-4" data-i18n="software_title">Software Development</h3>
                     <ul class="space-y-3 text-gray-400">
-                        <li class="flex items-center gap-2">
+                        <li class="flex items-center gap-3">
                             <span class="w-1.5 h-1.5 rounded-full bg-ai-pink"></span>
                             <span data-i18n="software_1">Python (Advanced)</span>
                         </li>
-                        <li class="flex items-center gap-2">
+                        <li class="flex items-center gap-3">
                             <span class="w-1.5 h-1.5 rounded-full bg-ai-pink"></span>
                             <span data-i18n="software_2">C/C++ (Embedded)</span>
                         </li>
-                        <li class="flex items-center gap-2">
+                        <li class="flex items-center gap-3">
                             <span class="w-1.5 h-1.5 rounded-full bg-ai-pink"></span>
                             <span data-i18n="software_3">Data Structures & Algorithms</span>
                         </li>
-                        <li class="flex items-center gap-2">
+                        <li class="flex items-center gap-3">
                             <span class="w-1.5 h-1.5 rounded-full bg-ai-pink"></span>
                             <span data-i18n="software_4">Git & DevOps Basics</span>
                         </li>
@@ -754,27 +979,27 @@
     </section>
 
     <!-- Contact Section -->
-    <section id="contact" class="py-20 relative">
+    <section id="contact" class="py-24 relative">
         <div class="max-w-4xl mx-auto px-6">
             <div class="glass-strong rounded-3xl p-8 md:p-12 border border-ai-accent/20 text-center reveal">
-                <h2 class="text-4xl font-bold mb-4" data-i18n="contact_title">Let's Build the <span class="gradient-text">Future</span> Together</h2>
-                <p class="text-gray-400 mb-8 max-w-xl mx-auto" data-i18n="contact_desc">Open to opportunities in AI research, computer vision, and innovative IoT projects.</p>
+                <h2 class="text-4xl md:text-5xl font-bold mb-4" data-i18n="contact_title">Let's Build the <span class="gradient-text">Future</span> Together</h2>
+                <p class="text-gray-400 mb-10 max-w-xl mx-auto" data-i18n="contact_desc">Open to opportunities in AI research, computer vision, and innovative IoT projects.</p>
                 
                 <div class="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-                    <a href="mailto:djeltiilyes@gmail.com" class="px-8 py-4 rounded-lg bg-gradient-to-r from-ai-accent to-ai-purple text-white font-semibold hover:shadow-lg hover:shadow-ai-accent/25 transition-all duration-300">
+                    <a href="mailto:djeltiilyes@gmail.com" class="glow-btn px-8 py-4 rounded-xl bg-gradient-to-r from-ai-accent to-ai-purple text-white font-semibold hover:shadow-lg hover:shadow-ai-accent/30 transition-all duration-300 transform hover:scale-105 hover:-translate-y-1">
                         <span data-i18n="get_in_touch">Get In Touch</span>
                     </a>
-                    <a href="https://github.com/DjeltiIlyes" target="_blank" class="px-8 py-4 rounded-lg glass border border-white/20 hover:border-ai-accent/50 transition-all duration-300 flex items-center justify-center gap-2">
-                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <a href="https://github.com/DjeltiIlyes" target="_blank" class="px-8 py-4 rounded-xl glass border border-white/20 hover:border-ai-accent/50 transition-all duration-300 flex items-center justify-center gap-3 group">
+                        <svg class="w-5 h-5 group-hover:text-ai-accent transition-colors" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
                         </svg>
-                        GitHub
+                        <span>GitHub</span>
                     </a>
-                    <a href="https://linkedin.com/in/djeltiilyes" target="_blank" class="px-8 py-4 rounded-lg glass border border-white/20 hover:border-ai-accent/50 transition-all duration-300 flex items-center justify-center gap-2">
-                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <a href="https://linkedin.com/in/djeltiilyes" target="_blank" class="px-8 py-4 rounded-xl glass border border-white/20 hover:border-ai-accent/50 transition-all duration-300 flex items-center justify-center gap-3 group">
+                        <svg class="w-5 h-5 group-hover:text-ai-accent transition-colors" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
                         </svg>
-                        LinkedIn
+                        <span>LinkedIn</span>
                     </a>
                 </div>
 
@@ -792,40 +1017,332 @@
     </section>
 
     <script>
-        // Neural Network Background Animation
+        // ==========================================
+        // CV Generation & Download System
+        // ==========================================
+        
+        async function generateAndDownloadCV() {
+            const progressEl = document.getElementById('downloadProgress');
+            const downloadText = document.getElementById('downloadText');
+            const lang = currentLang;
+            
+            // Show progress
+            progressEl.classList.add('show');
+            downloadText.textContent = translations[lang].generating || 'Generating CV...';
+            
+            try {
+                // Simulate generation time
+                await new Promise(resolve => setTimeout(resolve, 1500));
+                
+                downloadText.textContent = translations[lang].preparing || 'Preparing PDF...';
+                await new Promise(resolve => setTimeout(resolve, 500));
+                
+                // Create PDF using jsPDF
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+                
+                // Get translations for CV content
+                const cvData = getCVData(lang);
+                
+                // Colors
+                const primaryColor = [0, 212, 255];
+                const textColor = [30, 30, 30];
+                const grayColor = [100, 100, 100];
+                
+                // Header
+                doc.setFillColor(...primaryColor);
+                doc.rect(0, 0, 210, 40, 'F');
+                
+                doc.setTextColor(255, 255, 255);
+                doc.setFontSize(24);
+                doc.setFont('helvetica', 'bold');
+                doc.text('DJELTI ILYES', 20, 20);
+                
+                doc.setFontSize(12);
+                doc.setFont('helvetica', 'normal');
+                doc.text('AI Engineer & Researcher', 20, 30);
+                
+                // Contact Info
+                doc.setTextColor(...textColor);
+                doc.setFontSize(10);
+                doc.text('djeltiilyes@gmail.com', 20, 50);
+                doc.text('|', 85, 50);
+                doc.text('linkedin.com/in/djeltiilyes', 90, 50);
+                doc.text('|', 155, 50);
+                doc.text('github.com/DjeltiIlyes', 160, 50);
+                
+                // Professional Summary
+                doc.setFontSize(14);
+                doc.setFont('helvetica', 'bold');
+                doc.setTextColor(...primaryColor);
+                doc.text(cvData.summaryTitle, 20, 65);
+                
+                doc.setFontSize(10);
+                doc.setFont('helvetica', 'normal');
+                doc.setTextColor(...textColor);
+                
+                const summaryLines = doc.splitTextToSize(cvData.summary, 170);
+                doc.text(summaryLines, 20, 75);
+                
+                // Education
+                doc.setFontSize(14);
+                doc.setFont('helvetica', 'bold');
+                doc.setTextColor(...primaryColor);
+                doc.text(cvData.educationTitle, 20, 100);
+                
+                doc.setFontSize(11);
+                doc.setFont('helvetica', 'bold');
+                doc.setTextColor(...textColor);
+                doc.text(cvData.masterDegree, 20, 110);
+                
+                doc.setFontSize(10);
+                doc.setFont('helvetica', 'normal');
+                doc.setTextColor(...grayColor);
+                doc.text(cvData.masterField, 20, 117);
+                doc.text(cvData.masterScore, 20, 124);
+                
+                doc.setFontSize(11);
+                doc.setFont('helvetica', 'bold');
+                doc.setTextColor(...textColor);
+                doc.text(cvData.competitionName, 20, 136);
+                
+                doc.setFontSize(10);
+                doc.setFont('helvetica', 'normal');
+                doc.setTextColor(...grayColor);
+                doc.text(cvData.secondPlace, 20, 143);
+                
+                // Skills
+                doc.setFontSize(14);
+                doc.setFont('helvetica', 'bold');
+                doc.setTextColor(...primaryColor);
+                doc.text(cvData.skillsTitle, 20, 160);
+                
+                doc.setFontSize(10);
+                doc.setFont('helvetica', 'normal');
+                doc.setTextColor(...textColor);
+                
+                const skillsY = 170;
+                const skills = cvData.skills;
+                let col = 0;
+                let y = skillsY;
+                
+                skills.forEach((skill, index) => {
+                    if (index > 0 && index % 4 === 0) {
+                        col = 1;
+                        y = skillsY;
+                    }
+                    doc.text('• ' + skill, 20 + (col * 90), y);
+                    y += 7;
+                });
+                
+                // Projects
+                doc.setFontSize(14);
+                doc.setFont('helvetica', 'bold');
+                doc.setTextColor(...primaryColor);
+                doc.text(cvData.projectsTitle, 20, 210);
+                
+                doc.setFontSize(11);
+                doc.setFont('helvetica', 'bold');
+                doc.setTextColor(...textColor);
+                doc.text('LUNAV - ' + cvData.lunavTitle, 20, 220);
+                
+                doc.setFontSize(10);
+                doc.setFont('helvetica', 'normal');
+                doc.setTextColor(...grayColor);
+                const lunavLines = doc.splitTextToSize(cvData.lunavDesc, 170);
+                doc.text(lunavLines, 20, 227);
+                
+                doc.setFontSize(11);
+                doc.setFont('helvetica', 'bold');
+                doc.setTextColor(...textColor);
+                doc.text('DesertCool', 20, 245);
+                
+                doc.setFontSize(10);
+                doc.setFont('helvetica', 'normal');
+                doc.setTextColor(...grayColor);
+                const desertLines = doc.splitTextToSize(cvData.desertDesc, 170);
+                doc.text(desertLines, 20, 252);
+                
+                // Footer
+                doc.setFontSize(8);
+                doc.setTextColor(...grayColor);
+                doc.text('Generated: ' + new Date().toLocaleDateString(), 20, 285);
+                
+                // Save
+                doc.save('DJELTI_ILYES_CV.pdf');
+                
+                downloadText.textContent = translations[lang].complete || 'Complete!';
+                
+                // Hide after success
+                setTimeout(() => {
+                    progressEl.classList.remove('show');
+                }, 2000);
+                
+            } catch (error) {
+                console.error('CV Generation Error:', error);
+                downloadText.textContent = translations[lang].error || 'Error - Try Again';
+                
+                setTimeout(() => {
+                    progressEl.classList.remove('show');
+                }, 3000);
+            }
+        }
+        
+        function getCVData(lang) {
+            const data = {
+                en: {
+                    summaryTitle: 'PROFESSIONAL SUMMARY',
+                    summary: "Master's graduate (19.5/20) specializing in Computer Vision, IoT, and intelligent systems. Developed LUNAV - an AI-powered navigation system for visually impaired users achieving 95% accuracy. 2nd place winner in national competition 'The Call of Tech'. Passionate about technology that serves humanity.",
+                    educationTitle: 'EDUCATION',
+                    masterDegree: "Master's Degree in AI & Data Science",
+                    masterField: 'Specialization in Computer Vision & Intelligent Systems',
+                    masterScore: 'Score: 19.5/20 (Graduated with Honors)',
+                    competitionName: 'The Call of Tech - National Competition',
+                    secondPlace: '2nd Place Winner (2023)',
+                    skillsTitle: 'TECHNICAL SKILLS',
+                    skills: ['Python', 'TensorFlow', 'PyTorch', 'OpenCV', 'YOLO', 'Raspberry Pi', 'Arduino', 'C/C++', 'IoT', 'Edge Computing', 'Computer Vision', 'Embedded Systems'],
+                    projectsTitle: 'KEY PROJECTS',
+                    lunavTitle: 'Intelligent Navigation System',
+                    lunavDesc: 'AI-powered navigation system for visually impaired using YOLO object detection, 3D spatial audio, and haptic feedback. Achieved 95% accuracy at 30 FPS on Raspberry Pi 4.',
+                    desertDesc: 'Sustainable evaporative cooling system with IoT monitoring for arid regions. 10-15°C temperature reduction, 80% energy savings vs conventional AC. 2nd place in national competition.'
+                },
+                ar: {
+                    summaryTitle: 'ملخص مهني',
+                    summary: 'حاصل على ماجستير (19.5/20) متخصص في الرؤية الحاسوبية وإنترنت الأشياء والأنظمة الذكية. طورت LUNAV - نظام ملاحة ذكي للمكفوفين بدقة 95%. المركز الثاني في المسابقة الوطنية.',
+                    educationTitle: 'التعليم',
+                    masterDegree: 'ماجستير في الذكاء الاصطناعي وعلم البيانات',
+                    masterField: 'تخصص في الرؤية الحاسوبية والأنظمة الذكية',
+                    masterScore: 'المعدل: 19.5/20 (تخرج مع مرتبة الشرف)',
+                    competitionName: 'نداء التكنولوجيا - مسابقة وطنية',
+                    secondPlace: 'المركز الثاني (2023)',
+                    skillsTitle: 'المهارات التقنية',
+                    skills: ['بايثون', 'TensorFlow', 'PyTorch', 'OpenCV', 'YOLO', 'راسبيري باي', 'أردوينو', 'C/C++', 'إنترنت الأشياء', 'الحوسبة الطرفية', 'الرؤية الحاسوبية', 'الأنظمة المدمجة'],
+                    projectsTitle: 'المشاريع الرئيسية',
+                    lunavTitle: 'نظام الملاحة الذكي',
+                    lunavDesc: 'نظام ملاحة ذكي للمكفوفين بدقة 95% ومعدل 30 إطار/ثانية.',
+                    desertDesc: 'نظام تبريد مستدام بتقنية التبخر الذكي. تخفيض الحرارة 10-15 درجة مئوية.'
+                },
+                fr: {
+                    summaryTitle: 'RÉSUMÉ PROFESSIONNEL',
+                    summary: 'Diplômé master (19.5/20) spécialisation Vision par Ordinateur, IoT et systèmes intelligents. Développé LUNAV - système de navigation pour malvoyants avec 95% de précision. 2ème prix au concours national.',
+                    educationTitle: 'FORMATION',
+                    masterDegree: "Master en IA & Science des Données",
+                    masterField: 'Spécialisation Vision par Ordinateur',
+                    masterScore: 'Note: 19.5/20 (Mention Très Bien)',
+                    competitionName: 'The Call of Tech - Concours National',
+                    secondPlace: '2ème Place (2023)',
+                    skillsTitle: 'COMPÉTENCES TECHNIQUES',
+                    skills: ['Python', 'TensorFlow', 'PyTorch', 'OpenCV', 'YOLO', 'Raspberry Pi', 'Arduino', 'C/C++', 'IoT', 'Edge Computing', 'Computer Vision', 'Systèmes Embarqués'],
+                    projectsTitle: 'PROJETS PRINCIPAUX',
+                    lunavTitle: 'Système de Navigation Intelligent',
+                    lunavDesc: 'Système de navigation IA pour malvoyants avec 95% de précision à 30 FPS.',
+                    desertDesc: 'Système de refroidissement durable. Réduction de température 10-15°C.'
+                },
+                ru: {
+                    summaryTitle: 'ПРОФЕССИОНАЛЬНОЕ РЕЗЮМЕ',
+                    summary: 'Выпускник магистратуры (19.5/20) по специальности Компьютерное зрение, IoT и интеллектуальные системы. Разработал LUNAV - навигационную систему для слабовидящих с точностью 95%.',
+                    educationTitle: 'ОБРАЗОВАНИЕ',
+                    masterDegree: 'Магистратура по ИИ и Науке о Данных',
+                    masterField: 'Специализация: Компьютерное зрение',
+                    masterScore: 'Оценка: 19.5/20 (С отличием)',
+                    competitionName: 'The Call of Tech - Национальный конкурс',
+                    secondPlace: '2-е место (2023)',
+                    skillsTitle: 'ТЕХНИЧЕСКИЕ НАВЫКИ',
+                    skills: ['Python', 'TensorFlow', 'PyTorch', 'OpenCV', 'YOLO', 'Raspberry Pi', 'Arduino', 'C/C++', 'IoT', 'Edge Computing', 'Компьютерное зрение', 'Встроенные системы'],
+                    projectsTitle: 'ОСНОВНЫЕ ПРОЕКТЫ',
+                    lunavTitle: 'Интеллектуальная навигация',
+                    lunavDesc: 'Навигационная система ИИ для слабовидящих с точностью 95% и 30 FPS.',
+                    desertDesc: 'Система устойчивого охлаждения. Снижение температуры на 10-15°C.'
+                }
+            };
+            return data[lang] || data.en;
+        }
+
+        // ==========================================
+        // Three.js Neural Network Background
+        // ==========================================
+        
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         document.getElementById('canvas-container').appendChild(renderer.domElement);
 
         // Create particles
         const particlesGeometry = new THREE.BufferGeometry();
-        const particlesCount = 100;
+        const particlesCount = 150;
         const posArray = new Float32Array(particlesCount * 3);
+        const colorsArray = new Float32Array(particlesCount * 3);
 
-        for(let i = 0; i < particlesCount * 3; i++) {
-            posArray[i] = (Math.random() - 0.5) * 50;
+        for(let i = 0; i < particlesCount * 3; i += 3) {
+            posArray[i] = (Math.random() - 0.5) * 60;
+            posArray[i+1] = (Math.random() - 0.5) * 60;
+            posArray[i+2] = (Math.random() - 0.5) * 60;
+            
+            // Random colors between cyan and purple
+            const colorChoice = Math.random();
+            if (colorChoice < 0.33) {
+                colorsArray[i] = 0; colorsArray[i+1] = 0.83; colorsArray[i+2] = 1; // cyan
+            } else if (colorChoice < 0.66) {
+                colorsArray[i] = 0.49; colorsArray[i+1] = 0.23; colorsArray[i+2] = 0.93; // purple
+            } else {
+                colorsArray[i] = 0.93; colorsArray[i+1] = 0.29; colorsArray[i+2] = 0.6; // pink
+            }
         }
 
         particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+        particlesGeometry.setAttribute('color', new THREE.BufferAttribute(colorsArray, 3));
+
         const particlesMaterial = new THREE.PointsMaterial({
-            size: 0.1,
-            color: 0x00d4ff,
+            size: 0.15,
+            vertexColors: true,
             transparent: true,
             opacity: 0.8,
+            blending: THREE.AdditiveBlending
         });
 
         const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
         scene.add(particlesMesh);
+
+        // Add connecting lines
+        const lineGeometry = new THREE.BufferGeometry();
+        const lineMaterial = new THREE.LineBasicMaterial({
+            color: 0x00d4ff,
+            transparent: true,
+            opacity: 0.1
+        });
+        
+        const linesMesh = new THREE.LineSegments(lineGeometry, lineMaterial);
+        scene.add(linesMesh);
 
         camera.position.z = 30;
 
         function animate() {
             requestAnimationFrame(animate);
             
-            particlesMesh.rotation.x += 0.0005;
-            particlesMesh.rotation.y += 0.0005;
+            const time = Date.now() * 0.0001;
+            
+            particlesMesh.rotation.x = time * 0.5;
+            particlesMesh.rotation.y = time * 0.3;
+            
+            // Update lines
+            const positions = particlesGeometry.attributes.position.array;
+            const linePositions = [];
+            
+            for (let i = 0; i < particlesCount; i++) {
+                for (let j = i + 1; j < particlesCount; j++) {
+                    const x1 = positions[i * 3], y1 = positions[i * 3 + 1], z1 = positions[i * 3 + 2];
+                    const x2 = positions[j * 3], y2 = positions[j * 3 + 1], z2 = positions[j * 3 + 2];
+                    const dist = Math.sqrt((x2-x1)**2 + (y2-y1)**2 + (z2-z1)**2);
+                    
+                    if (dist < 8) {
+                        linePositions.push(x1, y1, z1, x2, y2, z2);
+                    }
+                }
+            }
+            
+            lineGeometry.setAttribute('position', new THREE.Float32BufferAttribute(linePositions, 3));
             
             renderer.render(scene, camera);
         }
@@ -838,12 +1355,15 @@
             renderer.setSize(window.innerWidth, window.innerHeight);
         });
 
-        // Typewriter effect
+        // ==========================================
+        // Typewriter Effect
+        // ==========================================
+        
         const words = {
-            en: ["Innovator", "Researcher", "Engineer", "Creator"],
-            ar: ["مبتكر", "باحث", "مهندس", "مبدع"],
-            fr: ["Innovateur", "Chercheur", "Ingénieur", "Créateur"],
-            ru: ["Новатор", "Исследователь", "Инженер", "Создатель"]
+            en: ["Innovator", "Researcher", "Engineer", "Creator", "Problem Solver"],
+            ar: ["مبتكر", "باحث", "مهندس", "مبدع", "حلّال مشاكل"],
+            fr: ["Innovateur", "Chercheur", "Ingénieur", "Créateur", "Résolveur"],
+            ru: ["Новатор", "Исследователь", "Инженер", "Создатель", "Решатель"]
         };
         
         let wordIndex = 0;
@@ -866,7 +1386,7 @@
             let typeSpeed = isDeleting ? 50 : 100;
 
             if (!isDeleting && charIndex === currentWord.length) {
-                typeSpeed = 2000;
+                typeSpeed = 2500;
                 isDeleting = true;
             } else if (isDeleting && charIndex === 0) {
                 isDeleting = false;
@@ -878,382 +1398,171 @@
         }
         typeWriter();
 
+        // ==========================================
         // Translations
+        // ==========================================
+        
         const translations = {
             en: {
-                nav_about: "About",
-                nav_projects: "Projects",
-                nav_skills: "Skills",
-                nav_contact: "Contact",
-                available: "Available for Opportunities",
-                hero_title1: "AI Engineer &",
+                scroll_down: "Scroll",
+                generating: "Generating CV...",
+                preparing: "Preparing PDF...",
+                complete: "Complete!",
+                error: "Error - Try Again",
+                nav_about: "About", nav_projects: "Projects", nav_skills: "Skills", nav_contact: "Contact",
+                available: "Available for Opportunities", hero_title1: "AI Engineer &",
                 hero_desc: "Master's graduate specializing in Computer Vision, IoT, and intelligent systems. Creating technology that bridges the gap between AI research and real-world impact.",
-                view_projects: "View Projects",
-                download_cv: "Download CV",
-                master_score: "Master's Score",
-                accuracy: "Model Accuracy",
-                national_rank: "National Rank",
-                about_title1: "Bridging",
-                about_title2: "AI Research",
-                about_title3: "& Real Impact",
+                view_projects: "View Projects", download_cv: "Download CV", master_score: "Master's Score", accuracy: "Model Accuracy", national_rank: "National Rank",
+                about_title1: "Bridging", about_title2: "AI Research", about_title3: "& Real Impact",
                 about_p1: "As a Master's graduate with a score of 19.5/20, I specialize in developing intelligent systems that solve critical real-world problems. My work focuses on the intersection of computer vision, embedded systems, and human-centered design.",
                 about_p2: "From creating navigation aids for the visually impaired to developing sustainable cooling solutions, I believe in technology that serves humanity. My approach combines rigorous engineering with creative problem-solving.",
-                skill1: "Deep Learning & CV",
-                skill2: "Embedded Systems",
-                skill3: "Real-time Processing",
-                skill4: "Academic Excellence",
-                edu_title: "Education & Achievements",
-                master_degree: "Master's Degree",
-                master_field: "AI & Data Science",
-                score_label: "Score",
-                competition: "National Competition",
-                competition_name: "The Call of Tech",
-                second_place: "2nd Place Winner",
-                master_thesis: "Master's Thesis",
-                lunav_subtitle: "Intelligent Navigation System for the Visually Impaired",
-                feature1_title: "Real-time Object Detection",
-                feature1_desc: "YOLO-based computer vision at 30 FPS",
-                feature2_title: "3D Spatial Audio",
-                feature2_desc: "Haptic feedback & directional sound guidance",
-                feature3_title: "Edge Computing",
-                feature3_desc: "Raspberry Pi 4 + Ultrasonic sensors",
-                stat_accuracy: "Accuracy",
-                stat_battery: "Battery",
-                confidence: "Object Detection Confidence",
-                other_projects: "Other",
-                projects_word: "Projects",
-                projects_desc: "Innovative solutions combining hardware and software engineering",
+                skill1: "Deep Learning & CV", skill2: "Embedded Systems", skill3: "Real-time Processing", skill4: "Academic Excellence",
+                edu_title: "Education & Achievements", master_degree: "Master's Degree", master_field: "AI & Data Science", score_label: "Score",
+                competition: "National Competition", competition_name: "The Call of Tech", second_place: "2nd Place Winner",
+                master_thesis: "Master's Thesis", lunav_subtitle: "Intelligent Navigation System for the Visually Impaired",
+                feature1_title: "Real-time Object Detection", feature1_desc: "YOLO-based computer vision at 30 FPS",
+                feature2_title: "3D Spatial Audio", feature2_desc: "Haptic feedback & directional sound guidance",
+                feature3_title: "Edge Computing", feature3_desc: "Raspberry Pi 4 + Ultrasonic sensors",
+                stat_accuracy: "Accuracy", stat_battery: "Battery", confidence: "Object Detection",
+                other_projects: "Other", projects_word: "Projects", projects_desc: "Innovative solutions combining hardware and software engineering",
                 desertcool_desc: "Sustainable cooling solution using evaporative techniques with smart IoT monitoring for arid regions.",
-                temp_reduction: "Temperature reduction",
-                energy_savings: "Energy savings",
-                vs_conventional: "vs conventional AC",
-                tag_sensors: "Sensors",
-                tag_sustainability: "Sustainability",
-                tag_workshop: "Workshop",
-                robotics_title: "Educational Robotics",
-                robotics_desc: "Designed and taught comprehensive Arduino robotics workshops for university students.",
-                hands_on: "Hands-on learning approach",
-                project_based: "Project-based curriculum",
-                tag_teaching: "Teaching",
-                tag_tool: "Tool",
-                network_title: "Network Optimizer",
-                network_desc: "Python-based network analysis and optimization tool for performance monitoring.",
-                realtime_monitoring: "Real-time monitoring",
-                auto_optimization: "Automated optimization",
-                tag_networking: "Networking",
-                tag_automation: "Automation",
-                next_project: "Your Next Project?",
-                lets_collab: "Let's collaborate",
-                technical: "Technical",
-                expertise: "Expertise",
-                aiml_title: "AI & Machine Learning",
-                aiml_1: "Computer Vision (OpenCV, YOLO)",
-                aiml_2: "Deep Learning (TensorFlow, PyTorch)",
-                aiml_3: "Edge AI & Model Optimization",
-                aiml_4: "Signal Processing",
-                iot_title: "IoT & Embedded",
-                iot_1: "Raspberry Pi & Arduino",
-                iot_2: "Sensor Integration",
-                iot_3: "Real-time Systems",
-                iot_4: "PCB Design Basics",
-                software_title: "Software Development",
-                software_1: "Python (Advanced)",
-                software_2: "C/C++ (Embedded)",
-                software_3: "Data Structures & Algorithms",
-                software_4: "Git & DevOps Basics",
-                contact_title: "Let's Build the Future Together",
-                contact_desc: "Open to opportunities in AI research, computer vision, and innovative IoT projects.",
-                get_in_touch: "Get In Touch",
-                rights: "All rights reserved",
-                open_to_work: "Open to work"
+                temp_reduction: "Temperature reduction", energy_savings: "Energy savings", vs_conventional: "vs conventional AC",
+                tag_sensors: "Sensors", tag_sustainability: "Sustainability", tag_workshop: "Workshop",
+                robotics_title: "Educational Robotics", robotics_desc: "Designed and taught comprehensive Arduino robotics workshops for university students.",
+                hands_on: "Hands-on learning approach", project_based: "Project-based curriculum", tag_teaching: "Teaching",
+                tag_tool: "Tool", network_title: "Network Optimizer", network_desc: "Python-based network analysis and optimization tool for performance monitoring.",
+                realtime_monitoring: "Real-time monitoring", auto_optimization: "Automated optimization", tag_networking: "Networking", tag_automation: "Automation",
+                next_project: "Your Next Project?", lets_collab: "Let's collaborate",
+                technical: "Technical", expertise: "Expertise",
+                aiml_title: "AI & Machine Learning", aiml_1: "Computer Vision (OpenCV, YOLO)", aiml_2: "Deep Learning (TensorFlow, PyTorch)", aiml_3: "Edge AI & Model Optimization", aiml_4: "Signal Processing",
+                iot_title: "IoT & Embedded", iot_1: "Raspberry Pi & Arduino", iot_2: "Sensor Integration", iot_3: "Real-time Systems", iot_4: "PCB Design Basics",
+                software_title: "Software Development", software_1: "Python (Advanced)", software_2: "C/C++ (Embedded)", software_3: "Data Structures & Algorithms", software_4: "Git & DevOps Basics",
+                contact_title: "Let's Build the Future Together", contact_desc: "Open to opportunities in AI research, computer vision, and innovative IoT projects.",
+                get_in_touch: "Get In Touch", rights: "All rights reserved", open_to_work: "Open to work"
             },
             ar: {
-                nav_about: "نبذة عني",
-                nav_projects: "المشاريع",
-                nav_skills: "المهارات",
-                nav_contact: "تواصل",
-                available: "متاح للفرص",
-                hero_title1: "مهندس ذكاء اصطناعي &",
-                hero_desc: "حاصل على ماجستير متخصص في الرؤية الحاسوبية وإنترنت الأشياء والأنظمة الذكية. أصنع تكنولوجيا تربط بين بحث الذكاء الاصطناعي والتأثير في العالم الحقيقي.",
-                view_projects: "عرض المشاريع",
-                download_cv: "تحميل السيرة الذاتية",
-                master_score: "معدل الماجستير",
-                accuracy: "دقة النموذج",
-                national_rank: "الترتيب الوطني",
-                about_title1: "ربط",
-                about_title2: "بحث الذكاء الاصطناعي",
-                about_title3: "بالتأثير الحقيقي",
-                about_p1: "كحاصل على ماجستير بمعدل 19.5/20، أتخصص في تطوير الأنظمة الذكية التي تحل مشاكل العالم الحقيقي الحرجة. يركز عملي على تقاطع الرؤية الحاسوبية والأنظمة المدمجة والتصميم المتمحور حول الإنسان.",
-                about_p2: "من إنشاء أدوات الملاحة للمكفوفين إلى تطوير حلول التبريد المستدامة، أؤمن بالتكنولوجيا التي تخدم الإنسانية. يجمع نهجي بين الهندسة الصارمة وحل المشكلات الإبداعي.",
-                skill1: "التعلم العميق والرؤية الحاسوبية",
-                skill2: "الأنظمة المدمجة",
-                skill3: "المعالجة في الوقت الفعلي",
-                skill4: "التميز الأكاديمي",
-                edu_title: "التعليم والإنجازات",
-                master_degree: "درجة الماجستير",
-                master_field: "الذكاء الاصطناعي وعلم البيانات",
-                score_label: "المعدل",
-                competition: "المسابقة الوطنية",
-                competition_name: "نداء التكنولوجيا",
-                second_place: "المركز الثاني",
-                master_thesis: "أطروحة الماجستير",
-                lunav_subtitle: "نظام ملاحة ذكي للمكفوفين",
-                feature1_title: "اكتشاف الأجسام في الوقت الفعلي",
-                feature1_desc: "رؤية حاسوبية قائمة على YOLO بمعدل 30 إطار في الثانية",
-                feature2_title: "الصوت المكاني ثلاثي الأبعاد",
-                feature2_desc: "تعليقات لمسية وتوجيه صوتي",
-                feature3_title: "الحوسبة الطرفية",
-                feature3_desc: "راسبيري باي 4 + مستشعرات فوق صوتية",
-                stat_accuracy: "الدقة",
-                stat_battery: "البطارية",
-                confidence: "ثقة الكشف عن الأجسام",
-                other_projects: "مشاريع",
-                projects_word: "أخرى",
-                projects_desc: "حلول مبتكرة تجمع بين الهندسة البرمجية والمادية",
-                desertcool_desc: "حل تبريد مستدام باستخدام تقنيات التبخر مع مراقبة إنترنت الأشياء الذكية للمناطق القاحلة.",
-                temp_reduction: "خفض درجة الحرارة",
-                energy_savings: "توفير الطاقة",
-                vs_conventional: "مقارنة بالمكيفات التقليدية",
-                tag_sensors: "المستشعرات",
-                tag_sustainability: "الاستدامة",
-                tag_workshop: "ورشة عمل",
-                robotics_title: "الروبوتات التعليمية",
-                robotics_desc: "تصميم وتدريس ورش عمل شاملة في روبوتات الأردوينو لطلاب الجامعات.",
-                hands_on: "نهج التعلم العملي",
-                project_based: "منهجية قائمة على المشاريع",
-                tag_teaching: "تدريس",
-                tag_tool: "أداة",
-                network_title: "محسن الشبكة",
-                network_desc: "أداة تحليل وتحسين الشبكة مبنية على بايثون لمراقبة الأداء.",
-                realtime_monitoring: "المراقبة في الوقت الفعلي",
-                auto_optimization: "التحسين التلقائي",
-                tag_networking: "الشبكات",
-                tag_automation: "الأتمتة",
-                next_project: "مشروعك القادم؟",
-                lets_collab: "لنتعاون",
-                technical: "الخبرة",
-                expertise: "التقنية",
-                aiml_title: "الذكاء الاصطناعي والتعلم الآلي",
-                aiml_1: "الرؤية الحاسوبية (OpenCV, YOLO)",
-                aiml_2: "التعلم العميق (TensorFlow, PyTorch)",
-                aiml_3: "الذكاء الاصطناعي الطرفي وتحسين النماذج",
-                aiml_4: "معالجة الإشارات",
-                iot_title: "إنترنت الأشياء والأنظمة المدمجة",
-                iot_1: "راسبيري باي وأردوينو",
-                iot_2: "تكامل المستشعرات",
-                iot_3: "الأنظمة في الوقت الفعلي",
-                iot_4: "أساسيات تصميم الدوائر المطبوعة",
-                software_title: "تطوير البرمجيات",
-                software_1: "بايثون (متقدم)",
-                software_2: "C/C++ (الأنظمة المدمجة)",
-                software_3: "هياكل البيانات والخوارزميات",
-                software_4: "أساسيات Git وDevOps",
-                contact_title: "لنبني المستقبل معاً",
-                contact_desc: "متاح لفرص في بحث الذكاء الاصطناعي والرؤية الحاسوبية ومشاريع إنترنت الأشياء المبتكرة.",
-                get_in_touch: "تواصل معي",
-                rights: "جميع الحقوق محفوظة",
-                open_to_work: "متاح للعمل"
+                scroll_down: "مرر",
+                generating: "جاري إنشاء السيرة...",
+                preparing: "جاري تحضير PDF...",
+                complete: "تم!",
+                error: "خطأ - حاول مجدداً",
+                nav_about: "نبذة", nav_projects: "المشاريع", nav_skills: "المهارات", nav_contact: "تواصل",
+                available: "متاح للفرص", hero_title1: "مهندس ذكاء اصطناعي &",
+                hero_desc: "حاصل على ماجستير متخصص في الرؤية الحاسوبية وإنترنت الأشياء. أصنع تكنولوجيا تربط بين بحث الذكاء الاصطناعي والتأثير في العالم الحقيقي.",
+                view_projects: "عرض المشاريع", download_cv: "تحميل السيرة", master_score: "معدل الماجستير", accuracy: "دقة النموذج", national_rank: "الترتيب الوطني",
+                about_title1: "ربط", about_title2: "بحث الذكاء الاصطناعي", about_title3: "بالتأثير الحقيقي",
+                about_p1: "كحاصل على ماجستير بمعدل 19.5/20، أتخصص في تطوير الأنظمة الذكية التي تحل مشاكل العالم الحقيقي.",
+                about_p2: "أؤمن بالتكنولوجيا التي تخدم الإنسانية.",
+                skill1: "التعلم العميق", skill2: "الأنظمة المدمجة", skill3: "المعالجة في الوقت الفعلي", skill4: "التميز الأكاديمي",
+                edu_title: "التعليم والإنجازات", master_degree: "درجة الماجستير", master_field: "الذكاء الاصطناعي", score_label: "المعدل",
+                competition: "المسابقة الوطنية", competition_name: "نداء التكنولوجيا", second_place: "المركز الثاني",
+                master_thesis: "أطروحة الماجستير", lunav_subtitle: "نظام ملاحة ذكي للمكفوفين",
+                feature1_title: "اكتشاف الأجسام في الوقت الفعلي", feature1_desc: "رؤية حاسوبية بـ 30 إطار/ثانية",
+                feature2_title: "الصوت المكاني ثلاثي الأبعاد", feature2_desc: "تعليقات لمسية",
+                feature3_title: "الحوسبة الطرفية", feature3_desc: "راسبيري باي 4",
+                stat_accuracy: "الدقة", stat_battery: "البطارية", confidence: "الكشف",
+                other_projects: "مشاريع", projects_word: "أخرى", projects_desc: "حلول مبتكرة تجمع بين البرمجيات والعتاد",
+                desertcool_desc: "حل تبريد مستدام باستخدام تقنيات التبخر.",
+                temp_reduction: "خفض الحرارة", energy_savings: "توفير الطاقة", vs_conventional: "مقارنة بالمكيفات",
+                tag_sensors: "المستشعرات", tag_sustainability: "الاستدامة", tag_workshop: "ورشة",
+                robotics_title: "الروبوتات التعليمية", robotics_desc: "ورش عمل أردوينو لطلاب الجامعات.",
+                hands_on: "تعلم عملي", project_based: "منهجية المشاريع", tag_teaching: "تدريس",
+                tag_tool: "أداة", network_title: "محسن الشبكة", network_desc: "أداة تحليل شبكة بايثون.",
+                realtime_monitoring: "مراقبة في الوقت الفعلي", auto_optimization: "تحسين تلقائي", tag_networking: "شبكات", tag_automation: "أتمتة",
+                next_project: "مشروعك القادم؟", lets_collab: "لنتعاون",
+                technical: "الخبرة", expertise: "التقنية",
+                aiml_title: "الذكاء الاصطناعي", aiml_1: "الرؤية الحاسوبية", aiml_2: "التعلم العميق", aiml_3: "الذكاء الاصطناعي الطرفي", aiml_4: "معالجة الإشارات",
+                iot_title: "إنترنت الأشياء", iot_1: "راسبيري باي وأردوينو", iot_2: "تكامل المستشعرات", iot_3: "الأنظمة في الوقت الفعلي", iot_4: "تصميم الدوائر",
+                software_title: "تطوير البرمجيات", software_1: "بايثون", software_2: "C/C++", software_3: "الخوارزميات", software_4: "Git",
+                contact_title: "لنبني المستقبل معاً", contact_desc: "متاح لفرص في الذكاء الاصطناعي والرؤية الحاسوبية.",
+                get_in_touch: "تواصل معي", rights: "جميع الحقوق محفوظة", open_to_work: "متاح للعمل"
             },
             fr: {
-                nav_about: "À propos",
-                nav_projects: "Projets",
-                nav_skills: "Compétences",
-                nav_contact: "Contact",
-                available: "Disponible pour des opportunités",
-                hero_title1: "Ingénieur IA &",
-                hero_desc: "Diplômé d'un Master spécialisé en Vision par Ordinateur, IoT et systèmes intelligents. Création de technologies qui comblent le fossé entre la recherche en IA et l'impact réel.",
-                view_projects: "Voir les Projets",
-                download_cv: "Télécharger CV",
-                master_score: "Score Master",
-                accuracy: "Précision du Modèle",
-                national_rank: "Rang National",
-                about_title1: "Relier la",
-                about_title2: "Recherche en IA",
-                about_title3: "à l'Impact Réel",
-                about_p1: "Diplômé d'un Master avec un score de 19.5/20, je me spécialise dans le développement de systèmes intelligents qui résolvent des problèmes réels critiques. Mon travail se concentre sur l'intersection de la vision par ordinateur, des systèmes embarqués et de la conception centrée sur l'humain.",
-                about_p2: "De la création d'aides à la navigation pour les malvoyants au développement de solutions de refroidissement durables, je crois en une technologie au service de l'humanité. Mon approche combine ingénierie rigoureuse et résolution créative de problèmes.",
-                skill1: "Deep Learning & Vision",
-                skill2: "Systèmes Embarqués",
-                skill3: "Traitement Temps Réel",
-                skill4: "Excellence Académique",
-                edu_title: "Formation & Réalisations",
-                master_degree: "Master",
-                master_field: "IA & Science des Données",
-                score_label: "Score",
-                competition: "Concours National",
-                competition_name: "The Call of Tech",
-                second_place: "2ème Prix",
-                master_thesis: "Thèse de Master",
-                lunav_subtitle: "Système de Navigation Intelligent pour Malvoyants",
-                feature1_title: "Détection d'Objets Temps Réel",
-                feature1_desc: "Vision par ordinateur YOLO à 30 FPS",
-                feature2_title: "Audio Spatial 3D",
-                feature2_desc: "Retour haptique et guidage sonore directionnel",
-                feature3_title: "Edge Computing",
-                feature3_desc: "Raspberry Pi 4 + Capteurs ultrasons",
-                stat_accuracy: "Précision",
-                stat_battery: "Batterie",
-                confidence: "Confiance de Détection",
-                other_projects: "Autres",
-                projects_word: "Projets",
-                projects_desc: "Solutions innovantes combinant matériel et logiciel",
-                desertcool_desc: "Solution de refroidissement durable utilisant des techniques évaporatives avec surveillance IoT intelligente pour les régions arides.",
-                temp_reduction: "Réduction de température",
-                energy_savings: "Économies d'énergie",
-                vs_conventional: "vs climatisation conventionnelle",
-                tag_sensors: "Capteurs",
-                tag_sustainability: "Durabilité",
-                tag_workshop: "Atelier",
-                robotics_title: "Robotique Éducative",
-                robotics_desc: "Conception et enseignement d'ateliers complets de robotique Arduino pour étudiants universitaires.",
-                hands_on: "Approche d'apprentissage pratique",
-                project_based: "Curriculum basé sur des projets",
-                tag_teaching: "Enseignement",
-                tag_tool: "Outil",
-                network_title: "Optimiseur Réseau",
-                network_desc: "Outil d'analyse et d'optimisation réseau basé sur Python pour le monitoring des performances.",
-                realtime_monitoring: "Monitoring temps réel",
-                auto_optimization: "Optimisation automatisée",
-                tag_networking: "Réseaux",
-                tag_automation: "Automatisation",
-                next_project: "Votre Prochain Projet ?",
-                lets_collab: "Collaborons",
-                technical: "Expertise",
-                expertise: "Technique",
-                aiml_title: "IA & Machine Learning",
-                aiml_1: "Vision par Ordinateur (OpenCV, YOLO)",
-                aiml_2: "Deep Learning (TensorFlow, PyTorch)",
-                aiml_3: "Edge AI & Optimisation de Modèles",
-                aiml_4: "Traitement du Signal",
-                iot_title: "IoT & Embarqué",
-                iot_1: "Raspberry Pi & Arduino",
-                iot_2: "Intégration de Capteurs",
-                iot_3: "Systèmes Temps Réel",
-                iot_4: "Bases de Conception PCB",
-                software_title: "Développement Logiciel",
-                software_1: "Python (Avancé)",
-                software_2: "C/C++ (Embarqué)",
-                software_3: "Structures de Données & Algorithmes",
-                software_4: "Bases de Git & DevOps",
-                contact_title: "Construisons l'Avenir Ensemble",
-                contact_desc: "Ouvert aux opportunités en recherche IA, vision par ordinateur et projets IoT innovants.",
-                get_in_touch: "Me Contacter",
-                rights: "Tous droits réservés",
-                open_to_work: "Disponible"
+                scroll_down: "Défiler",
+                generating: "Génération CV...",
+                preparing: "Préparation PDF...",
+                complete: "Terminé!",
+                error: "Erreur - Réessayer",
+                nav_about: "À propos", nav_projects: "Projets", nav_skills: "Compétences", nav_contact: "Contact",
+                available: "Disponible", hero_title1: "Ingénieur IA &",
+                hero_desc: "Diplômé master spécialisé en Vision par Ordinateur, IoT et systèmes intelligents.",
+                view_projects: "Voir les Projets", download_cv: "Télécharger CV", master_score: "Score Master", accuracy: "Précision", national_rank: "Rang National",
+                about_title1: "Relier la", about_title2: "Recherche IA", about_title3: "à l'Impact",
+                about_p1: "Diplômé master 19.5/20, spécialisé en systèmes intelligents.",
+                about_p2: "Je crois en la technologie au service de l'humanité.",
+                skill1: "Deep Learning", skill2: "Systèmes Embarqués", skill3: "Temps Réel", skill4: "Excellence",
+                edu_title: "Formation", master_degree: "Master", master_field: "IA & Data Science", score_label: "Note",
+                competition: "Concours National", competition_name: "The Call of Tech", second_place: "2ème Prix",
+                master_thesis: "Thèse de Master", lunav_subtitle: "Système de Navigation pour Malvoyants",
+                feature1_title: "Détection Objets", feature1_desc: "YOLO à 30 FPS",
+                feature2_title: "Audio Spatial 3D", feature2_desc: "Retour haptique",
+                feature3_title: "Edge Computing", feature3_desc: "Raspberry Pi 4",
+                stat_accuracy: "Précision", stat_battery: "Batterie", confidence: "Détection",
+                other_projects: "Autres", projects_word: "Projets", projects_desc: "Solutions innovantes",
+                desertcool_desc: "Solution de refroidissement durable.",
+                temp_reduction: "Réduction température", energy_savings: "Économies", vs_conventional: "vs AC",
+                tag_sensors: "Capteurs", tag_sustainability: "Durabilité", tag_workshop: "Atelier",
+                robotics_title: "Robotique Éducative", robotics_desc: "Ateliers Arduino pour étudiants.",
+                hands_on: "Apprentissage pratique", project_based: "Projets", tag_teaching: "Enseignement",
+                tag_tool: "Outil", network_title: "Optimiseur Réseau", network_desc: "Outil Python.",
+                realtime_monitoring: "Monitoring temps réel", auto_optimization: "Optimisation", tag_networking: "Réseaux", tag_automation: "Automatisation",
+                next_project: "Votre Projet?", lets_collab: "Collaborons",
+                technical: "Expertise", expertise: "Technique",
+                aiml_title: "IA & Machine Learning", aiml_1: "Vision par Ordinateur", aiml_2: "Deep Learning", aiml_3: "Edge AI", aiml_4: "Traitement Signal",
+                iot_title: "IoT & Embarqué", iot_1: "Raspberry Pi & Arduino", iot_2: "Capteurs", iot_3: "Temps Réel", iot_4: "PCB",
+                software_title: "Développement Logiciel", software_1: "Python", software_2: "C/C++", software_3: "Algorithmes", software_4: "Git",
+                contact_title: "Construisons l'Avenir Ensemble", contact_desc: "Disponible pour opportunités IA.",
+                get_in_touch: "Me Contacter", rights: "Tous droits réservés", open_to_work: "Disponible"
             },
             ru: {
-                nav_about: "Обо мне",
-                nav_projects: "Проекты",
-                nav_skills: "Навыки",
-                nav_contact: "Контакты",
-                available: "Открыт для предложений",
-                hero_title1: "Инженер ИИ &",
-                hero_desc: "Выпускник магистратуры, специализирующийся на компьютерном зрении, IoT и интеллектуальных системах. Создание технологий, связывающих исследования в области ИИ с реальным воздействием.",
-                view_projects: "Смотреть Проекты",
-                download_cv: "Скачать Резюме",
-                master_score: "Оценка Магистра",
-                accuracy: "Точность Модели",
-                national_rank: "Национальный Рейтинг",
-                about_title1: "Связь",
-                about_title2: "Исследований ИИ",
-                about_title3: "и Реального Влияния",
-                about_p1: "Как выпускник магистратуры с оценкой 19.5/20, я специализируюсь на разработке интеллектуальных систем, решающих критические реальные проблемы. Моя работа сосредоточена на пересечении компьютерного зрения, встроенных систем и ориентированного на человека дизайна.",
-                about_p2: "От создания навигационных средств для слабовидящих до разработки устойчивых решений по охлаждению, я верю в технологии, служащие человечеству. Мой подход сочетает строгую инженерию с творческим решением проблем.",
-                skill1: "Глубокое Обучение и Компьютерное Зрение",
-                skill2: "Встроенные Системы",
-                skill3: "Обработка в Реальном Времени",
-                skill4: "Академическое Превосходство",
-                edu_title: "Образование и Достижения",
-                master_degree: "Степень Магистра",
-                master_field: "ИИ и Наука о Данных",
-                score_label: "Оценка",
-                competition: "Национальный Конкурс",
-                competition_name: "The Call of Tech",
-                second_place: "2-е Место",
-                master_thesis: "Магистерская Диссертация",
-                lunav_subtitle: "Интеллектуальная Навигационная Система для Слабовидящих",
-                feature1_title: "Обнаружение Объектов в Реальном Времени",
-                feature1_desc: "Компьютерное зрение на базе YOLO со скоростью 30 FPS",
-                feature2_title: "3D Пространственный Аудио",
-                feature2_desc: "Тактильная обратная связь и направленное звуковое сопровождение",
-                feature3_title: "Edge Computing",
-                feature3_desc: "Raspberry Pi 4 + Ультразвуковые датчики",
-                stat_accuracy: "Точность",
-                stat_battery: "Батарея",
-                confidence: "Уверенность Обнаружения",
-                other_projects: "Другие",
-                projects_word: "Проекты",
-                projects_desc: "Инновационные решения, сочетающие аппаратное и программное обеспечение",
-                desertcool_desc: "Устойчивое решение для охлаждения с использованием испарительных техник с интеллектуальным IoT мониторингом для засушливых регионов.",
-                temp_reduction: "Снижение температуры",
-                energy_savings: "Экономия энергии",
-                vs_conventional: "по сравнению с обычным кондиционером",
-                tag_sensors: "Датчики",
-                tag_sustainability: "Устойчивость",
-                tag_workshop: "Мастер-класс",
-                robotics_title: "Образовательная Робототехника",
-                robotics_desc: "Разработка и преподавание комплексных мастер-классов по робототехнике Arduino для студентов университета.",
-                hands_on: "Практический подход к обучению",
-                project_based: "Проектно-ориентированная программа",
-                tag_teaching: "Преподавание",
-                tag_tool: "Инструмент",
-                network_title: "Оптимизатор Сети",
-                network_desc: "Инструмент анализа и оптимизации сети на Python для мониторинга производительности.",
-                realtime_monitoring: "Мониторинг в реальном времени",
-                auto_optimization: "Автоматическая оптимизация",
-                tag_networking: "Сети",
-                tag_automation: "Автоматизация",
-                next_project: "Ваш Следующий Проект?",
-                lets_collab: "Давайте сотрудничать",
-                technical: "Техническая",
-                expertise: "Экспертиза",
-                aiml_title: "ИИ и Машинное Обучение",
-                aiml_1: "Компьютерное Зрение (OpenCV, YOLO)",
-                aiml_2: "Глубокое Обучение (TensorFlow, PyTorch)",
-                aiml_3: "Edge AI и Оптимизация Моделей",
-                aiml_4: "Обработка Сигналов",
-                iot_title: "IoT и Встроенные Системы",
-                iot_1: "Raspberry Pi и Arduino",
-                iot_2: "Интеграция Датчиков",
-                iot_3: "Системы Реального Времени",
-                iot_4: "Основы Проектирования Печатных Плат",
-                software_title: "Разработка Программного Обеспечения",
-                software_1: "Python (Продвинутый)",
-                software_2: "C/C++ (Встроенный)",
-                software_3: "Структуры Данных и Алгоритмы",
-                software_4: "Основы Git и DevOps",
-                contact_title: "Давайте Строить Будущее Вместе",
-                contact_desc: "Открыт для возможностей в исследованиях ИИ, компьютерном зрении и инновационных IoT проектах.",
-                get_in_touch: "Связаться",
-                rights: "Все права защищены",
-                open_to_work: "Открыт для работы"
+                scroll_down: "Прокрутка",
+                generating: "Создание резюме...",
+                preparing: "Подготовка PDF...",
+                complete: "Готово!",
+                error: "Ошибка - Повторить",
+                nav_about: "Обо мне", nav_projects: "Проекты", nav_skills: "Навыки", nav_contact: "Контакты",
+                available: "Доступен", hero_title1: "Инженер ИИ &",
+                hero_desc: "Выпускник магистратуры по Компьютерному зрению, IoT и интеллектуальным системам.",
+                view_projects: "Смотреть Проекты", download_cv: "Скачать Резюме", master_score: "Оценка Магистра", accuracy: "Точность", national_rank: "Рейтинг",
+                about_title1: "Связь", about_title2: "Исследований ИИ", about_title3: "и Влияния",
+                about_p1: "Выпускник магистратуры 19.5/20, специалист по интеллектуальным системам.",
+                about_p2: "Верю в технологии на благо человечества.",
+                skill1: "Глубокое Обучение", skill2: "Встроенные Системы", skill3: "Реальное Время", skill4: "Академия",
+                edu_title: "Образование", master_degree: "Магистратура", master_field: "ИИ и Наука о Данных", score_label: "Оценка",
+                competition: "Национальный Конкурс", competition_name: "The Call of Tech", second_place: "2-е Место",
+                master_thesis: "Магистерская Диссертация", lunav_subtitle: "Навигация для Слабовидящих",
+                feature1_title: "Обнаружение Объектов", feature1_desc: "YOLO 30 FPS",
+                feature2_title: "3D Пространственное Аудио", feature2_desc: "Тактильная обратная связь",
+                feature3_title: "Edge Computing", feature3_desc: "Raspberry Pi 4",
+                stat_accuracy: "Точность", stat_battery: "Батарея", confidence: "Обнаружение",
+                other_projects: "Другие", projects_word: "Проекты", projects_desc: "Инновационные решения",
+                desertcool_desc: "Устойчивое решение для охлаждения.",
+                temp_reduction: "Снижение температуры", energy_savings: "Экономия", vs_conventional: "vs кондиционер",
+                tag_sensors: "Датчики", tag_sustainability: "Устойчивость", tag_workshop: "Мастер-класс",
+                robotics_title: "Образовательная Робототехника", robotics_desc: "Мастер-классы Arduino.",
+                hands_on: "Практическое обучение", project_based: "Проекты", tag_teaching: "Преподавание",
+                tag_tool: "Инструмент", network_title: "Оптимизатор Сети", network_desc: "Инструмент Python.",
+                realtime_monitoring: "Мониторинг", auto_optimization: "Оптимизация", tag_networking: "Сети", tag_automation: "Автоматизация",
+                next_project: "Ваш Проект?", lets_collab: "Сотрудничаем",
+                technical: "Техническая", expertise: "Экспертиза",
+                aiml_title: "ИИ и Машинное Обучение", aiml_1: "Компьютерное Зрение", aiml_2: "Глубокое Обучение", aiml_3: "Edge AI", aiml_4: "Обработка Сигналов",
+                iot_title: "IoT и Встроенные", iot_1: "Raspberry Pi & Arduino", iot_2: "Датчики", iot_3: "Реальное Время", iot_4: "PCB",
+                software_title: "Разработка ПО", software_1: "Python", software_2: "C/C++", software_3: "Алгоритмы", software_4: "Git",
+                contact_title: "Строим Будущее Вместе", contact_desc: "Открыт для возможностей в ИИ.",
+                get_in_touch: "Связаться", rights: "Все права защищены", open_to_work: "Доступен"
             }
         };
 
-        // Language switcher functionality
-        const langToggle = document.getElementById('langToggle');
-        const langDropdown = document.getElementById('langDropdown');
-        const currentLangSpan = document.getElementById('currentLang');
+        // ==========================================
+        // Language Switcher
+        // ==========================================
+        
         const langBtns = document.querySelectorAll('.lang-btn');
-
-        langToggle.addEventListener('click', (e) => {
-            e.stopPropagation();
-            langDropdown.classList.toggle('show');
-        });
-
-        document.addEventListener('click', () => {
-            langDropdown.classList.remove('show');
-        });
-
-        langDropdown.addEventListener('click', (e) => {
-            e.stopPropagation();
-        });
 
         function changeLanguage(lang) {
             currentLang = lang;
-            currentLangSpan.textContent = lang.toUpperCase();
             
-            // Update active state
+            // Update button states
             langBtns.forEach(btn => {
                 if(btn.dataset.lang === lang) {
                     btn.classList.add('active');
@@ -1262,7 +1571,7 @@
                 }
             });
 
-            // Update text content
+            // Update all translatable elements
             const elements = document.querySelectorAll('[data-i18n]');
             elements.forEach(el => {
                 const key = el.dataset.i18n;
@@ -1279,17 +1588,17 @@
                 document.documentElement.dir = 'ltr';
                 document.body.style.fontFamily = "'Inter', sans-serif";
             }
-
-            // Close dropdown
-            langDropdown.classList.remove('show');
             
-            // Update typewriter words
+            // Restart typewriter with new words
             wordIndex = 0;
             charIndex = 0;
             isDeleting = false;
         }
 
-        // Scroll reveal animation
+        // ==========================================
+        // Scroll Reveal Animation
+        // ==========================================
+        
         const observerOptions = {
             threshold: 0.1,
             rootMargin: "0px 0px -50px 0px"
@@ -1305,8 +1614,10 @@
 
         document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
 
-        // Navbar scroll effect
-        let lastScroll = 0;
+        // ==========================================
+        // Navbar Scroll Effect
+        // ==========================================
+        
         window.addEventListener('scroll', () => {
             const navbar = document.getElementById('navbar');
             const currentScroll = window.pageYOffset;
@@ -1320,37 +1631,12 @@
                 navbar.classList.add('py-4');
                 navbar.classList.remove('py-2');
             }
-            
-            lastScroll = currentScroll;
         });
 
-        // Download CV function
-        function downloadCV() {
-            const link = document.createElement('a');
-            link.href = '#';
-            link.download = 'DJELTI_ILYES_CV.pdf';
-            link.click();
-            showNotification(translations[currentLang].download_cv + ' started!');
-        }
-
-        // Notification system
-        function showNotification(message) {
-            const notification = document.createElement('div');
-            notification.className = 'fixed bottom-4 right-4 glass-strong px-6 py-3 rounded-lg border border-ai-accent/30 text-ai-accent z-50 transform translate-y-20 transition-transform duration-300';
-            notification.textContent = message;
-            document.body.appendChild(notification);
-            
-            setTimeout(() => {
-                notification.classList.remove('translate-y-20');
-            }, 100);
-            
-            setTimeout(() => {
-                notification.classList.add('translate-y-20');
-                setTimeout(() => notification.remove(), 300);
-            }, 3000);
-        }
-
-        // Smooth scroll for anchor links
+        // ==========================================
+        // Smooth Scroll
+        // ==========================================
+        
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
