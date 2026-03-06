@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="ru" dir="ltr">
 <head>
   <meta charset="UTF-8" />
@@ -7,26 +8,1341 @@
   <meta name="description" content="Portfolio of Djelti Ilyes – AI Engineer, Creative Technologist, Computer Vision & IoT specialist." />
 
   <!-- Fonts -->
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
 
   <!-- Remix Icons -->
+
   <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet" />
 
   <!-- AOS CSS -->
+
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
 
-  <!-- Custom CSS -->
-  <link rel="stylesheet" href="css/style.css" />
+<style>
+/* ============================================================
+   DJELTI ILYES — Portfolio Design System
+   ============================================================ */
+
+/* ---------- CSS Variables ---------- */
+:root {
+  --bg-primary: #06060e;
+  --bg-secondary: #0c0c1d;
+  --bg-tertiary: #111128;
+  --accent: #00d4ff;
+  --accent-2: #7b2ff7;
+  --accent-gradient: linear-gradient(135deg, #00d4ff 0%, #7b2ff7 100%);
+  --accent-glow: 0 0 30px rgba(0, 212, 255, 0.3);
+  --glass-bg: rgba(255, 255, 255, 0.03);
+  --glass-bg-hover: rgba(255, 255, 255, 0.06);
+  --glass-border: rgba(255, 255, 255, 0.06);
+  --glass-border-hover: rgba(255, 255, 255, 0.12);
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.55);
+  --text-tertiary: rgba(255, 255, 255, 0.35);
+  --font-heading: 'Space Grotesk', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
+  --radius-xl: 32px;
+  --transition: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ---------- Reset & Base ---------- */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* FIX: Body starts with overflow hidden so loader covers scroll bar flash */
+body {
+  font-family: var(--font-body);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.6;
+  overflow-x: hidden;
+  overflow-y: hidden; /* hidden during loader */
+}
+
+/* RTL support */
+[dir="rtl"] .about-grid { direction: rtl; }
+[dir="rtl"] .skills-grid { direction: rtl; }
+[dir="rtl"] .nav-links { direction: rtl; }
+
+a { text-decoration: none; color: inherit; }
+ul { list-style: none; }
+img { max-width: 100%; display: block; }
+button { border: none; background: none; cursor: pointer; font-family: inherit; color: inherit; }
+
+.container {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.section {
+  padding: 120px 0;
+  position: relative;
+}
+
+/* ---------- Custom Cursor ---------- */
+.cursor-dot {
+  width: 6px; height: 6px;
+  background: var(--accent);
+  border-radius: 50%;
+  position: fixed; top: 0; left: 0;
+  pointer-events: none;
+  z-index: 99999;
+  transition: transform 0.1s;
+  mix-blend-mode: difference;
+}
+.cursor-ring {
+  width: 36px; height: 36px;
+  border: 1.5px solid rgba(0, 212, 255, 0.4);
+  border-radius: 50%;
+  position: fixed; top: 0; left: 0;
+  pointer-events: none;
+  z-index: 99998;
+  transition: width 0.3s, height 0.3s, border-color 0.3s;
+}
+.cursor-ring.hover {
+  width: 56px; height: 56px;
+  border-color: var(--accent);
+}
+@media (max-width: 768px) {
+  .cursor-dot, .cursor-ring { display: none; }
+}
+
+/* ---------- Loader ---------- */
+.loader {
+  position: fixed;
+  inset: 0;
+  background: var(--bg-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100000;
+  transition: opacity 0.6s, visibility 0.6s;
+}
+.loader.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+.loader-inner { text-align: center; }
+.loader-ring {
+  width: 60px; height: 60px;
+  border: 2px solid var(--glass-border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto 20px;
+}
+.loader-text {
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  letter-spacing: 6px;
+  color: var(--text-secondary);
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ---------- Navigation ---------- */
+.nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 1000;
+  padding: 16px 0;
+  transition: var(--transition);
+}
+.nav.scrolled {
+  background: rgba(6, 6, 14, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--glass-border);
+  padding: 10px 0;
+}
+.nav-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.nav-logo {
+  font-family: var(--font-heading);
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+.logo-bracket { color: var(--accent); }
+
+.nav-links {
+  display: flex;
+  gap: 32px;
+}
+.nav-links a {
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  transition: var(--transition);
+  position: relative;
+  letter-spacing: 0.5px;
+}
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: -4px; left: 0;
+  width: 0; height: 2px;
+  background: var(--accent-gradient);
+  transition: width var(--transition);
+}
+.nav-links a:hover,
+.nav-links a.active { color: var(--text-primary); }
+.nav-links a:hover::after,
+.nav-links a.active::after { width: 100%; }
+
+.nav-right { display: flex; align-items: center; gap: 14px; }
+
+/* Language Switcher */
+.lang-switcher { position: relative; }
+.lang-btn {
+  display: flex; align-items: center; gap: 6px;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  font-size: 0.82rem;
+  font-weight: 500;
+  transition: var(--transition);
+  color: var(--text-primary);
+}
+.lang-btn:hover { background: var(--glass-bg-hover); border-color: var(--glass-border-hover); }
+.lang-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: rgba(12, 12, 29, 0.97);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  padding: 6px;
+  min-width: 160px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: var(--transition);
+  z-index: 100;
+}
+[dir="rtl"] .lang-dropdown { right: auto; left: 0; }
+.lang-dropdown.open {
+  opacity: 1; visibility: visible; transform: translateY(0);
+}
+.lang-option {
+  display: block;
+  width: 100%;
+  padding: 10px 14px;
+  text-align: left;
+  font-size: 0.85rem;
+  border-radius: var(--radius-sm);
+  transition: var(--transition);
+  color: var(--text-primary);
+}
+[dir="rtl"] .lang-option { text-align: right; }
+.lang-option:hover { background: var(--glass-bg-hover); }
+
+.nav-cta {
+  padding: 8px 20px;
+  border-radius: var(--radius-sm);
+  background: var(--accent-gradient);
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: #000;
+  transition: var(--transition);
+  display: inline-block;
+}
+.nav-cta:hover { transform: translateY(-1px); box-shadow: var(--accent-glow); }
+
+/* Mobile Toggle */
+.nav-toggle { display: none; flex-direction: column; gap: 5px; padding: 4px; }
+.nav-toggle span {
+  width: 22px; height: 2px;
+  background: var(--text-primary);
+  transition: var(--transition);
+  border-radius: 2px;
+  display: block;
+}
+.nav-toggle.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+.nav-toggle.active span:nth-child(2) { opacity: 0; }
+.nav-toggle.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
+@media (max-width: 900px) {
+  .nav-toggle { display: flex; }
+  .nav-links {
+    position: fixed;
+    top: 0; right: -100%;
+    width: 280px; height: 100vh;
+    background: rgba(6, 6, 14, 0.97);
+    backdrop-filter: blur(30px);
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 80px 32px 32px;
+    gap: 24px;
+    transition: right var(--transition-slow);
+    border-left: 1px solid var(--glass-border);
+    z-index: 999;
+  }
+  [dir="rtl"] .nav-links {
+    right: auto; left: -100%;
+    border-left: none;
+    border-right: 1px solid var(--glass-border);
+    transition: left var(--transition-slow);
+  }
+  .nav-links.open { right: 0; }
+  [dir="rtl"] .nav-links.open { left: 0; right: auto; }
+  .nav-links a { font-size: 1rem; }
+  .nav-cta { display: none; }
+}
+
+/* ---------- Hero Section ---------- */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.hero-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 0%, var(--bg-primary) 75%);
+  z-index: 1;
+}
+
+/* Floating Code Blocks */
+.floating-code {
+  position: absolute;
+  z-index: 2;
+  background: rgba(0, 212, 255, 0.04);
+  border: 1px solid rgba(0, 212, 255, 0.1);
+  border-radius: var(--radius-sm);
+  padding: 12px 18px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: rgba(0, 212, 255, 0.45);
+  opacity: 0;
+  animation: floatCode 6s ease-in-out infinite;
+  pointer-events: none;
+  user-select: none;
+}
+.fc-1 { top: 18%; left: 6%; animation-delay: 0s; }
+.fc-2 { top: 28%; right: 5%; animation-delay: 2s; }
+.fc-3 { bottom: 22%; left: 8%; animation-delay: 4s; }
+@keyframes floatCode {
+  0%, 100% { opacity: 0; transform: translateY(20px); }
+  20%, 80% { opacity: 1; }
+  50% { transform: translateY(-10px); }
+}
+
+.hero-content {
+  position: relative;
+  z-index: 3;
+  text-align: center;
+  max-width: 860px;
+  padding: 0 24px;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 20px;
+  border-radius: 100px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  margin-bottom: 32px;
+  opacity: 0; /* GSAP will animate this */
+}
+.badge-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: #22c55e;
+  animation: pulse-dot 2s ease-in-out infinite;
+  flex-shrink: 0;
+}
+@keyframes pulse-dot {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
+  50% { box-shadow: 0 0 0 8px rgba(34, 197, 94, 0); }
+}
+
+.hero-name {
+  font-family: var(--font-heading);
+  font-size: clamp(3.2rem, 10vw, 7.5rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -2px;
+  margin-bottom: 20px;
+}
+.name-line {
+  display: block;
+  opacity: 0; /* GSAP will animate */
+}
+.name-outline {
+  -webkit-text-stroke: 2px var(--accent);
+  color: transparent;
+}
+
+.hero-title {
+  font-family: var(--font-heading);
+  font-size: clamp(1rem, 2.5vw, 1.5rem);
+  font-weight: 400;
+  color: var(--text-secondary);
+  margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  opacity: 0; /* GSAP will animate */
+}
+.title-separator {
+  color: var(--accent);
+  font-weight: 300;
+}
+
+.hero-subtitle {
+  font-size: clamp(0.95rem, 1.5vw, 1.12rem);
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin: 0 auto 40px;
+  line-height: 1.7;
+  opacity: 0; /* GSAP will animate */
+}
+
+.hero-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  opacity: 0; /* GSAP will animate */
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 13px 28px;
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+.btn-primary {
+  background: var(--accent-gradient);
+  color: #000;
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: var(--accent-glow); }
+.btn-secondary {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  color: var(--text-primary);
+}
+.btn-secondary:hover { background: var(--glass-bg-hover); border-color: var(--glass-border-hover); }
+.btn-ghost {
+  color: var(--text-secondary);
+  padding: 13px 18px;
+}
+.btn-ghost:hover { color: var(--accent); }
+.btn-lg { padding: 16px 36px; font-size: 1rem; }
+
+/* Hero Scroll */
+.hero-scroll {
+  position: absolute;
+  bottom: 36px; left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  opacity: 0; /* GSAP will animate */
+}
+.scroll-line {
+  width: 1px; height: 50px;
+  background: linear-gradient(to bottom, var(--accent), transparent);
+  animation: scrollPulse 2s ease-in-out infinite;
+}
+@keyframes scrollPulse {
+  0%, 100% { opacity: 1; transform: scaleY(1); }
+  50% { opacity: 0.3; transform: scaleY(0.6); }
+}
+.hero-scroll span {
+  font-size: 0.7rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+/* ---------- Section Headers ---------- */
+.section-header {
+  text-align: center;
+  margin-bottom: 70px;
+}
+.section-tag {
+  display: inline-block;
+  padding: 6px 16px;
+  border-radius: 100px;
+  background: rgba(0, 212, 255, 0.08);
+  border: 1px solid rgba(0, 212, 255, 0.15);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--accent);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 18px;
+}
+.section-title {
+  font-family: var(--font-heading);
+  font-size: clamp(2.2rem, 5vw, 3.4rem);
+  font-weight: 700;
+  letter-spacing: -1px;
+  margin-bottom: 14px;
+}
+.section-subtitle {
+  font-size: 1.05rem;
+  color: var(--text-secondary);
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+/* ---------- About Section ---------- */
+.about { background: var(--bg-secondary); }
+.about-grid {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  gap: 60px;
+  align-items: center;
+}
+.image-frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3/4;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+.image-placeholder {
+  width: 100%;
+  height: 100%;
+  background: var(--bg-tertiary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-family: var(--font-heading);
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--text-tertiary);
+}
+.image-placeholder i { font-size: 4rem; color: var(--accent); opacity: 0.3; }
+.image-border {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--glass-border);
+  pointer-events: none;
+}
+/* FIX: .about-image needs position:relative so the badge is positioned correctly */
+.about-image { position: relative; }
+
+.about-exp-badge {
+  position: absolute;
+  bottom: -20px; right: -20px;
+  background: var(--accent-gradient);
+  color: #000;
+  border-radius: var(--radius-md);
+  padding: 18px 24px;
+  text-align: center;
+  font-weight: 700;
+  box-shadow: var(--accent-glow);
+  z-index: 2;
+}
+.exp-number {
+  display: block;
+  font-family: var(--font-heading);
+  font-size: 1.6rem;
+  line-height: 1;
+}
+.about-exp-badge span:last-child { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; }
+
+.about-heading {
+  font-family: var(--font-heading);
+  font-size: 1.6rem;
+  font-weight: 600;
+  margin-bottom: 18px;
+  line-height: 1.3;
+}
+.about-text {
+  color: var(--text-secondary);
+  font-size: 1rem;
+  line-height: 1.8;
+  margin-bottom: 28px;
+}
+
+.about-focus { margin-bottom: 32px; }
+.about-focus h4 {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--text-tertiary);
+  margin-bottom: 14px;
+}
+.focus-tags { display: flex; flex-wrap: wrap; gap: 10px; }
+.focus-tag {
+  padding: 7px 18px;
+  border-radius: 100px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  font-size: 0.84rem;
+  font-weight: 500;
+  color: var(--accent);
+  transition: var(--transition);
+}
+.focus-tag:hover { background: rgba(0, 212, 255, 0.1); border-color: rgba(0, 212, 255, 0.3); }
+
+.about-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+.about-stat {
+  text-align: center;
+  padding: 18px;
+  border-radius: var(--radius-md);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+}
+.stat-value {
+  display: block;
+  font-family: var(--font-heading);
+  font-size: 1.4rem;
+  font-weight: 700;
+  background: var(--accent-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.stat-label {
+  font-size: 0.76rem;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 4px;
+  display: block;
+}
+
+/* ---------- Achievements Section ---------- */
+.achievements-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+}
+.ach-card {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  padding: 40px 30px;
+  text-align: center;
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+.ach-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--accent-gradient);
+  opacity: 0;
+  transition: var(--transition);
+}
+.ach-card:hover {
+  transform: translateY(-6px);
+  border-color: var(--glass-border-hover);
+  background: var(--glass-bg-hover);
+}
+.ach-card:hover::before { opacity: 1; }
+.ach-icon {
+  width: 60px; height: 60px;
+  border-radius: 50%;
+  background: rgba(0, 212, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 24px;
+  font-size: 1.5rem;
+  color: var(--accent);
+}
+.ach-number {
+  font-family: var(--font-heading);
+  font-size: 3.2rem;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 12px;
+  background: var(--accent-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 4px;
+}
+.ach-unit {
+  font-size: 1.4rem;
+  font-weight: 500;
+}
+.ach-card h3 {
+  font-family: var(--font-heading);
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.ach-card p {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* ---------- Projects Section ---------- */
+.projects { background: var(--bg-secondary); }
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 28px;
+}
+
+.project-card {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: var(--transition);
+}
+.project-card:hover {
+  transform: translateY(-6px);
+  border-color: var(--glass-border-hover);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+.project-featured {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+.project-image { position: relative; overflow: hidden; }
+.project-img-placeholder {
+  width: 100%;
+  height: 100%;
+  min-height: 240px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3.5rem;
+  color: rgba(255, 255, 255, 0.3);
+  transition: transform var(--transition);
+}
+.project-card:hover .project-img-placeholder { transform: scale(1.05); }
+.lunav-bg { background: linear-gradient(135deg, #0d1b2a 0%, #1b2838 50%, #0a192f 100%); }
+.desertcool-bg { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); }
+.robotics-bg { background: linear-gradient(135deg, #1a0a2e 0%, #2d1b4e 50%, #1a0a2e 100%); }
+.network-bg { background: linear-gradient(135deg, #0a2e1a 0%, #1b4e2d 50%, #0a2e1a 100%); }
+
+.project-badge {
+  position: absolute;
+  top: 16px; left: 16px;
+  padding: 6px 14px;
+  border-radius: 100px;
+  background: var(--accent-gradient);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #000;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.project-info { padding: 30px; }
+.project-info h3 {
+  font-family: var(--font-heading);
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+.project-info > p {
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+  line-height: 1.6;
+  margin-bottom: 18px;
+}
+
+.project-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+.project-tags span {
+  padding: 4px 12px;
+  border-radius: 100px;
+  background: rgba(0, 212, 255, 0.08);
+  border: 1px solid rgba(0, 212, 255, 0.15);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--accent);
+  font-family: var(--font-mono);
+}
+
+.project-metrics {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+.metric { text-align: center; }
+.metric-value {
+  display: block;
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+.metric-label { font-size: 0.72rem; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 1px; }
+
+.project-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--accent);
+  transition: gap var(--transition);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+.project-link:hover { gap: 12px; }
+
+/* ---------- Modals ---------- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--transition), visibility var(--transition);
+  padding: 24px;
+}
+.modal-overlay.open { opacity: 1; visibility: visible; }
+
+/* FIX: Use opacity + visibility + display:none trick for proper modal animation */
+.modal {
+  background: var(--bg-secondary);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-xl);
+  max-width: 640px;
+  width: 100%;
+  max-height: 85vh;
+  overflow-y: auto;
+  padding: 40px;
+  position: relative;
+  transform: scale(0.9) translateY(20px);
+  opacity: 0;
+  transition: transform var(--transition), opacity var(--transition);
+  display: none; /* Hidden by default, shown via JS with reflow trick */
+}
+.modal.active {
+  transform: scale(1) translateY(0);
+  opacity: 1;
+}
+
+.modal-close {
+  position: absolute;
+  top: 20px; right: 20px;
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  transition: var(--transition);
+  color: var(--text-primary);
+}
+.modal-close:hover { background: var(--glass-bg-hover); }
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+.modal-icon {
+  width: 60px; height: 60px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  color: rgba(255, 255, 255, 0.7);
+  flex-shrink: 0;
+}
+.modal-header h2 {
+  font-family: var(--font-heading);
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+.modal-header p { color: var(--text-secondary); font-size: 0.9rem; }
+
+.modal-section { margin-bottom: 24px; }
+.modal-section h4 {
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--text-tertiary);
+  margin-bottom: 12px;
+}
+.modal-section p {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+.modal-section ul { padding-left: 0; }
+.modal-section li {
+  padding: 8px 0;
+  padding-left: 20px;
+  position: relative;
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+}
+.modal-section li::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 50%;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  transform: translateY(-50%);
+}
+[dir="rtl"] .modal-section li { padding-left: 0; padding-right: 20px; }
+[dir="rtl"] .modal-section li::before { left: auto; right: 0; }
+
+.modal-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+.modal-tags span {
+  padding: 6px 14px;
+  border-radius: 100px;
+  background: rgba(0, 212, 255, 0.08);
+  border: 1px solid rgba(0, 212, 255, 0.15);
+  font-size: 0.8rem;
+  color: var(--accent);
+  font-family: var(--font-mono);
+}
+
+.modal-metrics {
+  display: flex; gap: 20px; flex-wrap: wrap;
+}
+.modal-metric {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  padding: 18px 24px;
+  text-align: center;
+  flex: 1;
+  min-width: 100px;
+}
+.mm-val {
+  display: block;
+  font-family: var(--font-heading);
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 4px;
+}
+.mm-label { font-size: 0.72rem; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 1px; }
+
+/* ---------- Skills Section ---------- */
+.skills { background: var(--bg-secondary); }
+.skills-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 50px;
+}
+.skills-heading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font-heading);
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 28px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--glass-border);
+}
+.skills-heading i {
+  color: var(--accent);
+  font-size: 1.4rem;
+}
+
+/* FIX: skill-card uses CSS grid for icon + text + bar layout */
+.skill-card {
+  display: grid;
+  grid-template-columns: 44px 1fr;
+  grid-template-rows: auto auto;
+  gap: 0 14px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  margin-bottom: 14px;
+  transition: background var(--transition), border-color var(--transition), transform var(--transition);
+}
+.skill-card:hover {
+  background: var(--glass-bg-hover);
+  border-color: var(--glass-border-hover);
+  transform: translateX(6px);
+}
+[dir="rtl"] .skill-card:hover { transform: translateX(-6px); }
+
+.skill-icon {
+  grid-row: 1 / 3;
+  width: 44px; height: 44px;
+  border-radius: var(--radius-sm);
+  background: rgba(0, 212, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  color: var(--accent);
+}
+.skill-info h4 {
+  font-family: var(--font-heading);
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+.skill-info p {
+  font-size: 0.82rem;
+  color: var(--text-tertiary);
+  line-height: 1.4;
+}
+.skill-bar {
+  grid-column: 2;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 100px;
+  overflow: hidden;
+  margin-top: 10px;
+  align-self: end;
+}
+.skill-fill {
+  height: 100%;
+  background: var(--accent-gradient);
+  border-radius: 100px;
+  width: 0;
+  transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ---------- Portfolio Section ---------- */
+.portfolio-filters {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+}
+.filter-btn {
+  padding: 8px 22px;
+  border-radius: 100px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  transition: var(--transition);
+  cursor: pointer;
+}
+.filter-btn:hover { color: var(--text-primary); border-color: var(--glass-border-hover); }
+.filter-btn.active {
+  background: var(--accent-gradient);
+  color: #000;
+  border-color: transparent;
+  font-weight: 600;
+}
+
+.portfolio-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+.portfolio-item {
+  position: relative;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  cursor: pointer;
+  aspect-ratio: 4/3;
+  transition: transform var(--transition);
+}
+.portfolio-item.hidden { display: none; }
+.portfolio-item:hover { transform: translateY(-4px); }
+
+.portfolio-thumb {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  color: rgba(255, 255, 255, 0.15);
+  transition: transform var(--transition);
+}
+.portfolio-item:hover .portfolio-thumb { transform: scale(1.1); }
+
+.ai-gradient { background: linear-gradient(135deg, #0d2137, #1a3a5c); }
+.ai-gradient-2 { background: linear-gradient(135deg, #1a0d37, #3a1a5c); }
+.video-gradient { background: linear-gradient(135deg, #370d0d, #5c1a1a); }
+.design-gradient { background: linear-gradient(135deg, #0d3720, #1a5c3a); }
+.design-gradient-2 { background: linear-gradient(135deg, #37300d, #5c4e1a); }
+.tech-gradient { background: linear-gradient(135deg, #0d2537, #1a4a5c); }
+
+.portfolio-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity var(--transition);
+  backdrop-filter: blur(4px);
+}
+.portfolio-item:hover .portfolio-overlay { opacity: 1; }
+.portfolio-overlay h4 {
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+.portfolio-overlay span {
+  font-size: 0.82rem;
+  color: var(--accent);
+}
+
+/* ---------- Contact Section ---------- */
+.contact { background: var(--bg-secondary); }
+.contact-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+.contact-heading {
+  font-family: var(--font-heading);
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 18px;
+  letter-spacing: -1px;
+  margin-top: 16px;
+}
+.contact-text {
+  color: var(--text-secondary);
+  font-size: 1.05rem;
+  line-height: 1.7;
+  margin-bottom: 36px;
+}
+
+.contact-links { display: flex; flex-direction: column; gap: 12px; }
+.contact-link {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 22px;
+  border-radius: var(--radius-md);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  transition: var(--transition);
+  font-weight: 500;
+  color: var(--text-primary);
+}
+.contact-link:hover {
+  background: var(--glass-bg-hover);
+  border-color: var(--glass-border-hover);
+  transform: translateX(6px);
+}
+[dir="rtl"] .contact-link:hover { transform: translateX(-6px); }
+.contact-link i:first-child { font-size: 1.3rem; color: var(--accent); }
+.contact-link .link-arrow { margin-left: auto; color: var(--text-tertiary); font-size: 0.9rem; }
+[dir="rtl"] .contact-link .link-arrow { margin-left: 0; margin-right: auto; }
+
+.contact-card {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+}
+.contact-card-inner {
+  padding: 50px 40px;
+  text-align: center;
+}
+.cta-visual {
+  position: relative;
+  width: 100px; height: 100px;
+  margin: 0 auto 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  color: var(--accent);
+}
+.cta-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 212, 255, 0.2);
+  animation: ctaPulse 3s ease-in-out infinite;
+}
+.cta-ring-2 { animation-delay: 1.5s; }
+@keyframes ctaPulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.3); opacity: 0; }
+}
+.contact-card h3 {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+.contact-card p {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  margin-bottom: 28px;
+}
+
+/* ---------- Footer ---------- */
+.footer {
+  padding: 40px 0;
+  border-top: 1px solid var(--glass-border);
+}
+.footer-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.footer-logo {
+  font-family: var(--font-heading);
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+.footer-copy {
+  font-size: 0.84rem;
+  color: var(--text-tertiary);
+}
+.footer-links {
+  display: flex;
+  gap: 18px;
+}
+.footer-links a {
+  font-size: 1.2rem;
+  color: var(--text-secondary);
+  transition: var(--transition);
+}
+.footer-links a:hover { color: var(--accent); }
+
+/* ---------- Scrollbar ---------- */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-primary); }
+::-webkit-scrollbar-thumb { background: rgba(0, 212, 255, 0.2); border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(0, 212, 255, 0.4); }
+
+/* ---------- Selection ---------- */
+::selection { background: rgba(0, 212, 255, 0.2); color: var(--text-primary); }
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 1024px) {
+  .about-grid { grid-template-columns: 1fr; gap: 50px; }
+  .about-image { max-width: 320px; margin: 0 auto; }
+  .projects-grid { grid-template-columns: 1fr; }
+  .project-featured { grid-template-columns: 1fr; }
+  .skills-grid { grid-template-columns: 1fr; gap: 40px; }
+  .contact-wrapper { grid-template-columns: 1fr; gap: 40px; }
+}
+
+@media (max-width: 768px) {
+  .section { padding: 80px 0; }
+  .section-header { margin-bottom: 50px; }
+  .achievements-grid { grid-template-columns: 1fr; }
+  .ach-card { padding: 30px 20px; }
+  .portfolio-grid { grid-template-columns: repeat(2, 1fr); }
+  .about-stats { grid-template-columns: 1fr; gap: 12px; }
+  .hero-actions { flex-direction: column; align-items: stretch; }
+  .btn { width: 100%; justify-content: center; }
+  .footer-inner { flex-direction: column; gap: 16px; text-align: center; }
+  .floating-code { display: none; }
+  .hero-name { letter-spacing: -1px; }
+  .modal { padding: 28px; }
+  .modal-overlay { align-items: flex-end; padding: 0; }
+  .modal { border-radius: var(--radius-lg) var(--radius-lg) 0 0; max-height: 90vh; }
+}
+
+@media (max-width: 480px) {
+  .portfolio-grid { grid-template-columns: 1fr; }
+  .hero-badge { font-size: 0.75rem; }
+  .project-metrics { flex-wrap: wrap; gap: 10px; }
+}
+</style>
+
 </head>
 <body>
 
   <!-- ========== CUSTOM CURSOR ========== -->
+
   <div class="cursor-dot" id="cursorDot"></div>
   <div class="cursor-ring" id="cursorRing"></div>
 
   <!-- ========== LOADER ========== -->
+
   <div class="loader" id="loader">
     <div class="loader-inner">
       <div class="loader-ring"></div>
@@ -35,110 +1351,122 @@
   </div>
 
   <!-- ========== NAVIGATION ========== -->
+
   <nav class="nav" id="navbar">
     <div class="nav-container">
       <a href="#hero" class="nav-logo">
         <span class="logo-bracket">&lt;</span>DI<span class="logo-bracket">/&gt;</span>
       </a>
 
-      <ul class="nav-links" id="navLinks">
-        <li><a href="#about" data-i18n="nav.about">Обо мне</a></li>
-        <li><a href="#achievements" data-i18n="nav.achievements">Достижения</a></li>
-        <li><a href="#projects" data-i18n="nav.projects">Проекты</a></li>
-        <li><a href="#skills" data-i18n="nav.skills">Навыки</a></li>
-        <li><a href="#portfolio" data-i18n="nav.portfolio">Портфолио</a></li>
-        <li><a href="#contact" data-i18n="nav.contact">Контакт</a></li>
-      </ul>
+```
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#about" data-i18n="nav.about">Обо мне</a></li>
+    <li><a href="#achievements" data-i18n="nav.achievements">Достижения</a></li>
+    <li><a href="#projects" data-i18n="nav.projects">Проекты</a></li>
+    <li><a href="#skills" data-i18n="nav.skills">Навыки</a></li>
+    <li><a href="#portfolio" data-i18n="nav.portfolio">Портфолио</a></li>
+    <li><a href="#contact" data-i18n="nav.contact">Контакт</a></li>
+  </ul>
 
-      <div class="nav-right">
-        <!-- Language Switcher -->
-        <div class="lang-switcher" id="langSwitcher">
-          <button class="lang-btn" id="langBtn">
-            <span id="currentLangFlag">🇷🇺</span>
-            <span id="currentLangCode">RU</span>
-            <i class="ri-arrow-down-s-line"></i>
-          </button>
-          <div class="lang-dropdown" id="langDropdown">
-            <button class="lang-option" data-lang="ru">🇷�� Русский</button>
-            <button class="lang-option" data-lang="en">🇬🇧 English</button>
-            <button class="lang-option" data-lang="fr">🇫🇷 Français</button>
-            <button class="lang-option" data-lang="ar">🇸🇦 العربية</button>
-          </div>
-        </div>
-
-        <a href="#contact" class="nav-cta" data-i18n="nav.hire">Связаться</a>
-
-        <!-- Mobile Toggle -->
-        <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
-          <span></span><span></span><span></span>
-        </button>
+  <div class="nav-right">
+    <!-- Language Switcher -->
+    <div class="lang-switcher" id="langSwitcher">
+      <button class="lang-btn" id="langBtn">
+        <span id="currentLangFlag">🇷🇺</span>
+        <span id="currentLangCode">RU</span>
+        <i class="ri-arrow-down-s-line"></i>
+      </button>
+      <div class="lang-dropdown" id="langDropdown">
+        <button class="lang-option" data-lang="ru">🇷🇺 Русский</button>
+        <button class="lang-option" data-lang="en">🇬🇧 English</button>
+        <button class="lang-option" data-lang="fr">🇫🇷 Français</button>
+        <button class="lang-option" data-lang="ar">🇸🇦 العربية</button>
       </div>
     </div>
+
+    <a href="#contact" class="nav-cta" data-i18n="nav.hire">Связаться</a>
+
+    <!-- Mobile Toggle -->
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</div>
+```
+
   </nav>
 
   <!-- ========== HERO SECTION ========== -->
+
   <section class="hero" id="hero">
     <canvas class="hero-canvas" id="heroCanvas"></canvas>
-
     <div class="hero-overlay"></div>
 
-    <!-- Floating code blocks -->
-    <div class="floating-code fc-1" aria-hidden="true">
-      <pre><code>model.predict(frame)
+```
+<!-- Floating code blocks -->
+<div class="floating-code fc-1" aria-hidden="true">
+  <pre><code>model.predict(frame)
+```
+
 conf: 0.95 ✓</code></pre>
-    </div>
-    <div class="floating-code fc-2" aria-hidden="true">
-      <pre><code>import cv2
+</div>
+<div class="floating-code fc-2" aria-hidden="true">
+<pre><code>import cv2
 import tensorflow</code></pre>
-    </div>
-    <div class="floating-code fc-3" aria-hidden="true">
-      <pre><code>while detecting:
-  navigate(user)</code></pre>
-    </div>
+</div>
+<div class="floating-code fc-3" aria-hidden="true">
+<pre><code>while detecting:
+navigate(user)</code></pre>
+</div>
 
-    <div class="hero-content">
-      <div class="hero-badge" data-aos="fade-down" data-aos-delay="200">
-        <span class="badge-dot"></span>
-        <span data-i18n="hero.badge">Открыт для возможностей</span>
-      </div>
+```
+<div class="hero-content">
+  <!-- NOTE: No data-aos here — GSAP handles hero animations to avoid double-animation conflict -->
+  <div class="hero-badge">
+    <span class="badge-dot"></span>
+    <span data-i18n="hero.badge">Открыт для возможностей</span>
+  </div>
 
-      <h1 class="hero-name" id="heroName">
-        <span class="name-line" data-aos="fade-up" data-aos-delay="300">DJELTI</span>
-        <span class="name-line name-outline" data-aos="fade-up" data-aos-delay="450">ILYES</span>
-      </h1>
+  <h1 class="hero-name" id="heroName">
+    <span class="name-line">DJELTI</span>
+    <span class="name-line name-outline">ILYES</span>
+  </h1>
 
-      <p class="hero-title" data-aos="fade-up" data-aos-delay="600">
-        <span data-i18n="hero.title">ИИ Инженер</span>
-        <span class="title-separator">|</span>
-        <span data-i18n="hero.title2">Креативный Технолог</span>
-      </p>
+  <p class="hero-title">
+    <span data-i18n="hero.title">ИИ Инженер</span>
+    <span class="title-separator">|</span>
+    <span data-i18n="hero.title2">Креативный Технолог</span>
+  </p>
 
-      <p class="hero-subtitle" data-aos="fade-up" data-aos-delay="750" data-i18n="hero.subtitle">
-        Создаю интеллектуальные системы и цифровой опыт, соединяющий исследования в области ИИ с реальным воздействием.
-      </p>
+  <p class="hero-subtitle" data-i18n="hero.subtitle">
+    Создаю интеллектуальные системы и цифровой опыт, соединяющий исследования в области ИИ с реальным воздействием.
+  </p>
 
-      <div class="hero-actions" data-aos="fade-up" data-aos-delay="900">
-        <a href="#projects" class="btn btn-primary">
-          <span data-i18n="hero.btn1">Проекты</span>
-          <i class="ri-arrow-right-line"></i>
-        </a>
-        <a href="#contact" class="btn btn-secondary">
-          <span data-i18n="hero.btn2">Связаться</span>
-        </a>
-        <a href="#" class="btn btn-ghost" id="downloadCV">
-          <i class="ri-download-2-line"></i>
-          <span data-i18n="hero.btn3">Скачать CV</span>
-        </a>
-      </div>
-    </div>
+  <div class="hero-actions">
+    <a href="#projects" class="btn btn-primary">
+      <span data-i18n="hero.btn1">Проекты</span>
+      <i class="ri-arrow-right-line"></i>
+    </a>
+    <a href="#contact" class="btn btn-secondary">
+      <span data-i18n="hero.btn2">Связаться</span>
+    </a>
+    <a href="#" class="btn btn-ghost" id="downloadCV">
+      <i class="ri-download-2-line"></i>
+      <span data-i18n="hero.btn3">Скачать CV</span>
+    </a>
+  </div>
+</div>
 
-    <div class="hero-scroll" data-aos="fade-up" data-aos-delay="1200">
-      <div class="scroll-line"></div>
-      <span data-i18n="hero.scroll">Прокрутите вниз</span>
-    </div>
+<div class="hero-scroll">
+  <div class="scroll-line"></div>
+  <span data-i18n="hero.scroll">Прокрутите вниз</span>
+</div>
+```
+
   </section>
 
   <!-- ========== ABOUT SECTION ========== -->
+
   <section class="section about" id="about">
     <div class="container">
       <div class="section-header" data-aos="fade-up">
@@ -146,363 +1474,379 @@ import tensorflow</code></pre>
         <h2 class="section-title" data-i18n="about.title">Обо мне</h2>
       </div>
 
-      <div class="about-grid">
-        <div class="about-image" data-aos="fade-right" data-aos-delay="200">
-          <div class="image-frame">
-            <div class="image-placeholder">
-              <i class="ri-user-line"></i>
-              <span>DI</span>
-            </div>
-            <div class="image-border"></div>
-          </div>
-          <div class="about-exp-badge">
-            <span class="exp-number">M2</span>
-            <span data-i18n="about.degree">Магистр</span>
-          </div>
+```
+  <div class="about-grid">
+    <div class="about-image" data-aos="fade-right" data-aos-delay="200">
+      <div class="image-frame">
+        <div class="image-placeholder">
+          <i class="ri-user-line"></i>
+          <span>DI</span>
         </div>
+        <div class="image-border"></div>
+      </div>
+      <div class="about-exp-badge">
+        <span class="exp-number">M2</span>
+        <span data-i18n="about.degree">Магистр</span>
+      </div>
+    </div>
 
-        <div class="about-content" data-aos="fade-left" data-aos-delay="400">
-          <h3 class="about-heading" data-i18n="about.heading">
-            Магистр, специализирующийся на компьютерном зрении, IoT и интеллектуальных системах
-          </h3>
-          <p class="about-text" data-i18n="about.text">
-            Выпускник магистратуры, специализирующийся на компьютерном зрении, IoT и интеллектуальных системах. Создаю технологии, которые соединяют исследования в области ИИ с реальным воздействием на мир.
-          </p>
+    <div class="about-content" data-aos="fade-left" data-aos-delay="400">
+      <h3 class="about-heading" data-i18n="about.heading">
+        Магистр, специализирующийся на компьютерном зрении, IoT и интеллектуальных системах
+      </h3>
+      <p class="about-text" data-i18n="about.text">
+        Выпускник магистратуры, специализирующийся на компьютерном зрении, IoT и интеллектуальных системах. Создаю технологии, которые соединяют исследования в области ИИ с реальным воздействием на мир.
+      </p>
 
-          <div class="about-focus">
-            <h4 data-i18n="about.focus_title">Направления исследований</h4>
-            <div class="focus-tags">
-              <span class="focus-tag" data-i18n="about.focus1">Компьютерное зрение</span>
-              <span class="focus-tag" data-i18n="about.focus2">IoT</span>
-              <span class="focus-tag" data-i18n="about.focus3">Встраиваемые системы</span>
-              <span class="focus-tag" data-i18n="about.focus4">Edge AI</span>
-            </div>
-          </div>
+      <div class="about-focus">
+        <h4 data-i18n="about.focus_title">Направления исследований</h4>
+        <div class="focus-tags">
+          <span class="focus-tag" data-i18n="about.focus1">Компьютерное зрение</span>
+          <span class="focus-tag" data-i18n="about.focus2">IoT</span>
+          <span class="focus-tag" data-i18n="about.focus3">Встраиваемые системы</span>
+          <span class="focus-tag" data-i18n="about.focus4">Edge AI</span>
+        </div>
+      </div>
 
-          <div class="about-stats">
-            <div class="about-stat">
-              <span class="stat-value">19.5/20</span>
-              <span class="stat-label" data-i18n="about.stat1">Оценка магистра</span>
-            </div>
-            <div class="about-stat">
-              <span class="stat-value">95%</span>
-              <span class="stat-label" data-i18n="about.stat2">Точность модели</span>
-            </div>
-            <div class="about-stat">
-              <span class="stat-value">2-е</span>
-              <span class="stat-label" data-i18n="about.stat3">Место в стране</span>
-            </div>
-          </div>
+      <div class="about-stats">
+        <div class="about-stat">
+          <span class="stat-value">19.5/20</span>
+          <span class="stat-label" data-i18n="about.stat1">Оценка магистра</span>
+        </div>
+        <div class="about-stat">
+          <span class="stat-value">95%</span>
+          <span class="stat-label" data-i18n="about.stat2">Точность модели</span>
+        </div>
+        <div class="about-stat">
+          <span class="stat-value">2<sup>nd</sup></span>
+          <span class="stat-label" data-i18n="about.stat3">Место в стране</span>
         </div>
       </div>
     </div>
+  </div>
+</div>
+```
+
   </section>
 
   <!-- ========== ACHIEVEMENTS SECTION ========== -->
+
   <section class="section achievements" id="achievements">
     <div class="container">
       <div class="section-header" data-aos="fade-up">
         <span class="section-tag" data-i18n="ach.tag">Достижения</span>
         <h2 class="section-title" data-i18n="ach.title">Ключевые результаты</h2>
-        <p class="section-subtitle" data-i18n="ach.subtitle">
-          Цифры, которые отражают стремление к совершенству
-        </p>
+        <p class="section-subtitle" data-i18n="ach.subtitle">Цифры, которые отражают стремление к совершенству</p>
       </div>
 
-      <div class="achievements-grid">
-        <div class="ach-card" data-aos="fade-up" data-aos-delay="100">
-          <div class="ach-icon"><i class="ri-award-line"></i></div>
-          <div class="ach-number">
-            <span class="counter" data-target="19.5" data-decimal="true">0</span>
-            <span class="ach-unit">/ 20</span>
-          </div>
-          <h3 data-i18n="ach.label1">Оценка магистра</h3>
-          <p data-i18n="ach.desc1">Высший балл за исследование в области ИИ и компьютерного зрения</p>
-        </div>
-
-        <div class="ach-card" data-aos="fade-up" data-aos-delay="250">
-          <div class="ach-icon"><i class="ri-focus-3-line"></i></div>
-          <div class="ach-number">
-            <span class="counter" data-target="95">0</span>
-            <span class="ach-unit">%</span>
-          </div>
-          <h3 data-i18n="ach.label2">Точность модели</h3>
-          <p data-i18n="ach.desc2">Система обнаружения объектов LUNAV достигла 95% точности</p>
-        </div>
-
-        <div class="ach-card" data-aos="fade-up" data-aos-delay="400">
-          <div class="ach-icon"><i class="ri-trophy-line"></i></div>
-          <div class="ach-number">
-            <span class="counter" data-target="2">0</span>
-            <span class="ach-unit" data-i18n="ach.place">-е место</span>
-          </div>
-          <h3 data-i18n="ach.label3">Национальный конкурс</h3>
-          <p data-i18n="ach.desc3">Второе место в национальном конкурсе инноваций</p>
-        </div>
+```
+  <div class="achievements-grid">
+    <div class="ach-card" data-aos="fade-up" data-aos-delay="100">
+      <div class="ach-icon"><i class="ri-award-line"></i></div>
+      <div class="ach-number">
+        <span class="counter" data-target="19.5" data-decimal="true">0</span>
+        <span class="ach-unit">/ 20</span>
       </div>
+      <h3 data-i18n="ach.label1">Оценка магистра</h3>
+      <p data-i18n="ach.desc1">Высший балл за исследование в области ИИ и компьютерного зрения</p>
     </div>
+
+    <div class="ach-card" data-aos="fade-up" data-aos-delay="250">
+      <div class="ach-icon"><i class="ri-focus-3-line"></i></div>
+      <div class="ach-number">
+        <span class="counter" data-target="95">0</span>
+        <span class="ach-unit">%</span>
+      </div>
+      <h3 data-i18n="ach.label2">Точность модели</h3>
+      <p data-i18n="ach.desc2">Система обнаружения объектов LUNAV достигла 95% точности</p>
+    </div>
+
+    <div class="ach-card" data-aos="fade-up" data-aos-delay="400">
+      <div class="ach-icon"><i class="ri-trophy-line"></i></div>
+      <div class="ach-number">
+        <span class="counter" data-target="2">0</span>
+        <span class="ach-unit" data-i18n="ach.place">-е место</span>
+      </div>
+      <h3 data-i18n="ach.label3">Национальный конкурс</h3>
+      <p data-i18n="ach.desc3">Второе место в национальном конкурсе инноваций</p>
+    </div>
+  </div>
+</div>
+```
+
   </section>
 
   <!-- ========== PROJECTS SECTION ========== -->
+
   <section class="section projects" id="projects">
     <div class="container">
       <div class="section-header" data-aos="fade-up">
         <span class="section-tag" data-i18n="proj.tag">Работы</span>
         <h2 class="section-title" data-i18n="proj.title">Проекты</h2>
-        <p class="section-subtitle" data-i18n="proj.subtitle">
-          Интеллектуальные системы и инновационные решения
-        </p>
+        <p class="section-subtitle" data-i18n="proj.subtitle">Интеллектуальные системы и инновационные решения</p>
       </div>
 
-      <div class="projects-grid">
+```
+  <div class="projects-grid">
 
-        <!-- LUNAV -->
-        <div class="project-card project-featured" data-aos="fade-up" data-aos-delay="100" data-project="lunav">
-          <div class="project-image">
-            <div class="project-img-placeholder lunav-bg">
-              <i class="ri-eye-line"></i>
-            </div>
-            <div class="project-badge" data-i18n="proj.featured">Главный проект</div>
+    <!-- LUNAV (Featured) -->
+    <div class="project-card project-featured" data-aos="fade-up" data-aos-delay="100">
+      <div class="project-image">
+        <div class="project-img-placeholder lunav-bg">
+          <i class="ri-eye-line"></i>
+        </div>
+        <div class="project-badge" data-i18n="proj.featured">Главный проект</div>
+      </div>
+      <div class="project-info">
+        <h3>LUNAV</h3>
+        <p data-i18n="proj.lunav_desc">Интеллектуальная навигационная система для слабовидящих людей</p>
+        <div class="project-tags">
+          <span>Python</span><span>OpenCV</span><span>TensorFlow</span>
+          <span>YOLO</span><span>Raspberry Pi</span><span>IoT</span>
+        </div>
+        <div class="project-metrics">
+          <div class="metric">
+            <span class="metric-value">95%</span>
+            <span class="metric-label" data-i18n="proj.accuracy">Точность</span>
           </div>
-          <div class="project-info">
-            <h3>LUNAV</h3>
-            <p data-i18n="proj.lunav_desc">Интеллектуальная навигационная система для слабовидящих людей</p>
-            <div class="project-tags">
-              <span>Python</span><span>OpenCV</span><span>TensorFlow</span>
-              <span>YOLO</span><span>Raspberry Pi</span><span>IoT</span>
-            </div>
-            <div class="project-metrics">
-              <div class="metric">
-                <span class="metric-value">95%</span>
-                <span class="metric-label" data-i18n="proj.accuracy">Точность</span>
-              </div>
-              <div class="metric">
-                <span class="metric-value">30 FPS</span>
-                <span class="metric-label" data-i18n="proj.detection">Обнаружение</span>
-              </div>
-              <div class="metric">
-                <span class="metric-value">8h+</span>
-                <span class="metric-label" data-i18n="proj.battery">Батарея</span>
-              </div>
-            </div>
-            <button class="project-link" data-modal="lunav">
-              <span data-i18n="proj.details">Подробнее</span>
-              <i class="ri-arrow-right-up-line"></i>
-            </button>
+          <div class="metric">
+            <span class="metric-value">30 FPS</span>
+            <span class="metric-label" data-i18n="proj.detection">Обнаружение</span>
+          </div>
+          <div class="metric">
+            <span class="metric-value">8h+</span>
+            <span class="metric-label" data-i18n="proj.battery">Батарея</span>
           </div>
         </div>
-
-        <!-- DesertCool -->
-        <div class="project-card" data-aos="fade-up" data-aos-delay="200" data-project="desertcool">
-          <div class="project-image">
-            <div class="project-img-placeholder desertcool-bg">
-              <i class="ri-temp-cold-line"></i>
-            </div>
-          </div>
-          <div class="project-info">
-            <h3>DesertCool</h3>
-            <p data-i18n="proj.dc_desc">Устойчивое решение для испарительного охлаждения</p>
-            <div class="project-tags">
-              <span>Arduino</span><span data-i18n="proj.sensors">Датчики</span><span>IoT</span>
-            </div>
-            <div class="project-metrics">
-              <div class="metric">
-                <span class="metric-value">10–15°C</span>
-                <span class="metric-label" data-i18n="proj.temp">Снижение t°</span>
-              </div>
-              <div class="metric">
-                <span class="metric-value">80%</span>
-                <span class="metric-label" data-i18n="proj.energy">Экономия</span>
-              </div>
-            </div>
-            <button class="project-link" data-modal="desertcool">
-              <span data-i18n="proj.details">Подробнее</span>
-              <i class="ri-arrow-right-up-line"></i>
-            </button>
-          </div>
-        </div>
-
-        <!-- Educational Robotics -->
-        <div class="project-card" data-aos="fade-up" data-aos-delay="300" data-project="robotics">
-          <div class="project-image">
-            <div class="project-img-placeholder robotics-bg">
-              <i class="ri-robot-line"></i>
-            </div>
-          </div>
-          <div class="project-info">
-            <h3 data-i18n="proj.rob_title">Образовательная робототехника</h3>
-            <p data-i18n="proj.rob_desc">Мастер-классы по робототехнике Arduino для студентов университетов. Проектное обучение.</p>
-            <div class="project-tags">
-              <span>Arduino</span><span data-i18n="proj.robotics">Робототехника</span><span data-i18n="proj.education">Образование</span>
-            </div>
-            <button class="project-link" data-modal="robotics">
-              <span data-i18n="proj.details">Подробнее</span>
-              <i class="ri-arrow-right-up-line"></i>
-            </button>
-          </div>
-        </div>
-
-        <!-- Network Optimizer -->
-        <div class="project-card" data-aos="fade-up" data-aos-delay="400" data-project="network">
-          <div class="project-image">
-            <div class="project-img-placeholder network-bg">
-              <i class="ri-global-line"></i>
-            </div>
-          </div>
-          <div class="project-info">
-            <h3 data-i18n="proj.net_title">Network Optimizer</h3>
-            <p data-i18n="proj.net_desc">Инструмент мониторинга и оптимизации сети на Python. Мониторинг в реальном времени, автоматическая оптимизация.</p>
-            <div class="project-tags">
-              <span>Python</span><span data-i18n="proj.networking">Сети</span><span data-i18n="proj.monitoring">Мониторинг</span>
-            </div>
-            <button class="project-link" data-modal="network">
-              <span data-i18n="proj.details">Подробнее</span>
-              <i class="ri-arrow-right-up-line"></i>
-            </button>
-          </div>
-        </div>
-
+        <button class="project-link" data-modal="lunav">
+          <span data-i18n="proj.details">Подробнее</span>
+          <i class="ri-arrow-right-up-line"></i>
+        </button>
       </div>
     </div>
+
+    <!-- DesertCool -->
+    <div class="project-card" data-aos="fade-up" data-aos-delay="200">
+      <div class="project-image">
+        <div class="project-img-placeholder desertcool-bg">
+          <i class="ri-temp-cold-line"></i>
+        </div>
+      </div>
+      <div class="project-info">
+        <h3>DesertCool</h3>
+        <p data-i18n="proj.dc_desc">Устойчивое решение для испарительного охлаждения</p>
+        <div class="project-tags">
+          <span>Arduino</span><span data-i18n="proj.sensors">Датчики</span><span>IoT</span>
+        </div>
+        <div class="project-metrics">
+          <div class="metric">
+            <span class="metric-value">10–15°C</span>
+            <span class="metric-label" data-i18n="proj.temp">Снижение t°</span>
+          </div>
+          <div class="metric">
+            <span class="metric-value">80%</span>
+            <span class="metric-label" data-i18n="proj.energy">Экономия</span>
+          </div>
+        </div>
+        <button class="project-link" data-modal="desertcool">
+          <span data-i18n="proj.details">Подробнее</span>
+          <i class="ri-arrow-right-up-line"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Educational Robotics -->
+    <div class="project-card" data-aos="fade-up" data-aos-delay="300">
+      <div class="project-image">
+        <div class="project-img-placeholder robotics-bg">
+          <i class="ri-robot-line"></i>
+        </div>
+      </div>
+      <div class="project-info">
+        <h3 data-i18n="proj.rob_title">Образовательная робототехника</h3>
+        <p data-i18n="proj.rob_desc">Мастер-классы по робототехнике Arduino для студентов университетов. Проектное обучение.</p>
+        <div class="project-tags">
+          <span>Arduino</span>
+          <span data-i18n="proj.robotics">Робототехника</span>
+          <span data-i18n="proj.education">Образование</span>
+        </div>
+        <button class="project-link" data-modal="robotics">
+          <span data-i18n="proj.details">Подробнее</span>
+          <i class="ri-arrow-right-up-line"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Network Optimizer -->
+    <div class="project-card" data-aos="fade-up" data-aos-delay="400">
+      <div class="project-image">
+        <div class="project-img-placeholder network-bg">
+          <i class="ri-global-line"></i>
+        </div>
+      </div>
+      <div class="project-info">
+        <h3 data-i18n="proj.net_title">Network Optimizer</h3>
+        <p data-i18n="proj.net_desc">Инструмент мониторинга и оптимизации сети на Python. Мониторинг в реальном времени, автоматическая оптимизация.</p>
+        <div class="project-tags">
+          <span>Python</span>
+          <span data-i18n="proj.networking">Сети</span>
+          <span data-i18n="proj.monitoring">Мониторинг</span>
+        </div>
+        <button class="project-link" data-modal="network">
+          <span data-i18n="proj.details">Подробнее</span>
+          <i class="ri-arrow-right-up-line"></i>
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+```
+
   </section>
 
   <!-- ========== PROJECT MODALS ========== -->
+
   <div class="modal-overlay" id="modalOverlay">
-    <!-- LUNAV Modal -->
-    <div class="modal" id="modal-lunav">
-      <button class="modal-close" aria-label="Close"><i class="ri-close-line"></i></button>
-      <div class="modal-header">
-        <div class="modal-icon lunav-bg"><i class="ri-eye-line"></i></div>
-        <div>
-          <h2>LUNAV</h2>
-          <p data-i18n="modal.lunav_sub">Интеллектуальная навигационная система для слабовидящих</p>
-        </div>
-      </div>
-      <div class="modal-body">
-        <div class="modal-section">
-          <h4 data-i18n="modal.overview">Обзор</h4>
-          <p data-i18n="modal.lunav_overview">Интеллектуальная навигационная система для слабовидящих людей, использующая обнаружение объектов в реальном времени, компьютерное зрение YOLO, 3D-пространственный звук, навигацию с тактильной обратной связью, Raspberry Pi с ультразвуковыми датчиками.</p>
-        </div>
-        <div class="modal-section">
-          <h4 data-i18n="modal.features">Функции</h4>
-          <ul>
-            <li data-i18n="modal.lunav_f1">Обнаружение объектов в реальном времени</li>
-            <li data-i18n="modal.lunav_f2">Компьютерное зрение YOLO</li>
-            <li data-i18n="modal.lunav_f3">3D-пространственный звук</li>
-            <li data-i18n="modal.lunav_f4">Навигация с тактильной обратной связью</li>
-            <li data-i18n="modal.lunav_f5">Raspberry Pi + ультразвуковые датчики</li>
-          </ul>
-        </div>
-        <div class="modal-section">
-          <h4 data-i18n="modal.tech">Технологии</h4>
-          <div class="modal-tags">
-            <span>Python</span><span>OpenCV</span><span>TensorFlow</span>
-            <span>YOLO</span><span>IoT</span><span>AR/VR</span>
-            <span>Raspberry Pi</span>
-          </div>
-        </div>
-        <div class="modal-section">
-          <h4 data-i18n="modal.performance">Производительность</h4>
-          <div class="modal-metrics">
-            <div class="modal-metric">
-              <span class="mm-val">95%</span>
-              <span class="mm-label" data-i18n="proj.accuracy">Точность</span>
-            </div>
-            <div class="modal-metric">
-              <span class="mm-val">30 FPS</span>
-              <span class="mm-label" data-i18n="proj.detection">Обнаружение</span>
-            </div>
-            <div class="modal-metric">
-              <span class="mm-val">8h+</span>
-              <span class="mm-label" data-i18n="proj.battery">Батарея</span>
-            </div>
-          </div>
-        </div>
+
+```
+<!-- LUNAV Modal -->
+<div class="modal" id="modal-lunav">
+  <button class="modal-close" aria-label="Close"><i class="ri-close-line"></i></button>
+  <div class="modal-header">
+    <div class="modal-icon lunav-bg"><i class="ri-eye-line"></i></div>
+    <div>
+      <h2>LUNAV</h2>
+      <p data-i18n="modal.lunav_sub">Интеллектуальная навигационная система для слабовидящих</p>
+    </div>
+  </div>
+  <div class="modal-body">
+    <div class="modal-section">
+      <h4 data-i18n="modal.overview">Обзор</h4>
+      <p data-i18n="modal.lunav_overview">Интеллектуальная навигационная система для слабовидящих людей, использующая обнаружение объектов в реальном времени, компьютерное зрение YOLO, 3D-пространственный звук, навигацию с тактильной обратной связью, Raspberry Pi с ультразвуковыми датчиками.</p>
+    </div>
+    <div class="modal-section">
+      <h4 data-i18n="modal.features">Функции</h4>
+      <ul>
+        <li data-i18n="modal.lunav_f1">Обнаружение объектов в реальном времени</li>
+        <li data-i18n="modal.lunav_f2">Компьютерное зрение YOLO</li>
+        <li data-i18n="modal.lunav_f3">3D-пространственный звук</li>
+        <li data-i18n="modal.lunav_f4">Навигация с тактильной обратной связью</li>
+        <li data-i18n="modal.lunav_f5">Raspberry Pi + ультразвуковые датчики</li>
+      </ul>
+    </div>
+    <div class="modal-section">
+      <h4 data-i18n="modal.tech">Технологии</h4>
+      <div class="modal-tags">
+        <span>Python</span><span>OpenCV</span><span>TensorFlow</span>
+        <span>YOLO</span><span>IoT</span><span>Raspberry Pi</span>
       </div>
     </div>
-
-    <!-- DesertCool Modal -->
-    <div class="modal" id="modal-desertcool">
-      <button class="modal-close" aria-label="Close"><i class="ri-close-line"></i></button>
-      <div class="modal-header">
-        <div class="modal-icon desertcool-bg"><i class="ri-temp-cold-line"></i></div>
-        <div>
-          <h2>DesertCool</h2>
-          <p data-i18n="modal.dc_sub">Устойчивое решение для испарительного охлаждения</p>
+    <div class="modal-section">
+      <h4 data-i18n="modal.performance">Производительность</h4>
+      <div class="modal-metrics">
+        <div class="modal-metric">
+          <span class="mm-val">95%</span>
+          <span class="mm-label" data-i18n="proj.accuracy">Точность</span>
         </div>
-      </div>
-      <div class="modal-body">
-        <div class="modal-section">
-          <h4 data-i18n="modal.overview">Обзор</h4>
-          <p data-i18n="modal.dc_overview">Устойчивое решение для испарительного охлаждения. Снижение температуры на 10–15°C, экономия энергии 80%. Использует датчики Arduino.</p>
+        <div class="modal-metric">
+          <span class="mm-val">30 FPS</span>
+          <span class="mm-label" data-i18n="proj.detection">Обнаружение</span>
         </div>
-        <div class="modal-section">
-          <h4 data-i18n="modal.tech">Технологии</h4>
-          <div class="modal-tags"><span>Arduino</span><span>Sensors</span><span>IoT</span></div>
-        </div>
-        <div class="modal-section">
-          <h4 data-i18n="modal.results">Результаты</h4>
-          <div class="modal-metrics">
-            <div class="modal-metric"><span class="mm-val">10–15°C</span><span class="mm-label" data-i18n="proj.temp">Снижение t°</span></div>
-            <div class="modal-metric"><span class="mm-val">80%</span><span class="mm-label" data-i18n="proj.energy">Экономия</span></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Robotics Modal -->
-    <div class="modal" id="modal-robotics">
-      <button class="modal-close" aria-label="Close"><i class="ri-close-line"></i></button>
-      <div class="modal-header">
-        <div class="modal-icon robotics-bg"><i class="ri-robot-line"></i></div>
-        <div>
-          <h2 data-i18n="proj.rob_title">Образовательная робототехника</h2>
-          <p data-i18n="modal.rob_sub">Мастер-классы по робототехнике для студентов</p>
-        </div>
-      </div>
-      <div class="modal-body">
-        <div class="modal-section">
-          <h4 data-i18n="modal.overview">Обзор</h4>
-          <p data-i18n="modal.rob_overview">Мастер-классы по робототехнике Arduino для студентов университетов. Проектное обучение с практическими заданиями.</p>
-        </div>
-        <div class="modal-section">
-          <h4 data-i18n="modal.tech">Технологии</h4>
-          <div class="modal-tags"><span>Arduino</span><span>Robotics</span><span>C/C++</span></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Network Modal -->
-    <div class="modal" id="modal-network">
-      <button class="modal-close" aria-label="Close"><i class="ri-close-line"></i></button>
-      <div class="modal-header">
-        <div class="modal-icon network-bg"><i class="ri-global-line"></i></div>
-        <div>
-          <h2>Network Optimizer</h2>
-          <p data-i18n="modal.net_sub">Инструмент мониторинга и оптимизации сети</p>
-        </div>
-      </div>
-      <div class="modal-body">
-        <div class="modal-section">
-          <h4 data-i18n="modal.overview">Обзор</h4>
-          <p data-i18n="modal.net_overview">Инструмент мониторинга и оптимизации сети на Python. Мониторинг в реальном времени, автоматическая оптимизация производительности.</p>
-        </div>
-        <div class="modal-section">
-          <h4 data-i18n="modal.features">Функции</h4>
-          <ul>
-            <li data-i18n="modal.net_f1">Мониторинг в реальном времени</li>
-            <li data-i18n="modal.net_f2">Автоматическая оптимизация</li>
-          </ul>
-        </div>
-        <div class="modal-section">
-          <h4 data-i18n="modal.tech">Технологии</h4>
-          <div class="modal-tags"><span>Python</span><span>Networking</span></div>
+        <div class="modal-metric">
+          <span class="mm-val">8h+</span>
+          <span class="mm-label" data-i18n="proj.battery">Батарея</span>
         </div>
       </div>
     </div>
   </div>
+</div>
+
+<!-- DesertCool Modal -->
+<div class="modal" id="modal-desertcool">
+  <button class="modal-close" aria-label="Close"><i class="ri-close-line"></i></button>
+  <div class="modal-header">
+    <div class="modal-icon desertcool-bg"><i class="ri-temp-cold-line"></i></div>
+    <div>
+      <h2>DesertCool</h2>
+      <p data-i18n="modal.dc_sub">Устойчивое решение для испарительного охлаждения</p>
+    </div>
+  </div>
+  <div class="modal-body">
+    <div class="modal-section">
+      <h4 data-i18n="modal.overview">Обзор</h4>
+      <p data-i18n="modal.dc_overview">Устойчивое решение для испарительного охлаждения. Снижение температуры на 10–15°C, экономия энергии 80%. Использует датчики Arduino.</p>
+    </div>
+    <div class="modal-section">
+      <h4 data-i18n="modal.tech">Технологии</h4>
+      <div class="modal-tags"><span>Arduino</span><span>Sensors</span><span>IoT</span></div>
+    </div>
+    <div class="modal-section">
+      <h4 data-i18n="modal.results">Результаты</h4>
+      <div class="modal-metrics">
+        <div class="modal-metric"><span class="mm-val">10–15°C</span><span class="mm-label" data-i18n="proj.temp">Снижение t°</span></div>
+        <div class="modal-metric"><span class="mm-val">80%</span><span class="mm-label" data-i18n="proj.energy">Экономия</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Robotics Modal -->
+<div class="modal" id="modal-robotics">
+  <button class="modal-close" aria-label="Close"><i class="ri-close-line"></i></button>
+  <div class="modal-header">
+    <div class="modal-icon robotics-bg"><i class="ri-robot-line"></i></div>
+    <div>
+      <h2 data-i18n="proj.rob_title">Образовательная робототехника</h2>
+      <p data-i18n="modal.rob_sub">Мастер-классы по робототехнике для студентов</p>
+    </div>
+  </div>
+  <div class="modal-body">
+    <div class="modal-section">
+      <h4 data-i18n="modal.overview">Обзор</h4>
+      <p data-i18n="modal.rob_overview">Мастер-классы по робототехнике Arduino для студентов университетов. Проектное обучение с практическими заданиями.</p>
+    </div>
+    <div class="modal-section">
+      <h4 data-i18n="modal.tech">Технологии</h4>
+      <div class="modal-tags"><span>Arduino</span><span>Robotics</span><span>C/C++</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- Network Modal -->
+<div class="modal" id="modal-network">
+  <button class="modal-close" aria-label="Close"><i class="ri-close-line"></i></button>
+  <div class="modal-header">
+    <div class="modal-icon network-bg"><i class="ri-global-line"></i></div>
+    <div>
+      <h2>Network Optimizer</h2>
+      <p data-i18n="modal.net_sub">Инструмент мониторинга и оптимизации сети</p>
+    </div>
+  </div>
+  <div class="modal-body">
+    <div class="modal-section">
+      <h4 data-i18n="modal.overview">Обзор</h4>
+      <p data-i18n="modal.net_overview">Инструмент мониторинга и оптимизации сети на Python. Мониторинг в реальном времени, автоматическая оптимизация производительности.</p>
+    </div>
+    <div class="modal-section">
+      <h4 data-i18n="modal.features">Функции</h4>
+      <ul>
+        <li data-i18n="modal.net_f1">Мониторинг в реальном времени</li>
+        <li data-i18n="modal.net_f2">Автоматическая оптимизация</li>
+      </ul>
+    </div>
+    <div class="modal-section">
+      <h4 data-i18n="modal.tech">Технологии</h4>
+      <div class="modal-tags"><span>Python</span><span>Networking</span><span>Automation</span></div>
+    </div>
+  </div>
+</div>
+```
+
+  </div>
 
   <!-- ========== SKILLS SECTION ========== -->
+
   <section class="section skills" id="skills">
     <div class="container">
       <div class="section-header" data-aos="fade-up">
@@ -511,126 +1855,130 @@ import tensorflow</code></pre>
         <p class="section-subtitle" data-i18n="skills.subtitle">Техническая экспертиза и творческие способности</p>
       </div>
 
-      <div class="skills-grid">
-        <!-- Technical Skills -->
-        <div class="skills-column" data-aos="fade-right" data-aos-delay="200">
-          <h3 class="skills-heading">
-            <i class="ri-code-s-slash-line"></i>
-            <span data-i18n="skills.tech">Технические навыки</span>
-          </h3>
+```
+  <div class="skills-grid">
+    <!-- Technical Skills -->
+    <div class="skills-column" data-aos="fade-right" data-aos-delay="200">
+      <h3 class="skills-heading">
+        <i class="ri-code-s-slash-line"></i>
+        <span data-i18n="skills.tech">Технические навыки</span>
+      </h3>
 
-          <div class="skill-card">
-            <div class="skill-icon"><i class="ri-brain-line"></i></div>
-            <div class="skill-info">
-              <h4 data-i18n="skills.aiml">ИИ и Машинное обучение</h4>
-              <p data-i18n="skills.aiml_desc">Глубокое обучение, нейронные сети, обработка сигналов</p>
-            </div>
-            <div class="skill-bar"><div class="skill-fill" data-width="95"></div></div>
-          </div>
-
-          <div class="skill-card">
-            <div class="skill-icon"><i class="ri-camera-lens-line"></i></div>
-            <div class="skill-info">
-              <h4 data-i18n="skills.cv">Компьютерное зрение</h4>
-              <p data-i18n="skills.cv_desc">OpenCV, YOLO, обнаружение объектов, обработка изображений</p>
-            </div>
-            <div class="skill-bar"><div class="skill-fill" data-width="93"></div></div>
-          </div>
-
-          <div class="skill-card">
-            <div class="skill-icon"><i class="ri-cpu-line"></i></div>
-            <div class="skill-info">
-              <h4 data-i18n="skills.iot">IoT и Встраиваемые системы</h4>
-              <p data-i18n="skills.iot_desc">Raspberry Pi, Arduino, датчики, системы реального времени, основы PCB</p>
-            </div>
-            <div class="skill-bar"><div class="skill-fill" data-width="90"></div></div>
-          </div>
-
-          <div class="skill-card">
-            <div class="skill-icon"><i class="ri-terminal-box-line"></i></div>
-            <div class="skill-info">
-              <h4 data-i18n="skills.dev">Разработка ПО</h4>
-              <p data-i18n="skills.dev_desc">Python, C/C++, структуры данных, Git</p>
-            </div>
-            <div class="skill-bar"><div class="skill-fill" data-width="88"></div></div>
-          </div>
-
-          <div class="skill-card">
-            <div class="skill-icon"><i class="ri-flashlight-line"></i></div>
-            <div class="skill-info">
-              <h4>Edge AI</h4>
-              <p data-i18n="skills.edge_desc">Развертывание моделей на встраиваемых устройствах</p>
-            </div>
-            <div class="skill-bar"><div class="skill-fill" data-width="85"></div></div>
-          </div>
+      <div class="skill-card">
+        <div class="skill-icon"><i class="ri-brain-line"></i></div>
+        <div class="skill-info">
+          <h4 data-i18n="skills.aiml">ИИ и Машинное обучение</h4>
+          <p data-i18n="skills.aiml_desc">Глубокое обучение, нейронные сети, обработка сигналов</p>
         </div>
+        <div class="skill-bar"><div class="skill-fill" data-width="95"></div></div>
+      </div>
 
-        <!-- Creative Skills -->
-        <div class="skills-column" data-aos="fade-left" data-aos-delay="400">
-          <h3 class="skills-heading">
-            <i class="ri-palette-line"></i>
-            <span data-i18n="skills.creative">Творческие навыки</span>
-          </h3>
-
-          <div class="skill-card">
-            <div class="skill-icon"><i class="ri-film-line"></i></div>
-            <div class="skill-info">
-              <h4 data-i18n="skills.video">Видеомонтаж</h4>
-              <p data-i18n="skills.video_desc">Профессиональное редактирование видео и постпроизводство</p>
-            </div>
-            <div class="skill-bar"><div class="skill-fill" data-width="88"></div></div>
-          </div>
-
-          <div class="skill-card">
-            <div class="skill-icon"><i class="ri-pen-nib-line"></i></div>
-            <div class="skill-info">
-              <h4 data-i18n="skills.design">Графический дизайн</h4>
-              <p data-i18n="skills.design_desc">Визуальный дизайн и создание творческого контента</p>
-            </div>
-            <div class="skill-bar"><div class="skill-fill" data-width="85"></div></div>
-          </div>
-
-          <div class="skill-card">
-            <div class="skill-icon"><i class="ri-clapperboard-line"></i></div>
-            <div class="skill-info">
-              <h4 data-i18n="skills.film">Кинопроизводство</h4>
-              <p data-i18n="skills.film_desc">Создание фильмов, операторская работа и сторителлинг</p>
-            </div>
-            <div class="skill-bar"><div class="skill-fill" data-width="82"></div></div>
-          </div>
-
-          <div class="skill-card">
-            <div class="skill-icon"><i class="ri-megaphone-line"></i></div>
-            <div class="skill-info">
-              <h4 data-i18n="skills.marketing">Цифровой маркетинг</h4>
-              <p data-i18n="skills.marketing_desc">Онлайн-маркетинг и стратегии продвижения</p>
-            </div>
-            <div class="skill-bar"><div class="skill-fill" data-width="80"></div></div>
-          </div>
-
-          <div class="skill-card">
-            <div class="skill-icon"><i class="ri-shopping-cart-line"></i></div>
-            <div class="skill-info">
-              <h4 data-i18n="skills.ecommerce">E-commerce Маркетинг</h4>
-              <p data-i18n="skills.ecommerce_desc">Маркетинг электронной коммерции и оптимизация конверсий</p>
-            </div>
-            <div class="skill-bar"><div class="skill-fill" data-width="78"></div></div>
-          </div>
-
-          <div class="skill-card">
-            <div class="skill-icon"><i class="ri-quill-pen-line"></i></div>
-            <div class="skill-info">
-              <h4 data-i18n="skills.content">Создание контента</h4>
-              <p data-i18n="skills.content_desc">Создание креативного цифрового контента для различных платформ</p>
-            </div>
-            <div class="skill-bar"><div class="skill-fill" data-width="86"></div></div>
-          </div>
+      <div class="skill-card">
+        <div class="skill-icon"><i class="ri-camera-lens-line"></i></div>
+        <div class="skill-info">
+          <h4 data-i18n="skills.cv">Компьютерное зрение</h4>
+          <p data-i18n="skills.cv_desc">OpenCV, YOLO, обнаружение объектов, обработка изображений</p>
         </div>
+        <div class="skill-bar"><div class="skill-fill" data-width="93"></div></div>
+      </div>
+
+      <div class="skill-card">
+        <div class="skill-icon"><i class="ri-cpu-line"></i></div>
+        <div class="skill-info">
+          <h4 data-i18n="skills.iot">IoT и Встраиваемые системы</h4>
+          <p data-i18n="skills.iot_desc">Raspberry Pi, Arduino, датчики, системы реального времени, основы PCB</p>
+        </div>
+        <div class="skill-bar"><div class="skill-fill" data-width="90"></div></div>
+      </div>
+
+      <div class="skill-card">
+        <div class="skill-icon"><i class="ri-terminal-box-line"></i></div>
+        <div class="skill-info">
+          <h4 data-i18n="skills.dev">Разработка ПО</h4>
+          <p data-i18n="skills.dev_desc">Python, C/C++, структуры данных, Git</p>
+        </div>
+        <div class="skill-bar"><div class="skill-fill" data-width="88"></div></div>
+      </div>
+
+      <div class="skill-card">
+        <div class="skill-icon"><i class="ri-flashlight-line"></i></div>
+        <div class="skill-info">
+          <h4>Edge AI</h4>
+          <p data-i18n="skills.edge_desc">Развертывание моделей на встраиваемых устройствах</p>
+        </div>
+        <div class="skill-bar"><div class="skill-fill" data-width="85"></div></div>
       </div>
     </div>
+
+    <!-- Creative Skills -->
+    <div class="skills-column" data-aos="fade-left" data-aos-delay="400">
+      <h3 class="skills-heading">
+        <i class="ri-palette-line"></i>
+        <span data-i18n="skills.creative">Творческие навыки</span>
+      </h3>
+
+      <div class="skill-card">
+        <div class="skill-icon"><i class="ri-film-line"></i></div>
+        <div class="skill-info">
+          <h4 data-i18n="skills.video">Видеомонтаж</h4>
+          <p data-i18n="skills.video_desc">Профессиональное редактирование видео и постпроизводство</p>
+        </div>
+        <div class="skill-bar"><div class="skill-fill" data-width="88"></div></div>
+      </div>
+
+      <div class="skill-card">
+        <div class="skill-icon"><i class="ri-pen-nib-line"></i></div>
+        <div class="skill-info">
+          <h4 data-i18n="skills.design">Графический дизайн</h4>
+          <p data-i18n="skills.design_desc">Визуальный дизайн и создание творческого контента</p>
+        </div>
+        <div class="skill-bar"><div class="skill-fill" data-width="85"></div></div>
+      </div>
+
+      <div class="skill-card">
+        <div class="skill-icon"><i class="ri-movie-2-line"></i></div>
+        <div class="skill-info">
+          <h4 data-i18n="skills.film">Кинопроизводство</h4>
+          <p data-i18n="skills.film_desc">Создание фильмов, операторская работа и сторителлинг</p>
+        </div>
+        <div class="skill-bar"><div class="skill-fill" data-width="82"></div></div>
+      </div>
+
+      <div class="skill-card">
+        <div class="skill-icon"><i class="ri-megaphone-line"></i></div>
+        <div class="skill-info">
+          <h4 data-i18n="skills.marketing">Цифровой маркетинг</h4>
+          <p data-i18n="skills.marketing_desc">Онлайн-маркетинг и стратегии продвижения</p>
+        </div>
+        <div class="skill-bar"><div class="skill-fill" data-width="80"></div></div>
+      </div>
+
+      <div class="skill-card">
+        <div class="skill-icon"><i class="ri-shopping-cart-line"></i></div>
+        <div class="skill-info">
+          <h4 data-i18n="skills.ecommerce">E-commerce Маркетинг</h4>
+          <p data-i18n="skills.ecommerce_desc">Маркетинг электронной коммерции и оптимизация конверсий</p>
+        </div>
+        <div class="skill-bar"><div class="skill-fill" data-width="78"></div></div>
+      </div>
+
+      <div class="skill-card">
+        <div class="skill-icon"><i class="ri-quill-pen-line"></i></div>
+        <div class="skill-info">
+          <h4 data-i18n="skills.content">Создание контента</h4>
+          <p data-i18n="skills.content_desc">Создание креативного цифрового контента для различных платформ</p>
+        </div>
+        <div class="skill-bar"><div class="skill-fill" data-width="86"></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+```
+
   </section>
 
   <!-- ========== PORTFOLIO SECTION ========== -->
+
   <section class="section portfolio" id="portfolio">
     <div class="container">
       <div class="section-header" data-aos="fade-up">
@@ -639,79 +1987,71 @@ import tensorflow</code></pre>
         <p class="section-subtitle" data-i18n="port.subtitle">Избранные работы и прототипы</p>
       </div>
 
-      <div class="portfolio-filters" data-aos="fade-up" data-aos-delay="100">
-        <button class="filter-btn active" data-filter="all" data-i18n="port.all">Все</button>
-        <button class="filter-btn" data-filter="ai" data-i18n="port.ai">ИИ проекты</button>
-        <button class="filter-btn" data-filter="video" data-i18n="port.video">Видео</button>
-        <button class="filter-btn" data-filter="design" data-i18n="port.design">Дизайн</button>
-        <button class="filter-btn" data-filter="tech" data-i18n="port.tech">Технологии</button>
-      </div>
+```
+  <div class="portfolio-filters" data-aos="fade-up" data-aos-delay="100">
+    <button class="filter-btn active" data-filter="all" data-i18n="port.all">Все</button>
+    <button class="filter-btn" data-filter="ai" data-i18n="port.ai">ИИ проекты</button>
+    <button class="filter-btn" data-filter="video" data-i18n="port.video">Видео</button>
+    <button class="filter-btn" data-filter="design" data-i18n="port.design">Дизайн</button>
+    <button class="filter-btn" data-filter="tech" data-i18n="port.tech">Технологии</button>
+  </div>
 
-      <div class="portfolio-grid" id="portfolioGrid">
-        <div class="portfolio-item" data-category="ai" data-aos="zoom-in" data-aos-delay="100">
-          <div class="portfolio-thumb ai-gradient">
-            <i class="ri-robot-2-line"></i>
-          </div>
-          <div class="portfolio-overlay">
-            <h4 data-i18n="port.item1">Модель LUNAV</h4>
-            <span data-i18n="port.item1_cat">Компьютерное зрение</span>
-          </div>
-        </div>
-
-        <div class="portfolio-item" data-category="ai" data-aos="zoom-in" data-aos-delay="200">
-          <div class="portfolio-thumb ai-gradient-2">
-            <i class="ri-line-chart-line"></i>
-          </div>
-          <div class="portfolio-overlay">
-            <h4 data-i18n="port.item2">Обучение нейросети</h4>
-            <span data-i18n="port.item2_cat">Глубокое обучение</span>
-          </div>
-        </div>
-
-        <div class="portfolio-item" data-category="video" data-aos="zoom-in" data-aos-delay="300">
-          <div class="portfolio-thumb video-gradient">
-            <i class="ri-movie-2-line"></i>
-          </div>
-          <div class="portfolio-overlay">
-            <h4 data-i18n="port.item3">Видеопроект</h4>
-            <span data-i18n="port.item3_cat">Видеопроизводство</span>
-          </div>
-        </div>
-
-        <div class="portfolio-item" data-category="design" data-aos="zoom-in" data-aos-delay="400">
-          <div class="portfolio-thumb design-gradient">
-            <i class="ri-palette-line"></i>
-          </div>
-          <div class="portfolio-overlay">
-            <h4 data-i18n="port.item4">Дизайн-проект</h4>
-            <span data-i18n="port.item4_cat">Графический дизайн</span>
-          </div>
-        </div>
-
-        <div class="portfolio-item" data-category="tech" data-aos="zoom-in" data-aos-delay="500">
-          <div class="portfolio-thumb tech-gradient">
-            <i class="ri-cpu-line"></i>
-          </div>
-          <div class="portfolio-overlay">
-            <h4 data-i18n="port.item5">IoT прототип</h4>
-            <span data-i18n="port.item5_cat">Встраиваемые системы</span>
-          </div>
-        </div>
-
-        <div class="portfolio-item" data-category="design" data-aos="zoom-in" data-aos-delay="600">
-          <div class="portfolio-thumb design-gradient-2">
-            <i class="ri-brush-line"></i>
-          </div>
-          <div class="portfolio-overlay">
-            <h4 data-i18n="port.item6">Брендинг</h4>
-            <span data-i18n="port.item6_cat">Креативный дизайн</span>
-          </div>
-        </div>
+  <div class="portfolio-grid" id="portfolioGrid">
+    <div class="portfolio-item" data-category="ai" data-aos="zoom-in" data-aos-delay="100">
+      <div class="portfolio-thumb ai-gradient"><i class="ri-robot-2-line"></i></div>
+      <div class="portfolio-overlay">
+        <h4 data-i18n="port.item1">Модель LUNAV</h4>
+        <span data-i18n="port.item1_cat">Компьютерное зрение</span>
       </div>
     </div>
+
+    <div class="portfolio-item" data-category="ai" data-aos="zoom-in" data-aos-delay="200">
+      <div class="portfolio-thumb ai-gradient-2"><i class="ri-line-chart-line"></i></div>
+      <div class="portfolio-overlay">
+        <h4 data-i18n="port.item2">Обучение нейросети</h4>
+        <span data-i18n="port.item2_cat">Глубокое обучение</span>
+      </div>
+    </div>
+
+    <div class="portfolio-item" data-category="video" data-aos="zoom-in" data-aos-delay="300">
+      <div class="portfolio-thumb video-gradient"><i class="ri-movie-2-line"></i></div>
+      <div class="portfolio-overlay">
+        <h4 data-i18n="port.item3">Видеопроект</h4>
+        <span data-i18n="port.item3_cat">Видеопроизводство</span>
+      </div>
+    </div>
+
+    <div class="portfolio-item" data-category="design" data-aos="zoom-in" data-aos-delay="400">
+      <div class="portfolio-thumb design-gradient"><i class="ri-palette-line"></i></div>
+      <div class="portfolio-overlay">
+        <h4 data-i18n="port.item4">Дизайн-проект</h4>
+        <span data-i18n="port.item4_cat">Графический дизайн</span>
+      </div>
+    </div>
+
+    <div class="portfolio-item" data-category="tech" data-aos="zoom-in" data-aos-delay="500">
+      <div class="portfolio-thumb tech-gradient"><i class="ri-cpu-line"></i></div>
+      <div class="portfolio-overlay">
+        <h4 data-i18n="port.item5">IoT прототип</h4>
+        <span data-i18n="port.item5_cat">Встраиваемые системы</span>
+      </div>
+    </div>
+
+    <div class="portfolio-item" data-category="design" data-aos="zoom-in" data-aos-delay="600">
+      <div class="portfolio-thumb design-gradient-2"><i class="ri-brush-line"></i></div>
+      <div class="portfolio-overlay">
+        <h4 data-i18n="port.item6">Брендинг</h4>
+        <span data-i18n="port.item6_cat">Креативный дизайн</span>
+      </div>
+    </div>
+  </div>
+</div>
+```
+
   </section>
 
   <!-- ========== CONTACT SECTION ========== -->
+
   <section class="section contact" id="contact">
     <div class="container">
       <div class="contact-wrapper">
@@ -722,47 +2062,51 @@ import tensorflow</code></pre>
             Открыт для сотрудничества, исследовательских проектов и инновационных возможностей.
           </p>
 
-          <div class="contact-links">
-            <a href="https://github.com/DjeltiIlyes" target="_blank" rel="noopener" class="contact-link">
-              <i class="ri-github-fill"></i>
-              <span>GitHub</span>
-              <i class="ri-arrow-right-up-line"></i>
-            </a>
-            <a href="https://linkedin.com/" target="_blank" rel="noopener" class="contact-link">
-              <i class="ri-linkedin-box-fill"></i>
-              <span>LinkedIn</span>
-              <i class="ri-arrow-right-up-line"></i>
-            </a>
-            <a href="mailto:djelti.ilyes@email.com" class="contact-link">
-              <i class="ri-mail-line"></i>
-              <span>Email</span>
-              <i class="ri-arrow-right-up-line"></i>
-            </a>
-          </div>
-        </div>
+```
+      <div class="contact-links">
+        <a href="https://github.com/DjeltiIlyes" target="_blank" rel="noopener" class="contact-link">
+          <i class="ri-github-fill"></i>
+          <span>GitHub</span>
+          <i class="ri-arrow-right-up-line link-arrow"></i>
+        </a>
+        <a href="https://linkedin.com/" target="_blank" rel="noopener" class="contact-link">
+          <i class="ri-linkedin-box-fill"></i>
+          <span>LinkedIn</span>
+          <i class="ri-arrow-right-up-line link-arrow"></i>
+        </a>
+        <a href="mailto:djelti.ilyes@email.com" class="contact-link">
+          <i class="ri-mail-line"></i>
+          <span>djelti.ilyes@email.com</span>
+          <i class="ri-arrow-right-up-line link-arrow"></i>
+        </a>
+      </div>
+    </div>
 
-        <div class="contact-right" data-aos="fade-left" data-aos-delay="200">
-          <div class="contact-card">
-            <div class="contact-card-inner">
-              <div class="cta-visual">
-                <div class="cta-ring"></div>
-                <div class="cta-ring cta-ring-2"></div>
-                <i class="ri-rocket-2-line"></i>
-              </div>
-              <h3 data-i18n="contact.cta">Готовы к инновациям?</h3>
-              <p data-i18n="contact.cta_text">Свяжитесь со мной для обсуждения вашего следующего проекта</p>
-              <a href="mailto:djelti.ilyes@email.com" class="btn btn-primary btn-lg">
-                <span data-i18n="contact.btn">Написать мне</span>
-                <i class="ri-send-plane-line"></i>
-              </a>
-            </div>
+    <div class="contact-right" data-aos="fade-left" data-aos-delay="200">
+      <div class="contact-card">
+        <div class="contact-card-inner">
+          <div class="cta-visual">
+            <div class="cta-ring"></div>
+            <div class="cta-ring cta-ring-2"></div>
+            <i class="ri-rocket-2-line"></i>
           </div>
+          <h3 data-i18n="contact.cta">Готовы к инновациям?</h3>
+          <p data-i18n="contact.cta_text">Свяжитесь со мной для обсуждения вашего следующего проекта</p>
+          <a href="mailto:djelti.ilyes@email.com" class="btn btn-primary btn-lg">
+            <span data-i18n="contact.btn">Написать мне</span>
+            <i class="ri-send-plane-line"></i>
+          </a>
         </div>
       </div>
     </div>
+  </div>
+</div>
+```
+
   </section>
 
   <!-- ========== FOOTER ========== -->
+
   <footer class="footer">
     <div class="container">
       <div class="footer-inner">
@@ -771,18 +2115,690 @@ import tensorflow</code></pre>
         </div>
         <p class="footer-copy" data-i18n="footer.copy">© 2025 Djelti Ilyes. Все права защищены.</p>
         <div class="footer-links">
-          <a href="https://github.com/DjeltiIlyes" target="_blank" rel="noopener"><i class="ri-github-fill"></i></a>
-          <a href="https://linkedin.com/" target="_blank" rel="noopener"><i class="ri-linkedin-box-fill"></i></a>
-          <a href="mailto:djelti.ilyes@email.com"><i class="ri-mail-line"></i></a>
+          <a href="https://github.com/DjeltiIlyes" target="_blank" rel="noopener" aria-label="GitHub"><i class="ri-github-fill"></i></a>
+          <a href="https://linkedin.com/" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="ri-linkedin-box-fill"></i></a>
+          <a href="mailto:djelti.ilyes@email.com" aria-label="Email"><i class="ri-mail-line"></i></a>
         </div>
       </div>
     </div>
   </footer>
 
   <!-- ========== SCRIPTS ========== -->
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-  <script src="js/script.js"></script>
+
+<script>
+/* ============================================================
+   DJELTI ILYES — Portfolio Scripts
+   ============================================================ */
+
+// ==================== TRANSLATIONS ====================
+const translations = {
+  ru: {
+    'nav.about': 'Обо мне','nav.achievements': 'Достижения','nav.projects': 'Проекты',
+    'nav.skills': 'Навыки','nav.portfolio': 'Портфолио','nav.contact': 'Контакт','nav.hire': 'Связаться',
+    'hero.badge': 'Открыт для возможностей','hero.title': 'ИИ Инженер','hero.title2': 'Креативный Технолог',
+    'hero.subtitle': 'Создаю интеллектуальные системы и цифровой опыт, соединяющий исследования в области ИИ с реальным воздействием.',
+    'hero.btn1': 'Проекты','hero.btn2': 'Связаться','hero.btn3': 'Скачать CV','hero.scroll': 'Прокрутите вниз',
+    'about.tag': 'Знакомство','about.title': 'Обо мне','about.degree': 'Магистр',
+    'about.heading': 'Магистр, специализирующийся на компьютерном зрении, IoT и интеллектуальных системах',
+    'about.text': 'Выпускник магистратуры, специализирующийся на компьютерном зрении, IoT и интеллектуальных системах. Создаю технологии, которые соединяют исследования в области ИИ с реальным воздействием на мир.',
+    'about.focus_title': 'Направления исследований','about.focus1': 'Компьютерное зрение','about.focus2': 'IoT',
+    'about.focus3': 'Встраиваемые системы','about.focus4': 'Edge AI',
+    'about.stat1': 'Оценка магистра','about.stat2': 'Точность модели','about.stat3': 'Место в стране',
+    'ach.tag': 'Достижения','ach.title': 'Ключевые результаты',
+    'ach.subtitle': 'Цифры, которые отражают стремление к совершенству',
+    'ach.label1': 'Оценка магистра','ach.desc1': 'Высший балл за исследование в области ИИ и компьютерного зрения',
+    'ach.label2': 'Точность модели','ach.desc2': 'Система обнаружения объектов LUNAV достигла 95% точности',
+    'ach.label3': 'Национальный конкурс','ach.desc3': 'Второе место в национальном конкурсе инноваций','ach.place': '-е место',
+    'proj.tag': 'Работы','proj.title': 'Проекты','proj.subtitle': 'Интеллектуальные системы и инновационные решения',
+    'proj.featured': 'Главный проект','proj.lunav_desc': 'Интеллектуальная навигационная система для слабовидящих людей',
+    'proj.accuracy': 'Точность','proj.detection': 'Обнаружение','proj.battery': 'Батарея','proj.details': 'Подробнее',
+    'proj.dc_desc': 'Устойчивое решение для испарительного охлаждения',
+    'proj.sensors': 'Датчики','proj.temp': 'Снижение t°','proj.energy': 'Экономия',
+    'proj.rob_title': 'Образовательная робототехника',
+    'proj.rob_desc': 'Мастер-классы по робототехнике Arduino для студентов университетов. Проектное обучение.',
+    'proj.robotics': 'Робототехника','proj.education': 'Образование',
+    'proj.net_title': 'Network Optimizer',
+    'proj.net_desc': 'Инструмент мониторинга и оптимизации сети на Python. Мониторинг в реальном времени, автоматическая оптимизация.',
+    'proj.networking': 'Сети','proj.monitoring': 'Мониторинг',
+    'modal.lunav_sub': 'Интеллектуальная навигационная система для слабовидящих',
+    'modal.overview': 'Обзор',
+    'modal.lunav_overview': 'Интеллектуальная навигационная система для слабовидящих людей, использующая обнаружение объектов в реальном времени, компьютерное зрение YOLO, 3D-пространственный звук, навигацию с тактильной обратной связью, Raspberry Pi с ультразвуковыми датчиками.',
+    'modal.features': 'Функции','modal.lunav_f1': 'Обнаружение объектов в реальном времени',
+    'modal.lunav_f2': 'Компьютерное зрение YOLO','modal.lunav_f3': '3D-пространственный звук',
+    'modal.lunav_f4': 'Навигация с тактильной обратной связью','modal.lunav_f5': 'Raspberry Pi + ультразвуковые датчики',
+    'modal.tech': 'Технологии','modal.performance': 'Производительность',
+    'modal.dc_sub': 'Устойчивое решение для испарительного охлаждения',
+    'modal.dc_overview': 'Устойчивое решение для испарительного охлаждения. Снижение температуры на 10–15°C, экономия энергии 80%. Использует датчики Arduino.',
+    'modal.results': 'Результаты','modal.rob_sub': 'Мастер-классы по робототехнике для студентов',
+    'modal.rob_overview': 'Мастер-классы по робототехнике Arduino для студентов университетов. Проектное обучение с практическими заданиями.',
+    'modal.net_sub': 'Инструмент мониторинга и оптимизации сети',
+    'modal.net_overview': 'Инструмент мониторинга и оптимизации сети на Python. Мониторинг в реальном времени, автоматическая оптимизация производительности.',
+    'modal.net_f1': 'Мониторинг в реальном времени','modal.net_f2': 'Автоматическая оптимизация',
+    'skills.tag': 'Экспертиза','skills.title': 'Навыки','skills.subtitle': 'Техническая экспертиза и творческие способности',
+    'skills.tech': 'Технические навыки','skills.creative': 'Творческие навыки',
+    'skills.aiml': 'ИИ и Машинное обучение','skills.aiml_desc': 'Глубокое обучение, нейронные сети, обработка сигналов',
+    'skills.cv': 'Компьютерное зрение','skills.cv_desc': 'OpenCV, YOLO, обнаружение объектов, обработка изображений',
+    'skills.iot': 'IoT и Встраиваемые системы','skills.iot_desc': 'Raspberry Pi, Arduino, датчики, системы реального времени, основы PCB',
+    'skills.dev': 'Разработка ПО','skills.dev_desc': 'Python, C/C++, структуры данных, Git',
+    'skills.edge_desc': 'Развертывание моделей на встраиваемых устройствах',
+    'skills.video': 'Видеомонтаж','skills.video_desc': 'Профессиональное редактирование видео и постпроизводство',
+    'skills.design': 'Графический дизайн','skills.design_desc': 'Визуальный дизайн и создание творческого контента',
+    'skills.film': 'Кинопроизводство','skills.film_desc': 'Создание фильмов, операторская работа и сторителлинг',
+    'skills.marketing': 'Цифровой маркетинг','skills.marketing_desc': 'Онлайн-маркетинг и стратегии продвижения',
+    'skills.ecommerce': 'E-commerce Маркетинг','skills.ecommerce_desc': 'Маркетинг электронной коммерции и оптимизация конверсий',
+    'skills.content': 'Создание контента','skills.content_desc': 'Создание креативного цифрового контента для различных платформ',
+    'port.tag': 'Галерея','port.title': 'Портфолио','port.subtitle': 'Избранные работы и прототипы',
+    'port.all': 'Все','port.ai': 'ИИ проекты','port.video': 'Видео','port.design': 'Дизайн','port.tech': 'Технологии',
+    'port.item1': 'Модель LUNAV','port.item1_cat': 'Компьютерное зрение',
+    'port.item2': 'Обучение нейросети','port.item2_cat': 'Глубокое обучение',
+    'port.item3': 'Видеопроект','port.item3_cat': 'Видеопроизводство',
+    'port.item4': 'Дизайн-проект','port.item4_cat': 'Графический дизайн',
+    'port.item5': 'IoT прототип','port.item5_cat': 'Встраиваемые системы',
+    'port.item6': 'Брендинг','port.item6_cat': 'Креативный дизайн',
+    'contact.tag': 'Контакт','contact.heading': 'Давайте создадим\nбудущее вместе.',
+    'contact.text': 'Открыт для сотрудничества, исследовательских проектов и инновационных возможностей.',
+    'contact.cta': 'Готовы к инновациям?','contact.cta_text': 'Свяжитесь со мной для обсуждения вашего следующего проекта',
+    'contact.btn': 'Написать мне','footer.copy': '© 2025 Djelti Ilyes. Все права защищены.'
+  },
+  en: {
+    'nav.about': 'About','nav.achievements': 'Achievements','nav.projects': 'Projects',
+    'nav.skills': 'Skills','nav.portfolio': 'Portfolio','nav.contact': 'Contact','nav.hire': 'Hire Me',
+    'hero.badge': 'Open to Opportunities','hero.title': 'AI Engineer','hero.title2': 'Creative Technologist',
+    'hero.subtitle': 'Building intelligent systems and digital experiences that bridge AI research and real-world impact.',
+    'hero.btn1': 'View Projects','hero.btn2': 'Contact Me','hero.btn3': 'Download CV','hero.scroll': 'Scroll Down',
+    'about.tag': 'Introduction','about.title': 'About Me','about.degree': "Master's",
+    'about.heading': "Master's graduate specializing in Computer Vision, IoT, and intelligent systems",
+    'about.text': "Master's graduate specializing in Computer Vision, IoT, and intelligent systems. Creating technology that bridges the gap between AI research and real-world impact.",
+    'about.focus_title': 'Research Focus','about.focus1': 'Computer Vision','about.focus2': 'IoT',
+    'about.focus3': 'Embedded Systems','about.focus4': 'Edge AI',
+    'about.stat1': 'Master Score','about.stat2': 'Model Accuracy','about.stat3': 'National Rank',
+    'ach.tag': 'Achievements','ach.title': 'Key Results','ach.subtitle': 'Numbers that reflect the pursuit of excellence',
+    'ach.label1': 'Master Score','ach.desc1': 'Highest score in AI and Computer Vision research',
+    'ach.label2': 'Model Accuracy','ach.desc2': 'LUNAV object detection system achieved 95% accuracy',
+    'ach.label3': 'National Competition','ach.desc3': 'Second place in the national innovation competition','ach.place': 'nd Place',
+    'proj.tag': 'Works','proj.title': 'Projects','proj.subtitle': 'Intelligent systems and innovative solutions',
+    'proj.featured': 'Featured Project','proj.lunav_desc': 'Intelligent Navigation System for the Visually Impaired',
+    'proj.accuracy': 'Accuracy','proj.detection': 'Detection','proj.battery': 'Battery','proj.details': 'Learn More',
+    'proj.dc_desc': 'Sustainable evaporative cooling solution','proj.sensors': 'Sensors',
+    'proj.temp': 'Temp Reduction','proj.energy': 'Energy Savings',
+    'proj.rob_title': 'Educational Robotics','proj.rob_desc': 'Arduino robotics workshops for university students. Project-based teaching.',
+    'proj.robotics': 'Robotics','proj.education': 'Education',
+    'proj.net_title': 'Network Optimizer','proj.net_desc': 'Python network monitoring and optimization tool. Real-time monitoring, automated optimization.',
+    'proj.networking': 'Networking','proj.monitoring': 'Monitoring',
+    'modal.lunav_sub': 'Intelligent Navigation System for the Visually Impaired','modal.overview': 'Overview',
+    'modal.lunav_overview': 'Intelligent navigation system for the visually impaired using real-time object detection, YOLO computer vision, 3D spatial audio, haptic feedback navigation, Raspberry Pi with ultrasonic sensors.',
+    'modal.features': 'Features','modal.lunav_f1': 'Real-time object detection','modal.lunav_f2': 'YOLO computer vision',
+    'modal.lunav_f3': '3D spatial audio','modal.lunav_f4': 'Haptic feedback navigation','modal.lunav_f5': 'Raspberry Pi + ultrasonic sensors',
+    'modal.tech': 'Technologies','modal.performance': 'Performance',
+    'modal.dc_sub': 'Sustainable evaporative cooling solution',
+    'modal.dc_overview': 'Sustainable evaporative cooling solution. Temperature reduction of 10–15°C, energy savings of 80%. Uses Arduino sensors.',
+    'modal.results': 'Results','modal.rob_sub': 'Robotics workshops for university students',
+    'modal.rob_overview': 'Arduino robotics workshops for university students. Project-based teaching with hands-on assignments.',
+    'modal.net_sub': 'Network monitoring and optimization tool',
+    'modal.net_overview': 'Python network monitoring and optimization tool. Real-time monitoring, automated performance optimization.',
+    'modal.net_f1': 'Real-time monitoring','modal.net_f2': 'Automated optimization',
+    'skills.tag': 'Expertise','skills.title': 'Skills','skills.subtitle': 'Technical expertise and creative abilities',
+    'skills.tech': 'Technical Skills','skills.creative': 'Creative Skills',
+    'skills.aiml': 'AI & Machine Learning','skills.aiml_desc': 'Deep Learning, Neural Networks, Signal Processing',
+    'skills.cv': 'Computer Vision','skills.cv_desc': 'OpenCV, YOLO, Object Detection, Image Processing',
+    'skills.iot': 'IoT & Embedded Systems','skills.iot_desc': 'Raspberry Pi, Arduino, Sensor integration, Real-time systems, PCB basics',
+    'skills.dev': 'Software Development','skills.dev_desc': 'Python, C/C++, Data Structures, Git',
+    'skills.edge_desc': 'Deploying models on embedded devices',
+    'skills.video': 'Video Editing','skills.video_desc': 'Professional video editing and post-production',
+    'skills.design': 'Graphic Design','skills.design_desc': 'Visual design and creative content creation',
+    'skills.film': 'Filmmaking','skills.film_desc': 'Film production, cinematography and storytelling',
+    'skills.marketing': 'Digital Marketing','skills.marketing_desc': 'Online marketing and promotion strategies',
+    'skills.ecommerce': 'E-commerce Marketing','skills.ecommerce_desc': 'E-commerce marketing and conversion optimization',
+    'skills.content': 'Content Creation','skills.content_desc': 'Creating creative digital content for various platforms',
+    'port.tag': 'Gallery','port.title': 'Portfolio','port.subtitle': 'Selected works and prototypes',
+    'port.all': 'All','port.ai': 'AI Projects','port.video': 'Video','port.design': 'Design','port.tech': 'Technology',
+    'port.item1': 'LUNAV Model','port.item1_cat': 'Computer Vision',
+    'port.item2': 'Neural Network Training','port.item2_cat': 'Deep Learning',
+    'port.item3': 'Video Project','port.item3_cat': 'Video Production',
+    'port.item4': 'Design Project','port.item4_cat': 'Graphic Design',
+    'port.item5': 'IoT Prototype','port.item5_cat': 'Embedded Systems',
+    'port.item6': 'Branding','port.item6_cat': 'Creative Design',
+    'contact.tag': 'Contact','contact.heading': "Let's build the\nfuture together.",
+    'contact.text': 'Open for collaboration, research projects and innovative opportunities.',
+    'contact.cta': 'Ready to innovate?','contact.cta_text': 'Get in touch to discuss your next project',
+    'contact.btn': 'Write to Me','footer.copy': '© 2025 Djelti Ilyes. All rights reserved.'
+  },
+  fr: {
+    'nav.about': 'À propos','nav.achievements': 'Réalisations','nav.projects': 'Projets',
+    'nav.skills': 'Compétences','nav.portfolio': 'Portfolio','nav.contact': 'Contact','nav.hire': 'Contacter',
+    'hero.badge': 'Ouvert aux opportunités','hero.title': 'Ingénieur IA','hero.title2': 'Technologue Créatif',
+    'hero.subtitle': "Je crée des systèmes intelligents et des expériences numériques reliant la recherche en IA à un impact concret.",
+    'hero.btn1': 'Voir les Projets','hero.btn2': 'Me Contacter','hero.btn3': 'Télécharger CV','hero.scroll': 'Défiler vers le bas',
+    'about.tag': 'Présentation','about.title': 'À propos','about.degree': 'Master',
+    'about.heading': "Diplômé de Master spécialisé en Vision par Ordinateur, IoT et systèmes intelligents",
+    'about.text': "Diplômé de Master spécialisé en Vision par Ordinateur, IoT et systèmes intelligents. Je crée des technologies qui comblent le fossé entre la recherche en IA et l'impact réel.",
+    'about.focus_title': 'Axes de recherche','about.focus1': 'Vision par Ordinateur','about.focus2': 'IoT',
+    'about.focus3': 'Systèmes Embarqués','about.focus4': 'Edge AI',
+    'about.stat1': 'Note de Master','about.stat2': 'Précision du modèle','about.stat3': 'Rang National',
+    'ach.tag': 'Réalisations','ach.title': 'Résultats clés',"ach.subtitle": "Des chiffres qui reflètent la quête d'excellence",
+    'ach.label1': 'Note de Master','ach.desc1': 'Meilleure note en recherche IA et Vision par Ordinateur',
+    'ach.label2': 'Précision du modèle',"ach.desc2": "Le système de détection d'objets LUNAV a atteint 95% de précision",
+    'ach.label3': 'Compétition Nationale',"ach.desc3": "Deuxième place au concours national d'innovation",'ach.place': 'e place',
+    'proj.tag': 'Travaux','proj.title': 'Projets','proj.subtitle': 'Systèmes intelligents et solutions innovantes',
+    'proj.featured': 'Projet Principal','proj.lunav_desc': 'Système de navigation intelligent pour les personnes malvoyantes',
+    'proj.accuracy': 'Précision','proj.detection': 'Détection','proj.battery': 'Batterie','proj.details': 'En savoir plus',
+    'proj.dc_desc': 'Solution de refroidissement par évaporation durable','proj.sensors': 'Capteurs',
+    'proj.temp': 'Réduction t°','proj.energy': 'Économie',
+    'proj.rob_title': 'Robotique Éducative',"proj.rob_desc": "Ateliers de robotique Arduino pour étudiants universitaires. Enseignement par projet.",
+    'proj.robotics': 'Robotique','proj.education': 'Éducation',
+    'proj.net_title': 'Network Optimizer',"proj.net_desc": "Outil de surveillance et d'optimisation réseau en Python. Surveillance en temps réel, optimisation automatique.",
+    'proj.networking': 'Réseau','proj.monitoring': 'Surveillance',
+    'modal.lunav_sub': 'Système de navigation intelligent pour les malvoyants','modal.overview': 'Aperçu',
+    "modal.lunav_overview": "Système de navigation intelligent pour les personnes malvoyantes utilisant la détection d'objets en temps réel, la vision par ordinateur YOLO, l'audio spatial 3D, la navigation par retour haptique, Raspberry Pi avec capteurs ultrasoniques.",
+    'modal.features': 'Fonctionnalités',"modal.lunav_f1": "Détection d'objets en temps réel",'modal.lunav_f2': 'Vision par ordinateur YOLO',
+    'modal.lunav_f3': 'Audio spatial 3D','modal.lunav_f4': 'Navigation par retour haptique','modal.lunav_f5': 'Raspberry Pi + capteurs ultrasoniques',
+    'modal.tech': 'Technologies','modal.performance': 'Performance',
+    'modal.dc_sub': 'Solution de refroidissement par évaporation durable',
+    "modal.dc_overview": "Solution de refroidissement par évaporation durable. Réduction de température de 10–15°C, économie d'énergie de 80%. Utilise des capteurs Arduino.",
+    'modal.results': 'Résultats','modal.rob_sub': 'Ateliers de robotique pour étudiants',
+    'modal.rob_overview': 'Ateliers de robotique Arduino pour étudiants universitaires. Enseignement par projets avec travaux pratiques.',
+    "modal.net_sub": "Outil de surveillance et d'optimisation réseau",
+    "modal.net_overview": "Outil de surveillance et d'optimisation réseau en Python. Surveillance en temps réel, optimisation automatique des performances.",
+    'modal.net_f1': 'Surveillance en temps réel','modal.net_f2': 'Optimisation automatique',
+    'skills.tag': 'Expertise','skills.title': 'Compétences','skills.subtitle': 'Expertise technique et capacités créatives',
+    'skills.tech': 'Compétences Techniques','skills.creative': 'Compétences Créatives',
+    'skills.aiml': 'IA et Machine Learning','skills.aiml_desc': 'Deep Learning, Réseaux de neurones, Traitement du signal',
+    'skills.cv': 'Vision par Ordinateur',"skills.cv_desc": "OpenCV, YOLO, Détection d'objets, Traitement d'images",
+    'skills.iot': 'IoT et Systèmes Embarqués','skills.iot_desc': 'Raspberry Pi, Arduino, Intégration capteurs, Systèmes temps réel, Bases PCB',
+    'skills.dev': 'Développement Logiciel','skills.dev_desc': 'Python, C/C++, Structures de données, Git',
+    'skills.edge_desc': 'Déploiement de modèles sur appareils embarqués',
+    'skills.video': 'Montage Vidéo','skills.video_desc': 'Édition vidéo professionnelle et post-production',
+    'skills.design': 'Design Graphique','skills.design_desc': 'Design visuel et création de contenu créatif',
+    'skills.film': 'Réalisation','skills.film_desc': 'Production cinématographique et narration visuelle',
+    'skills.marketing': 'Marketing Digital','skills.marketing_desc': 'Marketing en ligne et stratégies de promotion',
+    'skills.ecommerce': 'Marketing E-commerce','skills.ecommerce_desc': 'Marketing e-commerce et optimisation de conversion',
+    'skills.content': 'Création de Contenu','skills.content_desc': 'Création de contenu numérique créatif pour diverses plateformes',
+    'port.tag': 'Galerie','port.title': 'Portfolio','port.subtitle': 'Travaux sélectionnés et prototypes',
+    'port.all': 'Tous','port.ai': 'Projets IA','port.video': 'Vidéo','port.design': 'Design','port.tech': 'Technologie',
+    'port.item1': 'Modèle LUNAV','port.item1_cat': 'Vision par Ordinateur',
+    'port.item2': 'Entraînement réseau neuronal','port.item2_cat': 'Deep Learning',
+    'port.item3': 'Projet Vidéo','port.item3_cat': 'Production Vidéo',
+    'port.item4': 'Projet Design','port.item4_cat': 'Design Graphique',
+    'port.item5': 'Prototype IoT','port.item5_cat': 'Systèmes Embarqués',
+    'port.item6': 'Branding','port.item6_cat': 'Design Créatif',
+    'contact.tag': 'Contact','contact.heading': "Construisons\nl'avenir ensemble.",
+    'contact.text': 'Ouvert à la collaboration, aux projets de recherche et aux opportunités innovantes.',
+    'contact.cta': 'Prêt à innover ?','contact.cta_text': 'Contactez-moi pour discuter de votre prochain projet',
+    'contact.btn': "M'écrire",'footer.copy': '© 2025 Djelti Ilyes. Tous droits réservés.'
+  },
+  ar: {
+    'nav.about': 'نبذة عني','nav.achievements': 'الإنجازات','nav.projects': 'المشاريع',
+    'nav.skills': 'المهارات','nav.portfolio': 'معرض الأعمال','nav.contact': 'اتصل بي','nav.hire': 'تواصل',
+    'hero.badge': 'متاح للفرص','hero.title': 'مهندس ذكاء اصطناعي','hero.title2': 'تقني إبداعي',
+    'hero.subtitle': 'أبني أنظمة ذكية وتجارب رقمية تربط بين أبحاث الذكاء الاصطناعي والتأثير الحقيقي.',
+    'hero.btn1': 'المشاريع','hero.btn2': 'اتصل بي','hero.btn3': 'تحميل السيرة الذاتية','hero.scroll': 'مرر للأسفل',
+    'about.tag': 'تعريف','about.title': 'نبذة عني','about.degree': 'ماجستير',
+    'about.heading': 'حاصل على ماجستير متخصص في الرؤية الحاسوبية وإنترنت الأشياء والأنظمة الذكية',
+    'about.text': 'خريج ماجستير متخصص في الرؤية الحاسوبية وإنترنت الأشياء والأنظمة الذكية. أبتكر تقنيات تسد الفجوة بين أبحاث الذكاء الاصطناعي والتأثير الحقيقي.',
+    'about.focus_title': 'محاور البحث','about.focus1': 'الرؤية الحاسوبية','about.focus2': 'إنترنت الأشياء',
+    'about.focus3': 'الأنظمة المدمجة','about.focus4': 'Edge AI',
+    'about.stat1': 'درجة الماجستير','about.stat2': 'دقة النموذج','about.stat3': 'الترتيب الوطني',
+    'ach.tag': 'الإنجازات','ach.title': 'النتائج الرئيسية','ach.subtitle': 'أرقام تعكس السعي نحو التميز',
+    'ach.label1': 'درجة الماجستير','ach.desc1': 'أعلى درجة في بحث الذكاء الاصطناعي والرؤية الحاسوبية',
+    'ach.label2': 'دقة النموذج','ach.desc2': 'نظام كشف الأجسام LUNAV حقق دقة 95%',
+    'ach.label3': 'مسابقة وطنية','ach.desc3': 'المركز الثاني في المسابقة الوطنية للابتكار','ach.place': ' - المركز',
+    'proj.tag': 'الأعمال','proj.title': 'المشاريع','proj.subtitle': 'أنظمة ذكية وحلول مبتكرة',
+    'proj.featured': 'المشروع الرئيسي','proj.lunav_desc': 'نظام ملاحة ذكي لضعاف البصر',
+    'proj.accuracy': 'الدقة','proj.detection': 'الكشف','proj.battery': 'البطارية','proj.details': 'المزيد',
+    'proj.dc_desc': 'حل تبريد تبخيري مستدام','proj.sensors': 'المستشعرات','proj.temp': 'خفض الحرارة','proj.energy': 'توفير الطاقة',
+    'proj.rob_title': 'الروبوتات التعليمية','proj.rob_desc': 'ورش عمل روبوتات Arduino لطلاب الجامعات. التعلم القائم على المشاريع.',
+    'proj.robotics': 'الروبوتات','proj.education': 'التعليم',
+    'proj.net_title': 'محسّن الشبكات','proj.net_desc': 'أداة مراقبة وتحسين الشبكة بلغة Python. مراقبة فورية، تحسين تلقائي.',
+    'proj.networking': 'الشبكات','proj.monitoring': 'المراقبة',
+    'modal.lunav_sub': 'نظام ملاحة ذكي لضعاف البصر','modal.overview': 'نظرة عامة',
+    'modal.lunav_overview': 'نظام ملاحة ذكي لضعاف البصر يستخدم كشف الأجسام في الوقت الحقيقي، الرؤية الحاسوبية YOLO، الصوت المكاني ثلاثي الأبعاد، الملاحة باللمس، Raspberry Pi مع مستشعرات فوق صوتية.',
+    'modal.features': 'الميزات','modal.lunav_f1': 'كشف الأجسام في الوقت الحقيقي','modal.lunav_f2': 'الرؤية الحاسوبية YOLO',
+    'modal.lunav_f3': 'الصوت المكاني ثلاثي الأبعاد','modal.lunav_f4': 'الملاحة باللمس','modal.lunav_f5': 'Raspberry Pi + مستشعرات فوق صوتية',
+    'modal.tech': 'التقنيات','modal.performance': 'الأداء',
+    'modal.dc_sub': 'حل تبريد تبخيري مستدام','modal.dc_overview': 'حل تبريد تبخيري مستدام. خفض الحرارة 10-15 درجة مئوية، توفير الطاقة 80%. يستخدم مستشعرات Arduino.',
+    'modal.results': 'النتائج','modal.rob_sub': 'ورش عمل روبوتات للطلاب',
+    'modal.rob_overview': 'ورش عمل روبوتات Arduino لطلاب الجامعات. التعلم القائم على المشاريع مع مهام عملية.',
+    'modal.net_sub': 'أداة مراقبة وتحسين الشبكة',
+    'modal.net_overview': 'أداة مراقبة وتحسين الشبكة بلغة Python. مراقبة فورية، تحسين تلقائي للأداء.',
+    'modal.net_f1': 'مراقبة فورية','modal.net_f2': 'تحسين تلقائي',
+    'skills.tag': 'الخبرة','skills.title': 'المهارات','skills.subtitle': 'الخبرة التقنية والقدرات الإبداعية',
+    'skills.tech': 'المهارات التقنية','skills.creative': 'المهارات الإبداعية',
+    'skills.aiml': 'الذكاء الاصطناعي والتعلم الآلي','skills.aiml_desc': 'التعلم العميق، الشبكات العصبية، معالجة الإشارات',
+    'skills.cv': 'الرؤية الحاسوبية','skills.cv_desc': 'OpenCV، YOLO، كشف الأجسام، معالجة الصور',
+    'skills.iot': 'إنترنت الأشياء والأنظمة المدمجة','skills.iot_desc': 'Raspberry Pi، Arduino، تكامل المستشعرات، أنظمة الوقت الحقيقي، أساسيات PCB',
+    'skills.dev': 'تطوير البرمجيات','skills.dev_desc': 'Python، C/C++، هياكل البيانات، Git',
+    'skills.edge_desc': 'نشر النماذج على الأجهزة المدمجة',
+    'skills.video': 'تحرير الفيديو','skills.video_desc': 'تحرير فيديو احترافي وما بعد الإنتاج',
+    'skills.design': 'التصميم الجرافيكي','skills.design_desc': 'التصميم المرئي وإنشاء المحتوى الإبداعي',
+    'skills.film': 'صناعة الأفلام','skills.film_desc': 'إنتاج الأفلام والتصوير السينمائي وسرد القصص',
+    'skills.marketing': 'التسويق الرقمي','skills.marketing_desc': 'التسويق عبر الإنترنت واستراتيجيات الترويج',
+    'skills.ecommerce': 'تسويق التجارة الإلكترونية','skills.ecommerce_desc': 'تسويق التجارة الإلكترونية وتحسين التحويلات',
+    'skills.content': 'إنشاء المحتوى','skills.content_desc': 'إنشاء محتوى رقمي إبداعي لمنصات متنوعة',
+    'port.tag': 'المعرض','port.title': 'معرض الأعمال','port.subtitle': 'أعمال مختارة ونماذج أولية',
+    'port.all': 'الكل','port.ai': 'مشاريع ذكاء اصطناعي','port.video': 'فيديو','port.design': 'تصميم','port.tech': 'تكنولوجيا',
+    'port.item1': 'نموذج LUNAV','port.item1_cat': 'الرؤية الحاسوبية',
+    'port.item2': 'تدريب الشبكة العصبية','port.item2_cat': 'التعلم العميق',
+    'port.item3': 'مشروع فيديو','port.item3_cat': 'إنتاج الفيديو',
+    'port.item4': 'مشروع تصميم','port.item4_cat': 'التصميم الجرافيكي',
+    'port.item5': 'نموذج IoT أولي','port.item5_cat': 'الأنظمة المدمجة',
+    'port.item6': 'العلامة التجارية','port.item6_cat': 'التصميم الإبداعي',
+    'contact.tag': 'اتصل بي','contact.heading': 'لنبنِ المستقبل\nمعاً.',
+    'contact.text': 'متاح للتعاون والمشاريع البحثية والفرص المبتكرة.',
+    'contact.cta': 'مستعد للابتكار؟','contact.cta_text': 'تواصل معي لمناقشة مشروعك القادم',
+    'contact.btn': 'راسلني','footer.copy': '© 2025 جلطي إلياس. جميع الحقوق محفوظة.'
+  }
+};
+
+const langFlags = { ru: '🇷🇺', en: '🇬🇧', fr: '🇫🇷', ar: '🇸🇦' };
+const langCodes = { ru: 'RU', en: 'EN', fr: 'FR', ar: 'AR' };
+let currentLang = localStorage.getItem('lang') || 'ru';
+
+// ==================== LANGUAGE SWITCHER ====================
+function setLanguage(lang) {
+  currentLang = lang;
+  localStorage.setItem('lang', lang);
+
+  const isRTL = lang === 'ar';
+  document.documentElement.setAttribute('dir', isRTL ? 'rtl' : 'ltr');
+  document.documentElement.setAttribute('lang', lang);
+
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (translations[lang] && translations[lang][key]) {
+      const text = translations[lang][key];
+      if (key === 'contact.heading') {
+        el.innerHTML = text.replace(/\n/g, '<br/>');
+      } else {
+        el.textContent = text;
+      }
+    }
+  });
+
+  document.getElementById('currentLangFlag').textContent = langFlags[lang];
+  document.getElementById('currentLangCode').textContent = langCodes[lang];
+  document.getElementById('langDropdown').classList.remove('open');
+}
+
+// ==================== PARTICLE SYSTEM ====================
+class ParticleNetwork {
+  constructor(canvas) {
+    this.canvas = canvas;
+    this.ctx = canvas.getContext('2d');
+    this.particles = [];
+    this.mouse = { x: null, y: null };
+    this.animFrame = null;
+    this.resize();
+    this.init();
+    this.animate();
+
+    window.addEventListener('resize', () => { this.resize(); this.init(); });
+    window.addEventListener('mousemove', (e) => { this.mouse.x = e.clientX; this.mouse.y = e.clientY; });
+  }
+
+  resize() {
+    this.canvas.width = window.innerWidth;
+    this.canvas.height = window.innerHeight;
+  }
+
+  init() {
+    const count = window.innerWidth < 768 ? 40 : 80;
+    this.particles = [];
+    for (let i = 0; i < count; i++) {
+      this.particles.push({
+        x: Math.random() * this.canvas.width,
+        y: Math.random() * this.canvas.height,
+        vx: (Math.random() - 0.5) * 0.5,
+        vy: (Math.random() - 0.5) * 0.5,
+        size: Math.random() * 2 + 0.5,
+        opacity: Math.random() * 0.5 + 0.2
+      });
+    }
+  }
+
+  animate() {
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+    this.particles.forEach((p, i) => {
+      p.x += p.vx;
+      p.y += p.vy;
+
+      if (p.x < 0) p.x = this.canvas.width;
+      if (p.x > this.canvas.width) p.x = 0;
+      if (p.y < 0) p.y = this.canvas.height;
+      if (p.y > this.canvas.height) p.y = 0;
+
+      if (this.mouse.x !== null) {
+        const dx = p.x - this.mouse.x;
+        const dy = p.y - this.mouse.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 120) {
+          p.x += dx * 0.02;
+          p.y += dy * 0.02;
+        }
+      }
+
+      this.ctx.beginPath();
+      this.ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+      this.ctx.fillStyle = `rgba(0, 212, 255, ${p.opacity})`;
+      this.ctx.fill();
+
+      for (let j = i + 1; j < this.particles.length; j++) {
+        const p2 = this.particles[j];
+        const dx = p.x - p2.x;
+        const dy = p.y - p2.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 150) {
+          this.ctx.beginPath();
+          this.ctx.moveTo(p.x, p.y);
+          this.ctx.lineTo(p2.x, p2.y);
+          this.ctx.strokeStyle = `rgba(0, 212, 255, ${(1 - dist / 150) * 0.15})`;
+          this.ctx.lineWidth = 0.5;
+          this.ctx.stroke();
+        }
+      }
+    });
+
+    this.animFrame = requestAnimationFrame(() => this.animate());
+  }
+}
+
+// ==================== DOM CONTENT LOADED ====================
+document.addEventListener('DOMContentLoaded', () => {
+
+  // ----- Loader -----
+  const loader = document.getElementById('loader');
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      loader.classList.add('hidden');
+      // FIX: restore body scroll after loader hides
+      document.body.style.overflowY = '';
+    }, 1200);
+  });
+
+  // ----- Particle Background -----
+  const heroCanvas = document.getElementById('heroCanvas');
+  if (heroCanvas) new ParticleNetwork(heroCanvas);
+
+  // ----- Initialize AOS -----
+  AOS.init({
+    duration: 800,
+    easing: 'ease-out-cubic',
+    once: true,
+    offset: 80
+  });
+
+  // ----- Set Language -----
+  setLanguage(currentLang);
+
+  // ----- Language Dropdown -----
+  const langBtn = document.getElementById('langBtn');
+  const langDropdown = document.getElementById('langDropdown');
+
+  langBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    langDropdown.classList.toggle('open');
+  });
+
+  document.querySelectorAll('.lang-option').forEach(option => {
+    option.addEventListener('click', () => {
+      setLanguage(option.getAttribute('data-lang'));
+    });
+  });
+
+  document.addEventListener('click', () => {
+    langDropdown.classList.remove('open');
+  });
+
+  // ----- Custom Cursor -----
+  const cursorDot = document.getElementById('cursorDot');
+  const cursorRing = document.getElementById('cursorRing');
+
+  if (window.innerWidth > 768) {
+    let mouseX = 0, mouseY = 0;
+    let ringX = 0, ringY = 0;
+
+    document.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      cursorDot.style.left = mouseX - 3 + 'px';
+      cursorDot.style.top = mouseY - 3 + 'px';
+    });
+
+    function animateRing() {
+      ringX += (mouseX - ringX) * 0.15;
+      ringY += (mouseY - ringY) * 0.15;
+      cursorRing.style.left = ringX - 18 + 'px';
+      cursorRing.style.top = ringY - 18 + 'px';
+      requestAnimationFrame(animateRing);
+    }
+    animateRing();
+
+    document.querySelectorAll('a, button, .project-card, .portfolio-item, .skill-card').forEach(el => {
+      el.addEventListener('mouseenter', () => cursorRing.classList.add('hover'));
+      el.addEventListener('mouseleave', () => cursorRing.classList.remove('hover'));
+    });
+  }
+
+  // ----- Navbar Scroll -----
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 60);
+  }, { passive: true });
+
+  // ----- Mobile Nav Toggle -----
+  const navToggle = document.getElementById('navToggle');
+  const navLinks = document.getElementById('navLinks');
+
+  navToggle.addEventListener('click', () => {
+    navToggle.classList.toggle('active');
+    navLinks.classList.toggle('open');
+  });
+
+  navLinks.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      navToggle.classList.remove('active');
+      navLinks.classList.remove('open');
+    });
+  });
+
+  // ----- Smooth Scroll -----
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+      const href = this.getAttribute('href');
+      if (href === '#') return;
+      e.preventDefault();
+      const target = document.querySelector(href);
+      if (target) {
+        const y = target.getBoundingClientRect().top + window.pageYOffset - 80;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+      }
+    });
+  });
+
+  // ----- Counter Animation -----
+  const counterObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const counter = entry.target;
+      const target = parseFloat(counter.getAttribute('data-target'));
+      const isDecimal = counter.getAttribute('data-decimal') === 'true';
+      const duration = 2000;
+      const startTime = performance.now();
+
+      function updateCounter(currentTime) {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const current = eased * target;
+        counter.textContent = isDecimal ? current.toFixed(1) : Math.floor(current);
+        if (progress < 1) {
+          requestAnimationFrame(updateCounter);
+        } else {
+          counter.textContent = isDecimal ? target.toFixed(1) : target;
+        }
+      }
+
+      requestAnimationFrame(updateCounter);
+      counterObserver.unobserve(counter);
+    });
+  }, { threshold: 0.5 });
+
+  document.querySelectorAll('.counter').forEach(c => counterObserver.observe(c));
+
+  // ----- Skill Bars Animation -----
+  const skillObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const fill = entry.target;
+      const width = fill.getAttribute('data-width');
+      setTimeout(() => { fill.style.width = width + '%'; }, 200);
+      skillObserver.unobserve(fill);
+    });
+  }, { threshold: 0.3 });
+
+  document.querySelectorAll('.skill-fill').forEach(f => skillObserver.observe(f));
+
+  // ----- Project Modals -----
+  // FIX: Use display + requestAnimationFrame reflow trick so CSS transitions fire correctly
+  const modalOverlay = document.getElementById('modalOverlay');
+  let closeTimer = null;
+
+  function openModal(modalId) {
+    const modal = document.getElementById('modal-' + modalId);
+    if (!modal) return;
+
+    // Close any open modal first
+    document.querySelectorAll('.modal').forEach(m => {
+      m.classList.remove('active');
+      m.style.display = 'none';
+    });
+    if (closeTimer) { clearTimeout(closeTimer); closeTimer = null; }
+
+    modalOverlay.classList.add('open');
+    modal.style.display = 'block';
+    // Force reflow so CSS transition fires from scale(0.9) → scale(1)
+    modal.offsetHeight;
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    document.querySelectorAll('.modal.active').forEach(m => {
+      m.classList.remove('active');
+      // Wait for transition to finish before hiding
+      closeTimer = setTimeout(() => { m.style.display = 'none'; }, 350);
+    });
+    modalOverlay.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  document.querySelectorAll('[data-modal]').forEach(btn => {
+    btn.addEventListener('click', () => openModal(btn.getAttribute('data-modal')));
+  });
+
+  document.querySelectorAll('.modal-close').forEach(btn => {
+    btn.addEventListener('click', closeModal);
+  });
+
+  modalOverlay.addEventListener('click', (e) => {
+    if (e.target === modalOverlay) closeModal();
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeModal();
+  });
+
+  // ----- Portfolio Filters -----
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  const portfolioItems = document.querySelectorAll('.portfolio-item');
+
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const filter = btn.getAttribute('data-filter');
+      portfolioItems.forEach(item => {
+        const show = filter === 'all' || item.getAttribute('data-category') === filter;
+        item.classList.toggle('hidden', !show);
+      });
+    });
+  });
+
+  // ----- GSAP Animations -----
+  if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Hero entrance — runs after loader (1.4s delay)
+    // FIX: Only GSAP handles hero elements (no AOS on hero) to prevent double-animation
+    const heroTl = gsap.timeline({ delay: 1.4 });
+    heroTl
+      .to('.hero-badge', { y: 0, opacity: 1, duration: 0.6, ease: 'power2.out' })
+      .to('.name-line', { y: 0, opacity: 1, duration: 0.7, stagger: 0.15, ease: 'power3.out' }, '-=0.3')
+      .to('.hero-title', { y: 0, opacity: 1, duration: 0.6, ease: 'power2.out' }, '-=0.3')
+      .to('.hero-subtitle', { y: 0, opacity: 1, duration: 0.6, ease: 'power2.out' }, '-=0.3')
+      .to('.hero-actions', { y: 0, opacity: 1, duration: 0.6, ease: 'power2.out' }, '-=0.3')
+      .to('.hero-scroll', { opacity: 1, duration: 0.6 }, '-=0.2');
+
+    // Set initial states for GSAP hero elements
+    gsap.set('.hero-badge', { y: 30, opacity: 0 });
+    gsap.set('.name-line', { y: 60, opacity: 0 });
+    gsap.set('.hero-title', { y: 30, opacity: 0 });
+    gsap.set('.hero-subtitle', { y: 20, opacity: 0 });
+    gsap.set('.hero-actions', { y: 20, opacity: 0 });
+    gsap.set('.hero-scroll', { opacity: 0 });
+
+    // Re-run timeline now that initial states are set
+    heroTl.restart();
+
+    // Parallax on hero scroll
+    gsap.to('.hero-content', {
+      y: -80,
+      opacity: 0.3,
+      scrollTrigger: {
+        trigger: '.hero',
+        start: 'top top',
+        end: 'bottom top',
+        scrub: 1
+      }
+    });
+
+    // Contact section
+    gsap.from('.contact-heading', {
+      y: 40,
+      opacity: 0,
+      duration: 0.8,
+      scrollTrigger: {
+        trigger: '.contact',
+        start: 'top 80%',
+        toggleActions: 'play none none none'
+      }
+    });
+  }
+
+  // ----- Active Nav Link on Scroll -----
+  const sections = document.querySelectorAll('.section');
+  const navLinksList = document.querySelectorAll('.nav-links a');
+
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(section => {
+      if (window.pageYOffset >= section.offsetTop - 120) {
+        current = section.getAttribute('id');
+      }
+    });
+    navLinksList.forEach(link => {
+      link.classList.toggle('active', link.getAttribute('href') === '#' + current);
+    });
+  }, { passive: true });
+
+});
+</script>
+
 </body>
 </html>
